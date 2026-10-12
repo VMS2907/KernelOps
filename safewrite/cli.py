@@ -12,6 +12,7 @@ Proof commands::
     trace     print an engine's exact syscall protocol for a scenario
     explore   exhaustive crash-state exploration (the matrix)
     torture   real kill -9 loop against real files
+    race      lost-update race vs. synchronized read-modify-write
     bench     latency / fsyncs / write amplification / recovery time
     serve     the Crash Lab web UI
     demo      a narrated walk-through in the terminal
@@ -423,6 +424,21 @@ def cmd_bench(a: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_race(a: argparse.Namespace) -> int:
+    from .race import run_race
+    head(f"lost-update race: {a.threads} threads x {a.increments} increments of one counter document")
+    for eng in a.engines.split(","):
+        r = run_race(eng, a.threads, a.increments)
+        lost = r["expected"] - r["unsynchronized"]
+        print(f"  {c(eng, 'bold'):<8}")
+        bad(f"get() then put():      counter = {r['unsynchronized']:>5} of {r['expected']} "
+            f"({lost} updates lost: each put is atomic, the read-modify-write is not)")
+        (ok if r["synchronized"] == r["expected"] else bad)(
+            f"store.update(fn):      counter = {r['synchronized']:>5} of {r['expected']} "
+            "(transaction lock held from read to commit)")
+    return 0
+
+
 def cmd_serve(a: argparse.Namespace) -> int:
     from .server.app import serve
     serve(a.host, a.port, open_browser=not a.no_browser, store_dir=a.store)
@@ -523,6 +539,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--json")
     s.set_defaults(fn=cmd_bench)
 
+    s = sub.add_parser("race", help="lost-update race vs. synchronized read-modify-write")
+    s.add_argument("--engines", default="cow,wal")
+    s.add_argument("--threads", type=int, default=8)
+    s.add_argument("--increments", type=int, default=50)
+    s.set_defaults(fn=cmd_race)
+
     s = sub.add_parser("serve", help="Crash Lab web UI")
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8765)
@@ -537,6 +559,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
+    # Windows pipes default to a legacy code page that cannot print ✓ / ✗.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure") and (stream.encoding or "").lower().replace("-", "") != "utf8":
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, OSError):
+                pass
     args = build_parser().parse_args(argv)
     try:
         return args.fn(args) or 0

@@ -349,10 +349,10 @@ class Handler(BaseHTTPRequestHandler):
             plan = self._plan(key, text)
             at = int(b.get("at") or 0) or random.randint(1, max(1, plan["syscalls"]))
             env = dict(os.environ, PYTHONPATH=ROOT + os.pathsep + os.environ.get("PYTHONPATH", ""),
-                       NO_COLOR="1")
+                       NO_COLOR="1", PYTHONIOENCODING="utf-8")
             proc = subprocess.run([sys.executable, "-m", "safewrite", "crash", self.state.store_dir, key,
                                    "--text", text, "--at", str(at)],
-                                  capture_output=True, text=True, env=env, timeout=60)
+                                  capture_output=True, encoding="utf-8", errors="replace", env=env, timeout=60)
             t0 = time.perf_counter()
             s = self.state.open_store()               # <- recovery runs here, on the dead child's files
             rec_ms = (time.perf_counter() - t0) * 1e3

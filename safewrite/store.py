@@ -18,8 +18,9 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 from contextlib import contextmanager
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional
 
 from .concurrency import ProcessLock, StoreLocked
 from .engines import Engine, RecoveryReport, Version, make, parse_spec
@@ -74,6 +75,9 @@ class SafeStore:
         self.engine = engine
         self.recovery = report
         self._lock = lock
+        #: Serialises transactions inside this process (isolation).  Plain
+        #: reads do not take it: the cow engine serves them from MVCC snapshots.
+        self._tx_lock = threading.RLock()
 
     # ------------------------------------------------------------- opening
     @classmethod
@@ -163,11 +167,28 @@ class SafeStore:
 
     @contextmanager
     def transaction(self) -> Iterator[Transaction]:
-        """All-or-nothing multi-document update (if the engine supports it)."""
-        tx = Transaction(self)
-        yield tx
-        if tx.changes:
-            self.engine.commit(tx.changes)
+        """All-or-nothing multi-document update (if the engine supports it).
+
+        The store's transaction lock is held from the first read to the commit,
+        so a read-modify-write inside a transaction can never lose another
+        thread's update (serializable isolation within the process; other
+        processes are already excluded by the flock).
+        """
+        with self._tx_lock:
+            tx = Transaction(self)
+            yield tx
+            if tx.changes:
+                self.engine.commit(tx.changes)
+
+    def update(self, key: str, fn: Callable[[Optional[bytes]], Optional[bytes]]) -> Optional[bytes]:
+        """Atomic read-modify-write: ``new = fn(old)`` (``None`` deletes)."""
+        with self.transaction() as tx:
+            new = fn(tx.get(key))
+            if new is None:
+                tx.delete(key)
+            else:
+                tx.put(key, new)
+        return new
 
     def info(self) -> Dict[str, Any]:
         return {

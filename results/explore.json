@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-12 18:26:28",
+ "generated": "2026-10-12 18:31:40",
  "results": [
   {
    "spec": "naive",
@@ -795,7 +795,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "naive/trunc",
@@ -971,7 +971,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.0
+   "seconds": 0.001
   },
   {
    "spec": "naive/trunc",
@@ -1442,7 +1442,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "shadow",
@@ -1560,7 +1560,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "shadow",
@@ -1835,7 +1835,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "shadow/no-fsync",
@@ -2131,7 +2131,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "shadow/no-fsync",
@@ -2236,7 +2236,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "shadow/no-fsync",
@@ -2781,7 +2781,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "shadow/no-dirsync",
@@ -2886,7 +2886,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "shadow/no-dirsync",
@@ -2952,7 +2952,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.0
+   "seconds": 0.001
   },
   {
    "spec": "shadow/no-dirsync",
@@ -3122,7 +3122,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "undo",
@@ -3279,7 +3279,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   {
    "spec": "undo",
@@ -3462,7 +3462,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.009
+   "seconds": 0.013
   },
   {
    "spec": "undo",
@@ -3632,7 +3632,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "undo",
@@ -3776,7 +3776,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.005
   },
   {
    "spec": "undo",
@@ -4037,7 +4037,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.008
+   "seconds": 0.01
   },
   {
    "spec": "undo/no-journal-sync",
@@ -4181,7 +4181,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.008
   },
   {
    "spec": "undo/no-journal-sync",
@@ -4351,7 +4351,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.01
+   "seconds": 0.013
   },
   {
    "spec": "undo/no-journal-sync",
@@ -4508,7 +4508,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "undo/no-journal-sync",
@@ -4639,7 +4639,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.005
   },
   {
    "spec": "undo/no-journal-sync",
@@ -4874,7 +4874,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.008
+   "seconds": 0.01
   },
   {
    "spec": "wal",
@@ -5031,7 +5031,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.012
+   "seconds": 0.015
   },
   {
    "spec": "wal",
@@ -5214,7 +5214,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.011
+   "seconds": 0.012
   },
   {
    "spec": "wal",
@@ -5384,7 +5384,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.008
+   "seconds": 0.006
   },
   {
    "spec": "wal",
@@ -5711,7 +5711,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.006
+   "seconds": 0.007
   },
   {
    "spec": "wal/no-checksum",
@@ -5868,7 +5868,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.009
+   "seconds": 0.007
   },
   {
    "spec": "wal/no-checksum",
@@ -6051,7 +6051,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.011
+   "seconds": 0.01
   },
   {
    "spec": "wal/no-checksum",
@@ -6221,7 +6221,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "wal/no-checksum",
@@ -6365,7 +6365,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "wal/no-checksum",
@@ -6862,7 +6862,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.011
+   "seconds": 0.012
   },
   {
    "spec": "wal/early-ack",
@@ -7019,7 +7019,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "wal/early-ack",
@@ -7307,7 +7307,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.007
+   "seconds": 0.008
   },
   {
    "spec": "cow",
@@ -7425,7 +7425,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow",
@@ -7556,7 +7556,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow",
@@ -7975,7 +7975,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   {
    "spec": "cow/no-barrier",
@@ -8080,7 +8080,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/no-barrier",
@@ -8303,7 +8303,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/no-barrier",
@@ -8565,7 +8565,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   {
    "spec": "cow/one-super",
@@ -8683,7 +8683,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -8814,7 +8814,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -8932,7 +8932,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -9233,7 +9233,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.004
   },
   {
    "spec": "naive",
@@ -9387,7 +9387,7 @@
      "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143), #5 ftruncate(docs/inventory.csv, 1167)"
     }
    ],
-   "seconds": 0.015
+   "seconds": 0.023
   },
   {
    "spec": "naive",
@@ -9563,7 +9563,7 @@
      "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.005
   },
   {
    "spec": "naive",
@@ -9727,7 +9727,7 @@
      "crash": "lost #3 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #2 creat(docs/report.md)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.006
   },
   {
    "spec": "naive",
@@ -9985,7 +9985,7 @@
      "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300), #8 ftruncate(docs/notes.txt, 300)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.011
   },
   {
    "spec": "naive/trunc",
@@ -10163,7 +10163,7 @@
      "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512); #5 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.022
+   "seconds": 0.031
   },
   {
    "spec": "naive/trunc",
@@ -10370,7 +10370,7 @@
      "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0); #6 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.008
+   "seconds": 0.012
   },
   {
    "spec": "naive/trunc",
@@ -10534,7 +10534,7 @@
      "crash": "lost #3 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #2 creat(docs/report.md)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.006
   },
   {
    "spec": "naive/trunc",
@@ -10806,7 +10806,7 @@
      "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.013
   },
   {
    "spec": "shadow",
@@ -10924,7 +10924,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.007
+   "seconds": 0.009
   },
   {
    "spec": "shadow",
@@ -11143,7 +11143,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   {
    "spec": "shadow",
@@ -11536,7 +11536,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.006
+   "seconds": 0.009
   },
   {
    "spec": "shadow/no-fsync",
@@ -11678,7 +11678,7 @@
      "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.014
   },
   {
    "spec": "shadow/no-fsync",
@@ -11911,7 +11911,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.014
   },
   {
    "spec": "shadow/no-fsync",
@@ -12132,7 +12132,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "shadow/no-fsync",
@@ -12468,7 +12468,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.007
   },
   {
    "spec": "shadow/no-dirsync",
@@ -12807,7 +12807,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/report.md~1.tmp -> docs/report.md)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "shadow/no-dirsync",
@@ -13094,7 +13094,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
     }
    ],
-   "seconds": 0.008
+   "seconds": 0.007
   },
   {
    "spec": "undo",
@@ -13251,7 +13251,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.089
+   "seconds": 0.079
   },
   {
    "spec": "undo",
@@ -13434,7 +13434,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.032
+   "seconds": 0.028
   },
   {
    "spec": "undo",
@@ -13604,7 +13604,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.011
+   "seconds": 0.008
   },
   {
    "spec": "undo",
@@ -13748,7 +13748,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.035
+   "seconds": 0.025
   },
   {
    "spec": "undo",
@@ -14009,7 +14009,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.026
+   "seconds": 0.022
   },
   {
    "spec": "undo/no-journal-sync",
@@ -14189,7 +14189,7 @@
      "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.138
+   "seconds": 0.106
   },
   {
    "spec": "undo/no-journal-sync",
@@ -14431,7 +14431,7 @@
      "crash": "lost #2 pwrite(undo.journal, off=512, len=101)"
     }
    ],
-   "seconds": 0.05
+   "seconds": 0.034
   },
   {
    "spec": "undo/no-journal-sync",
@@ -14624,7 +14624,7 @@
      "crash": "lost #2 pwrite(undo.journal, off=512, len=20)"
     }
    ],
-   "seconds": 0.022
+   "seconds": 0.015
   },
   {
    "spec": "undo/no-journal-sync",
@@ -14755,7 +14755,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.05
+   "seconds": 0.039
   },
   {
    "spec": "undo/no-journal-sync",
@@ -15027,7 +15027,7 @@
      "crash": "lost #14 pwrite(undo.journal, off=512, len=356), #15 pwrite(undo.journal, off=0, len=512)"
     }
    ],
-   "seconds": 0.046
+   "seconds": 0.031
   },
   {
    "spec": "wal",
@@ -15184,7 +15184,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.077
+   "seconds": 0.051
   },
   {
    "spec": "wal",
@@ -15367,7 +15367,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.033
+   "seconds": 0.022
   },
   {
    "spec": "wal",
@@ -15537,7 +15537,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.033
+   "seconds": 0.02
   },
   {
    "spec": "wal",
@@ -15681,7 +15681,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.01
+   "seconds": 0.006
   },
   {
    "spec": "wal",
@@ -15864,7 +15864,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.029
+   "seconds": 0.019
   },
   {
    "spec": "wal/no-checksum",
@@ -16032,7 +16032,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=1250) torn: bytes 512-1024 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.084
+   "seconds": 0.049
   },
   {
    "spec": "wal/no-checksum",
@@ -16215,7 +16215,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.035
+   "seconds": 0.02
   },
   {
    "spec": "wal/no-checksum",
@@ -16385,7 +16385,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.033
+   "seconds": 0.024
   },
   {
    "spec": "wal/no-checksum",
@@ -16529,7 +16529,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.01
+   "seconds": 0.006
   },
   {
    "spec": "wal/no-checksum",
@@ -16712,7 +16712,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.029
+   "seconds": 0.022
   },
   {
    "spec": "wal/early-ack",
@@ -16892,7 +16892,7 @@
      "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.118
+   "seconds": 0.075
   },
   {
    "spec": "wal/early-ack",
@@ -17134,7 +17134,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.04
+   "seconds": 0.029
   },
   {
    "spec": "wal/early-ack",
@@ -17327,7 +17327,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=892) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.033
+   "seconds": 0.029
   },
   {
    "spec": "wal/early-ack",
@@ -17458,7 +17458,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.009
+   "seconds": 0.007
   },
   {
    "spec": "wal/early-ack",
@@ -17670,7 +17670,7 @@
      "crash": "lost #2 pwrite(wal.log, off=512, len=391); #10 pwrite(data/notes.txt, off=0, len=324) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.05
+   "seconds": 0.043
   },
   {
    "spec": "cow",
@@ -18037,7 +18037,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   {
    "spec": "cow",
@@ -18142,7 +18142,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.001
   },
   {
    "spec": "cow",
@@ -18631,7 +18631,7 @@
      "crash": "lost #2 pwrite(volume.img, off=3072, len=11)"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.007
   },
   {
    "spec": "cow/no-barrier",
@@ -19069,7 +19069,7 @@
      "crash": "#12 pwrite(volume.img, off=3584, len=300) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.008
+   "seconds": 0.007
   },
   {
    "spec": "cow/one-super",
@@ -19737,7 +19737,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.004
   },
   {
    "spec": "naive",
@@ -19891,7 +19891,7 @@
      "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143), #5 ftruncate(docs/inventory.csv, 1167)"
     }
    ],
-   "seconds": 0.402
+   "seconds": 0.398
   },
   {
    "spec": "naive",
@@ -20067,7 +20067,7 @@
      "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.006
   },
   {
    "spec": "naive",
@@ -20231,7 +20231,7 @@
      "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.03
+   "seconds": 0.045
   },
   {
    "spec": "naive",
@@ -20667,7 +20667,7 @@
      "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512); #5 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.331
+   "seconds": 0.392
   },
   {
    "spec": "naive/trunc",
@@ -20874,7 +20874,7 @@
      "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0); #6 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.008
   },
   {
    "spec": "naive/trunc",
@@ -21038,7 +21038,7 @@
      "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.029
+   "seconds": 0.03
   },
   {
    "spec": "naive/trunc",
@@ -21310,7 +21310,7 @@
      "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
     }
    ],
-   "seconds": 0.054
+   "seconds": 0.056
   },
   {
    "spec": "shadow",
@@ -21428,7 +21428,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.014
+   "seconds": 0.011
   },
   {
    "spec": "shadow",
@@ -21647,7 +21647,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.015
+   "seconds": 0.013
   },
   {
    "spec": "shadow",
@@ -21765,7 +21765,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.009
+   "seconds": 0.006
   },
   {
    "spec": "shadow",
@@ -22040,7 +22040,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.028
+   "seconds": 0.019
   },
   {
    "spec": "shadow/no-fsync",
@@ -22182,7 +22182,7 @@
      "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.025
+   "seconds": 0.016
   },
   {
    "spec": "shadow/no-fsync",
@@ -22415,7 +22415,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.033
+   "seconds": 0.04
   },
   {
    "spec": "shadow/no-fsync",
@@ -22557,7 +22557,7 @@
      "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 288 of 837 bytes persisted"
     }
    ],
-   "seconds": 0.017
+   "seconds": 0.012
   },
   {
    "spec": "shadow/no-fsync",
@@ -22972,7 +22972,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.01
   },
   {
    "spec": "shadow/no-dirsync",
@@ -23187,7 +23187,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/alice~3.tmp -> docs/alice), #11 creat(docs/bob~4.tmp), #17 rename(docs/bob~4.tmp -> docs/bob)"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.01
   },
   {
    "spec": "shadow/no-dirsync",
@@ -23311,7 +23311,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/report.md~1.tmp -> docs/report.md)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "shadow/no-dirsync",
@@ -23598,7 +23598,7 @@
      "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
     }
    ],
-   "seconds": 0.02
+   "seconds": 0.019
   },
   {
    "spec": "undo",
@@ -23755,7 +23755,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.157
+   "seconds": 0.182
   },
   {
    "spec": "undo",
@@ -23938,7 +23938,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.145
+   "seconds": 0.175
   },
   {
    "spec": "undo",
@@ -24108,7 +24108,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.032
+   "seconds": 0.033
   },
   {
    "spec": "undo",
@@ -24252,7 +24252,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.05
+   "seconds": 0.049
   },
   {
    "spec": "undo",
@@ -24513,7 +24513,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.146
+   "seconds": 0.138
   },
   {
    "spec": "undo/no-journal-sync",
@@ -24693,7 +24693,7 @@
      "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.252
+   "seconds": 0.189
   },
   {
    "spec": "undo/no-journal-sync",
@@ -24936,7 +24936,7 @@
      "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=101) torn: only the last 85 of 101 bytes persisted"
     }
    ],
-   "seconds": 0.245
+   "seconds": 0.274
   },
   {
    "spec": "undo/no-journal-sync",
@@ -25129,7 +25129,7 @@
      "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=20) torn: only the last 4 of 20 bytes persisted"
     }
    ],
-   "seconds": 0.056
+   "seconds": 0.085
   },
   {
    "spec": "undo/no-journal-sync",
@@ -25260,7 +25260,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.072
+   "seconds": 0.109
   },
   {
    "spec": "undo/no-journal-sync",
@@ -25532,7 +25532,7 @@
      "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) torn: only the last 224 of 336 bytes persisted"
     }
    ],
-   "seconds": 0.139
+   "seconds": 0.172
   },
   {
    "spec": "wal",
@@ -25689,7 +25689,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.15
+   "seconds": 0.155
   },
   {
    "spec": "wal",
@@ -25872,7 +25872,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.102
+   "seconds": 0.108
   },
   {
    "spec": "wal",
@@ -26042,7 +26042,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.072
+   "seconds": 0.071
   },
   {
    "spec": "wal",
@@ -26369,7 +26369,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.119
+   "seconds": 0.12
   },
   {
    "spec": "wal/no-checksum",
@@ -26537,7 +26537,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=1250) torn: bytes 624-640 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.178
+   "seconds": 0.149
   },
   {
    "spec": "wal/no-checksum",
@@ -26720,7 +26720,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.131
+   "seconds": 0.101
   },
   {
    "spec": "wal/no-checksum",
@@ -26901,7 +26901,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=892) torn: bytes 432-448 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.088
+   "seconds": 0.072
   },
   {
    "spec": "wal/no-checksum",
@@ -27045,7 +27045,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.024
+   "seconds": 0.022
   },
   {
    "spec": "wal/no-checksum",
@@ -27248,7 +27248,7 @@
      "crash": "#9 pwrite(wal.log, off=903, len=379) torn: bytes 185-201 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.162
+   "seconds": 0.119
   },
   {
    "spec": "wal/early-ack",
@@ -27428,7 +27428,7 @@
      "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.152
+   "seconds": 0.141
   },
   {
    "spec": "wal/early-ack",
@@ -27671,7 +27671,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=135) torn: only the first 48 of 135 bytes persisted"
     }
    ],
-   "seconds": 0.149
+   "seconds": 0.125
   },
   {
    "spec": "wal/early-ack",
@@ -27864,7 +27864,7 @@
      "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the first 304 of 892 bytes persisted"
     }
    ],
-   "seconds": 0.106
+   "seconds": 0.089
   },
   {
    "spec": "wal/early-ack",
@@ -27995,7 +27995,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.048
+   "seconds": 0.042
   },
   {
    "spec": "wal/early-ack",
@@ -28223,7 +28223,7 @@
      "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) torn: only the last 212 of 324 bytes persisted"
     }
    ],
-   "seconds": 0.169
+   "seconds": 0.144
   },
   {
    "spec": "cow",
@@ -28341,7 +28341,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.014
+   "seconds": 0.009
   },
   {
    "spec": "cow",
@@ -28472,7 +28472,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.015
+   "seconds": 0.01
   },
   {
    "spec": "cow",
@@ -28590,7 +28590,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.012
+   "seconds": 0.008
   },
   {
    "spec": "cow",
@@ -28695,7 +28695,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "cow",
@@ -28891,7 +28891,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.02
+   "seconds": 0.018
   },
   {
    "spec": "cow/no-barrier",
@@ -29031,7 +29031,7 @@
      "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the first 384 of 1167 bytes persisted"
     }
    ],
-   "seconds": 0.023
+   "seconds": 0.019
   },
   {
    "spec": "cow/no-barrier",
@@ -29184,7 +29184,7 @@
      "crash": "lost #2 pwrite(volume.img, off=3072, len=11)"
     }
    ],
-   "seconds": 0.035
+   "seconds": 0.025
   },
   {
    "spec": "cow/no-barrier",
@@ -29324,7 +29324,7 @@
      "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the first 272 of 813 bytes persisted"
     }
    ],
-   "seconds": 0.024
+   "seconds": 0.018
   },
   {
    "spec": "cow/no-barrier",
@@ -29416,7 +29416,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.007
+   "seconds": 0.005
   },
   {
    "spec": "cow/no-barrier",
@@ -29622,7 +29622,7 @@
      "crash": "#2 pwrite(volume.img, off=2560, len=312) torn: only the first 112 of 312 bytes persisted"
     }
    ],
-   "seconds": 0.047
+   "seconds": 0.038
   },
   {
    "spec": "cow/one-super",
@@ -30466,7 +30466,7 @@
      "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.018
+   "seconds": 0.017
   }
  ]
 }

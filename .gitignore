@@ -10,3 +10,5 @@ dist/
 /scratch/
 *.swp
 .DS_Store
+/video/build/
+/video/node_modules/

@@ -169,9 +169,10 @@ safewrite/
   torture.py      real kill -9 harness        race.py   lost-update demo
   bench.py        measurements                demo.py   narrated terminal demo
   cli.py          python -m safewrite …       server/   Crash Lab (stdlib http.server + vanilla JS)
-tests/            53 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API
+tests/            54 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API
 results/          explore.json · bench.json (pre-generated, loaded by the UI)
-docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · img/
+docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · VIDEO_PLAN.md · img/ · media/
+video/            the launch film, built from code (footage capture, motion graphics, synthesized score)
 ```
 
 ## Documents
@@ -182,6 +183,7 @@ docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · img/
 * **[docs/JUDGE_QA.md](docs/JUDGE_QA.md)**: the questions we expect from judges, answered.
 * **[docs/PLAN.md](docs/PLAN.md)**: the build plan and gap analysis of our round-1 submission.
 * **[docs/Team_VAT_SafeWrite_Final_Round.pptx](docs/Team_VAT_SafeWrite_Final_Round.pptx)**: the final-round slide deck (Kernel Ops template).
+* **[docs/media/SafeWrite_launch.mp4](docs/media/SafeWrite_launch.mp4)**: the 100-second launch film: real product footage, real CLI output, original score. Built from code: [video/README.md](video/README.md); storyboard and voiceover script: [docs/VIDEO_PLAN.md](docs/VIDEO_PLAN.md).
 
 ## Honest limitations
 

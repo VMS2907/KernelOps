@@ -56,6 +56,7 @@ export async function api(path, body) {
 export function stream(path, handlers) {
   const es = new EventSource(path);
   for (const [name, fn] of Object.entries(handlers)) {
+    if (name === "error") continue;           // handled by onerror below (no JSON payload)
     es.addEventListener(name, (ev) => fn(JSON.parse(ev.data)));
   }
   es.onerror = () => { es.close(); handlers.error && handlers.error(); };

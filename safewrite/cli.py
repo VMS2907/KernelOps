@@ -105,8 +105,12 @@ def cmd_put(a: argparse.Namespace) -> int:
         t0 = time.perf_counter()
         s.put(a.key, value)
         dt = time.perf_counter() - t0
-    ok(f"{a.key}: {len(value)} bytes committed and durable in {dt * 1000:.2f} ms "
-       f"(sha256 {sha256(value)[:12]})")
+    if s.engine.safe and "/" not in s.spec:
+        ok(f"{a.key}: {len(value)} bytes committed and durable in {dt * 1000:.2f} ms "
+           f"(sha256 {sha256(value)[:12]})")
+    else:
+        note(f"{a.key}: {len(value)} bytes written in {dt * 1000:.2f} ms with engine {s.spec}: "
+             "NOT crash-safe (no commit point)")
     return 0
 
 

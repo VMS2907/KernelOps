@@ -180,6 +180,7 @@ docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · img/
 * **[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)**: the 7-minute stage demo, click by click, with a fallback plan.
 * **[docs/JUDGE_QA.md](docs/JUDGE_QA.md)**: the questions we expect from judges, answered.
 * **[docs/PLAN.md](docs/PLAN.md)**: the build plan and gap analysis of our round-1 submission.
+* **[docs/Team_VAT_SafeWrite_Final_Round.pptx](docs/Team_VAT_SafeWrite_Final_Round.pptx)**: the final-round slide deck (Kernel Ops template).
 
 ## Honest limitations
 

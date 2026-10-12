@@ -226,6 +226,9 @@ class WalEngine(Engine):
     def _checkpoint(self, reason: str) -> None:
         vfs = self.vfs
         with self._rw.write():
+            if reason == "threshold" and (self._since_ckpt < self.opt["checkpoint_every"]
+                                          and self._tail < self.opt["checkpoint_bytes"]):
+                return  # another thread checkpointed while we waited for the lock
             vfs.note("checkpoint", reason=reason, docs=len(self._mem))
             dir_dirty = False
             for key, value in sorted(self._mem.items()):

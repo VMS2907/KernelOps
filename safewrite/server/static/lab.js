@@ -352,7 +352,7 @@ export class LabView {
         tooltip(seg, `bytes ${sgm.start}-${sgm.end}: ${name[sgm.src] || sgm.src}`);
         strip.append(seg);
       }
-      wrap.append(h("p", { class: "small", style: { marginTop: "6px" } }, h("b", {}, "A corrupted mixture: "), doc.text), strip,
+      wrap.append(h("p", { class: "small", style: { marginTop: "6px" } }, h("b", {}, "Corrupted: "), doc.text), strip,
         h("div", { class: "legend" },
           h("span", {}, h("i", { style: { background: "var(--old)" } }), "byte from previous version"),
           h("span", {}, h("i", { style: { background: "var(--new)" } }), "byte from new version"),
@@ -362,19 +362,21 @@ export class LabView {
     } else if (doc.text && doc.status !== "match") {
       wrap.append(h("p", { class: "small muted", style: { marginTop: "6px" } }, doc.text));
     }
-    if (doc.preview !== undefined) wrap.append(doc.provenance ? colouredPreview(doc.preview, doc.provenance) : h("pre", { class: "preview" }, doc.preview));
+    if (doc.preview !== undefined) wrap.append(doc.provenance ? colouredPreview(doc.preview, doc.provenance, doc.preview_offset || 0) : h("pre", { class: "preview" }, doc.preview));
     return wrap;
   }
 }
 
 // The preview text with each byte's background showing which version it came from.
-function colouredPreview(text, segs) {
+function colouredPreview(text, segs, offset) {
   const pre = h("pre", { class: "preview" });
+  if (offset) pre.append(h("span", { class: "muted" }, `… (from byte ${offset})\n`));
   const bytes = new TextEncoder().encode(text);
   const cls = { old: "p-old", new: "p-new", "0": "p-zero", "?": "p-junk" };
   for (const s of segs) {
-    if (s.start >= bytes.length) break;
-    const part = new TextDecoder().decode(bytes.slice(s.start, Math.min(s.end, bytes.length)));
+    const a = Math.max(0, s.start - offset), b = Math.min(bytes.length, s.end - offset);
+    if (b <= a) continue;
+    const part = new TextDecoder().decode(bytes.slice(a, b));
     pre.append(cls[s.src] ? h("span", { class: cls[s.src] }, part) : document.createTextNode(part));
   }
   return pre;

@@ -367,9 +367,17 @@ def _doc_view(key: str, value: Optional[bytes], err: Optional[str], states: List
         d.update(status="absent", match=match, text="document does not exist")
         return d
     match = [j for j, s in enumerate(states) if s.get(key) == value]
+    segs = provenance(value, versions) if not match else None
+    start = 0
+    if segs:
+        # Centre the preview on the first place where the bytes switch version.
+        switch = next((int(sg["start"]) for sg in segs[1:] if sg["src"] not in ("=",)), 0)  # type: ignore[arg-type]
+        if switch > 240:
+            nl = value.rfind(b"\n", 0, switch - 160)
+            start = nl + 1 if nl >= 0 else 0
     d.update(status="match" if match else "corrupt", match=match, len=len(value),
-             sha256=sha256(value)[:12], preview=value[:600].decode("utf-8", "replace"),
-             provenance=provenance(value, versions) if not match else None,
+             sha256=sha256(value)[:12], preview=value[start:start + 700].decode("utf-8", "replace"),
+             preview_offset=start, provenance=segs,
              text=(f"identical to the {version_label(match[-1], n)}" if match
                    else describe_mixture(value, versions)))
     return d

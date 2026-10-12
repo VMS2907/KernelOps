@@ -265,9 +265,18 @@ def explore(spec: str, scenario: str = "update", model: str = "power",
 
     violations = sum(v for k, v in counts.items() if k != "OK")
     info = spec_info(spec)
+    # An engine that is only atomic per document (shadow, naive) is *expected*
+    # to half-apply a multi-document commit.  That is a documented limitation,
+    # not evidence about the safeguard an ablation removed, so it is counted
+    # separately and never used as an ablation's counter-example.
     multi_doc = any(len(step) > 1 for step in sc.steps)
-    limitation = (multi_doc and not rec.engine(MemVFS()).atomic_tx and info["expected_safe"]
-                  and set(counts) <= {"OK", "TORN_TX"} and not rec_viol)
+    inherent = counts.get("TORN_TX", 0) if multi_doc and not rec.engine(MemVFS()).atomic_tx else 0
+    real = violations - inherent + rec_viol
+    examples.sort(key=lambda e: e["code"] == "TORN_TX" and inherent > 0)
+    if real == 0 and inherent:
+        verdict = "LIMITATION"
+    else:
+        verdict = _verdict(real, info["expected_safe"])
     return {
         "spec": spec, "engine": info["name"], "variant": info["variant"],
         "expected_safe": info["expected_safe"], "breaks": info["breaks"],
@@ -276,8 +285,9 @@ def explore(spec: str, scenario: str = "update", model: str = "power",
         "fsyncs": sum(1 for op in trace if op.kind in ("fsync", "fsync_dir")),
         "crash_points": len(points), "states": total, "unique_images": len({k[0] for k in cache}),
         "exhaustive": exhaustive_all, "outcomes": counts, "violations": violations,
+        "limitation": inherent,
         "recovery_crash_states": rec_states, "recovery_violations": rec_viol,
-        "verdict": "LIMITATION" if limitation else _verdict(violations + rec_viol, info["expected_safe"]),
+        "verdict": verdict,
         "timeline": timeline, "examples": examples,
         "seconds": round(time.perf_counter() - t0, 3),
     }

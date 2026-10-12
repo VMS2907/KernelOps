@@ -10,33 +10,38 @@ from __future__ import annotations
 from typing import Dict, List, Optional, Sequence, Tuple
 
 
-def provenance(data: bytes, versions: Sequence[Tuple[str, Optional[bytes]]]) -> List[Dict[str, object]]:
+def provenance(data: bytes, versions: Sequence[Tuple[str, Optional[bytes]]],
+               block: int = 64) -> List[Dict[str, object]]:
     """Run-length segments ``{"src": label, "start": i, "end": j}``.
 
-    ``src`` is the label of the first version whose byte at the same offset
-    matches, ``"="`` if several versions agree, ``"0"`` for a zero byte that
-    matches none, ``"?"`` for anything else.
+    ``src`` is the label of the version whose byte at the same offset matches,
+    ``"="`` if several versions agree, ``"0"`` for a zero byte that matches
+    none, ``"?"`` for anything else.  Whole 64-byte blocks are compared first;
+    only blocks that match nothing as a whole are classified byte by byte.
     """
-    segs: List[Dict[str, object]] = []
     vs = [(label, v) for label, v in versions if v is not None]
-    cur: Optional[str] = None
-    start = 0
-    for i, byte in enumerate(data):
-        hits = [label for label, v in vs if i < len(v) and v[i] == byte]
-        if len(hits) > 1:
-            src = "="
-        elif hits:
-            src = hits[0]
-        elif byte == 0:
-            src = "0"
+    segs: List[Dict[str, object]] = []
+
+    def add(src: str, a: int, b: int) -> None:
+        if segs and segs[-1]["src"] == src and segs[-1]["end"] == a:
+            segs[-1]["end"] = b
         else:
-            src = "?"
-        if src != cur:
-            if cur is not None:
-                segs.append({"src": cur, "start": start, "end": i})
-            cur, start = src, i
-    if cur is not None:
-        segs.append({"src": cur, "start": start, "end": len(data)})
+            segs.append({"src": src, "start": a, "end": b})
+
+    for i in range(0, len(data), block):
+        j = min(len(data), i + block)
+        chunk = data[i:j]
+        hits = [label for label, v in vs if v[i:j] == chunk]
+        if hits:
+            add("=" if len(hits) > 1 else hits[0], i, j)
+            continue
+        if chunk.count(0) == len(chunk):
+            add("0", i, j)
+            continue
+        for k in range(i, j):
+            byte = data[k]
+            hits = [label for label, v in vs if k < len(v) and v[k] == byte]
+            add("=" if len(hits) > 1 else hits[0] if hits else "0" if byte == 0 else "?", k, k + 1)
     return segs
 
 

@@ -98,6 +98,8 @@ class SimulatedImagesMatchRealDisk(unittest.TestCase):
                             got = {k: eng.get(k) for k in rec.scenario.keys}
                         except Exception as e:  # noqa: BLE001
                             got = repr(type(e))
+                        finally:
+                            eng.close()       # Windows cannot delete files that are still open
                         if mem_out.state is not None and mem_out.code in ("OK", "CORRUPT", "LOST"):
                             self.assertEqual(got, mem_out.state, f"{spec} point {point}")
         finally:

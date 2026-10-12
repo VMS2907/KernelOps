@@ -100,6 +100,13 @@ SCENARIOS: Dict[str, Scenario] = {s.name: s for s in [
         # WAL checkpoints every 2nd commit here, so commit 1 is acknowledged
         # while it exists only in the log: this exercises the pure-log path.
         {**_COMMON, "wal": {"checkpoint_every": 2}}),
+    Scenario(
+        "large", "Large document (many blocks)",
+        "A 20 KB document becomes 28 KB: dozens of sectors, multi-block extents, "
+        "multi-chunk writes that can be torn anywhere.",
+        {"report.csv": inventory("large A", 600, 11)},
+        [{"report.csv": inventory("large B", 820, 13)}],
+        {"wal": {"checkpoint_every": 1}, "cow": {"block_size": 4096}, "naive": {"chunk": 4096}}),
 ]}
 
-DEFAULT_SCENARIOS = ["update", "transfer", "create", "delete", "sequence"]
+DEFAULT_SCENARIOS = ["update", "transfer", "create", "delete", "sequence", "large"]

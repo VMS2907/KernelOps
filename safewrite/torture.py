@@ -118,11 +118,15 @@ class TortureResult:
 
 
 def _read_acks(proc: subprocess.Popen) -> int:
+    """Highest version the dead writer acknowledged; closes its pipes."""
     assert proc.stdout is not None
     last = -1
     for line in proc.stdout.read().splitlines():
         if line.startswith(b"A "):
             last = int(line[2:])
+    proc.stdout.close()
+    if proc.stderr is not None:
+        proc.stderr.close()
     return last
 
 

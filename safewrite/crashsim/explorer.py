@@ -424,7 +424,7 @@ def inspect(spec: str, scenario: str, model: str, point: int, index: int) -> Dic
 
 
 def find_state(spec: str, scenario: str, model: str, want: str = "violation",
-               seed: Optional[int] = None) -> Tuple[int, int]:
+               seed: Optional[int] = None) -> Tuple[int, int, bool]:
     """Pick a (point, index) for the Lab's "pull the plug" button.
 
     ``want`` = "violation" finds a failing state if one exists, "random" picks any.
@@ -437,7 +437,7 @@ def find_state(spec: str, scenario: str, model: str, want: str = "violation",
     if want == "random":
         p = rng.choice(points[1:] or points)
         states, _ = enumerate_states(rec.trace, rec.base, p, mdl)
-        return p, rng.randrange(len(states))
+        return p, rng.randrange(len(states)), False
     order = points[:]
     rng.shuffle(order)
     for p in order:
@@ -449,7 +449,7 @@ def find_state(spec: str, scenario: str, model: str, want: str = "violation",
             img = build_image(rec.trace, rec.base, states[i])
             out, _, _ = recover_and_judge(rec, img.files, img.dirs, a, b, check_idempotent=False)
             if not out.ok:
-                return p, i
+                return p, i, True
     return find_state(spec, scenario, model, "random", seed)
 
 

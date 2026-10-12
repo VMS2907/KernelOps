@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SafeWrite Crash Lab</title>
+<meta name="description" content="Crash-consistent document storage: pull the plug and watch recovery.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a78d6'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-15h-7z' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">⚡</div>
+      <div>
+        <div class="brand-name">SafeWrite Crash Lab</div>
+        <div class="brand-sub">crash-consistent document storage · proven, not promised</div>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" data-tab="lab" aria-selected="true">Lab</button>
+      <button role="tab" data-tab="explorer">Explorer</button>
+      <button role="tab" data-tab="torture">Torture</button>
+      <button role="tab" data-tab="bench">Trade-offs</button>
+      <button role="tab" data-tab="docs">Documents</button>
+      <button role="tab" data-tab="concepts">OS concepts</button>
+    </nav>
+    <div class="spacer"></div>
+    <button class="icon-btn" id="theme" title="Toggle light/dark">Theme</button>
+  </div>
+</header>
+<main>
+  <section class="view active" id="view-lab"></section>
+  <section class="view" id="view-explorer"></section>
+  <section class="view" id="view-torture"></section>
+  <section class="view" id="view-bench"></section>
+  <section class="view" id="view-docs"></section>
+  <section class="view" id="view-concepts"></section>
+</main>
+<div class="tooltip" id="tooltip"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

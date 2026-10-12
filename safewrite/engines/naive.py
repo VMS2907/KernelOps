@@ -33,7 +33,8 @@ class NaiveEngine(Engine):
     recovers_to = "whatever bytes happened to reach the disk"
     atomic_tx = False
     safe = False
-    OPTIONS = {"mode": "inplace", "chunk": 4096, "fsync": True}
+    #: Like ``open(path, "w").write(data)``: buffered chunks, no fsync.
+    OPTIONS = {"mode": "inplace", "chunk": 4096, "fsync": False}
     VARIANTS = {
         "trunc": {"options": {"mode": "truncate"},
                   "breaks": "O_TRUNC destroys version A before B is written: crash -> empty/partial file"},

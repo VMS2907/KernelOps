@@ -69,6 +69,8 @@ class Op:
             "idx": self.idx, "kind": self.kind, "path": self.path, "ino": self.ino,
             "text": self.describe(),
         }
+        if self.mutating:
+            d["n"] = self.info.get("syscall")
         if self.kind == "rename":
             d["dst"] = self.dst
         if self.kind == "write":
@@ -100,7 +102,8 @@ class RecordingVFS(VFS):
                  on_crash: Optional[Callable[[Op], None]] = None,
                  partial_write: Optional[float] = None) -> None:
         """
-        :param crash_at: crash *before* executing trace entry ``crash_at``.
+        :param crash_at: crash just before the ``crash_at``-th mutating system
+            call (1-based; notes are not counted).
         :param crash_at_label: crash when a ``note`` with this label is reached.
         :param on_crash: what "crash" means (default: raise :class:`CrashNow`).
         :param partial_write: if the crashing op is a write, first persist this
@@ -120,6 +123,7 @@ class RecordingVFS(VFS):
         self._handles: Dict[int, int] = {}       # handle -> inode
         self._handle_paths: Dict[int, str] = {}  # handle -> path it was opened as
         self._next_ino = 1
+        self.syscalls = 0                         # mutating ops executed so far
         self.reset()
 
     # ------------------------------------------------------------- lifecycle
@@ -128,6 +132,7 @@ class RecordingVFS(VFS):
         the durable base image (call after setting up a scenario)."""
         with self._mu:
             self.trace = []
+            self.syscalls = 0
             self._names = {}
             contents: Dict[int, bytes] = {}
             for path in self.inner.walk_files():
@@ -156,7 +161,10 @@ class RecordingVFS(VFS):
         """Append ``op`` to the trace, crashing first if this is the crash point."""
         op.idx = len(self.trace)
         op.thread = threading.current_thread().name
-        crash = (self.crash_at is not None and op.idx >= self.crash_at) or (
+        if op.mutating:
+            self.syscalls += 1
+            op.info.setdefault("syscall", self.syscalls)
+        crash = (self.crash_at is not None and op.mutating and self.syscalls >= self.crash_at) or (
             self.crash_at_label is not None and op.kind == "note"
             and op.label == self.crash_at_label)
         if crash:

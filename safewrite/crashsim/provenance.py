@@ -52,7 +52,53 @@ def describe_mixture(data: bytes, versions: Sequence[Tuple[str, Optional[bytes]]
         return "empty file (0 bytes)"
     if not any(data):
         return f"{len(data)} bytes, all zeros"
+    for label, v in versions:
+        if v and len(data) < len(v) and v.startswith(data):
+            return f"truncated: only the first {len(data)} of {len(v)} bytes of the {label} version"
+    for label, v in versions:
+        for label2, w in versions:
+            if v and w and label != label2:
+                cut = _common_prefix(data, v)
+                if cut and data[cut:] == w[cut:len(data)] and len(data) == len(w):
+                    return (f"mixture: bytes 0-{cut} from the {label} version, "
+                            f"bytes {cut}-{len(data)} from the {label2} version")
+                if cut and len(data) > cut and data[cut:] == w[cut:len(data)]:
+                    return (f"mixture: first {cut} bytes from the {label} version, "
+                            f"the remaining {len(data) - cut} from the {label2} version")
+    coarse = _coarse(provenance(data, versions))
+    names = {"?": "unrecognised bytes", "0": "zeros"}
+    if 2 <= len(coarse) <= 4:
+        return "mixture: " + ", ".join(
+            f"bytes {a}-{b} {'are ' + names[src] if src in names else 'from the ' + src + ' version'}"
+            for src, a, b in coarse)
     pct = summarize(provenance(data, versions), len(data))
-    parts = [f"{v:.0f}% {k}" for k, v in sorted(pct.items(), key=lambda kv: -kv[1])
+    names = {"?": "unrecognised bytes", "0": "zeros"}
+    parts = [f"{v:.0f}% {names.get(k, k)}" for k, v in sorted(pct.items(), key=lambda kv: -kv[1])
              if k not in ("=",) and v >= 1]
     return f"{len(data)} bytes: mixture of " + ", ".join(parts) if parts else f"{len(data)} bytes"
+
+
+def _common_prefix(a: bytes, b: bytes) -> int:
+    n = min(len(a), len(b))
+    i = 0
+    while i < n and a[i] == b[i]:
+        i += 1
+    return i
+
+
+def _coarse(segs: List[Dict[str, object]], slack: int = 24) -> List[Tuple[str, int, int]]:
+    """Merge byte-level provenance into a few big runs ("=" bytes join their neighbours)."""
+    out: List[List] = []
+    for sg in segs:
+        src, a, b = str(sg["src"]), int(sg["start"]), int(sg["end"])  # type: ignore[arg-type]
+        if src == "=" or (out and out[-1][0] != src and b - a < slack and src != "0"):
+            if out:
+                out[-1][2] = b
+            else:
+                out.append(["=", a, b])
+            continue
+        if out and out[-1][0] in (src, "="):
+            out[-1][0], out[-1][2] = src, b
+        else:
+            out.append([src, a, b])
+    return [(str(s), int(a), int(b)) for s, a, b in out]

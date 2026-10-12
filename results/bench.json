@@ -1,0 +1,163 @@
+{
+ "generated": "2026-10-12 18:23:13",
+ "n": 200,
+ "size": 4096,
+ "threads": [
+  1,
+  4,
+  16
+ ],
+ "platform": "Linux",
+ "results": [
+  {
+   "engine": "naive",
+   "p50_ms": 0.247,
+   "p99_ms": 1.138,
+   "mean_ms": 0.29,
+   "saves_per_s": 3447.6,
+   "fsyncs_per_commit": 1.0,
+   "syscalls_per_commit": 2.08,
+   "write_amplification": 1.0,
+   "recovery_ms": 0.056,
+   "recovery_summary": "clean: nothing to repair",
+   "no_fsync_saves_per_s": 36180.1,
+   "throughput": {
+    "1": {
+     "commits_per_s": 3722.8,
+     "fsyncs_per_commit": 1.0
+    },
+    "4": {
+     "commits_per_s": 2589.2,
+     "fsyncs_per_commit": 1.0
+    },
+    "16": {
+     "commits_per_s": 1589.3,
+     "fsyncs_per_commit": 1.0
+    }
+   }
+  },
+  {
+   "engine": "shadow",
+   "p50_ms": 0.842,
+   "p99_ms": 3.784,
+   "mean_ms": 0.988,
+   "saves_per_s": 1011.9,
+   "fsyncs_per_commit": 2.0,
+   "syscalls_per_commit": 6.0,
+   "write_amplification": 1.01,
+   "recovery_ms": 0.386,
+   "recovery_summary": "clean: nothing to repair",
+   "no_fsync_saves_per_s": 3009.2,
+   "throughput": {
+    "1": {
+     "commits_per_s": 1093.6,
+     "fsyncs_per_commit": 2.0
+    },
+    "4": {
+     "commits_per_s": 965.7,
+     "fsyncs_per_commit": 2.0
+    },
+    "16": {
+     "commits_per_s": 1074.2,
+     "fsyncs_per_commit": 2.0
+    }
+   }
+  },
+  {
+   "engine": "undo",
+   "p50_ms": 0.654,
+   "p99_ms": 1.848,
+   "mean_ms": 0.698,
+   "saves_per_s": 1433.0,
+   "fsyncs_per_commit": 3.08,
+   "syscalls_per_commit": 7.16,
+   "write_amplification": 2.19,
+   "recovery_ms": 0.11,
+   "recovery_summary": "clean: nothing to repair",
+   "no_fsync_saves_per_s": 11802.0,
+   "throughput": {
+    "1": {
+     "commits_per_s": 2062.8,
+     "fsyncs_per_commit": 3.02
+    },
+    "4": {
+     "commits_per_s": 1308.2,
+     "fsyncs_per_commit": 3.08
+    },
+    "16": {
+     "commits_per_s": 923.2,
+     "fsyncs_per_commit": 3.33
+    }
+   }
+  },
+  {
+   "engine": "wal",
+   "p50_ms": 0.263,
+   "p99_ms": 5.109,
+   "mean_ms": 0.404,
+   "saves_per_s": 2473.4,
+   "fsyncs_per_commit": 1.26,
+   "syscalls_per_commit": 2.61,
+   "write_amplification": 1.26,
+   "recovery_ms": 2.338,
+   "recovery_summary": "replayed 8 committed change(s)",
+   "no_fsync_saves_per_s": 40021.9,
+   "throughput": {
+    "1": {
+     "commits_per_s": 2796.1,
+     "fsyncs_per_commit": 1.08,
+     "avg_group_size": 1.0
+    },
+    "4": {
+     "commits_per_s": 2995.2,
+     "fsyncs_per_commit": 0.75,
+     "avg_group_size": 2.17
+    },
+    "16": {
+     "commits_per_s": 2011.4,
+     "fsyncs_per_commit": 0.96,
+     "avg_group_size": 6.86
+    }
+   }
+  },
+  {
+   "engine": "cow",
+   "p50_ms": 0.32,
+   "p99_ms": 0.675,
+   "mean_ms": 0.348,
+   "saves_per_s": 2876.4,
+   "fsyncs_per_commit": 2.0,
+   "syscalls_per_commit": 5.0,
+   "write_amplification": 1.31,
+   "recovery_ms": 0.416,
+   "recovery_summary": "clean: nothing to repair",
+   "no_fsync_saves_per_s": 16600.4,
+   "throughput": {
+    "1": {
+     "commits_per_s": 2812.2,
+     "fsyncs_per_commit": 2.0
+    },
+    "4": {
+     "commits_per_s": 1735.0,
+     "fsyncs_per_commit": 2.0
+    },
+    "16": {
+     "commits_per_s": 1161.9,
+     "fsyncs_per_commit": 2.0
+    }
+   }
+  }
+ ],
+ "recovery_scaling": {
+  "wal": {
+   "100": 22.52,
+   "1000": 36.146,
+   "5000": 76.912
+  },
+  "cow": {
+   "100": 1.057,
+   "1000": 0.983,
+   "5000": 1.181
+  }
+ }
+}

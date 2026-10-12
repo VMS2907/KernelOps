@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safewrite"
+version = "1.0.0"
+description = "Crash-consistent document storage with pluggable recovery engines and an exhaustive power-loss simulator"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Tanush Keshri" },
+  { name = "Vyom Singh" },
+  { name = "Abhishek Kumar Maurya" },
+]
+dependencies = []
+
+[project.scripts]
+safewrite = "safewrite.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["safewrite*"]
+
+[tool.setuptools.package-data]
+"safewrite.server" = ["static/*"]

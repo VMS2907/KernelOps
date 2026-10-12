@@ -259,6 +259,27 @@ export class LabView {
       if (!f.owners.length) sec.append(h("span", { class: "muted small" }, "(empty file)"));
       box.append(h("div", { class: "disk-file" }, h("div", { class: "name" }, h("span", {}, f.path), h("span", { class: "muted" }, fmt.int(f.size) + " B")), sec));
     }
+    const lay = d.layout || {};
+    let blockMap = null;
+    if (lay.owners) {
+      const strip = h("div", { class: "sectors" });
+      const free = new Set(lay.free || []);
+      for (let b = 0; b < lay.high_water; b++) {
+        const who = lay.owners[String(b)] || (free.has(b) ? "free" : "unused");
+        const kind = who.startsWith("superblock") ? "sb" : who.startsWith("catalog") ? "cat" : who === "free" || who === "unused" ? "free" : "doc";
+        const cell = h("span", { class: "block b-" + kind });
+        tooltip(cell, `block ${b}: ${esc(who)}`);
+        strip.append(cell);
+      }
+      blockMap = h("div", { class: "disk-file", style: { marginTop: "14px" } },
+        h("div", { class: "name" }, h("span", {}, `after recovery: ${lay.block_size}-byte blocks of volume.img`), h("span", { class: "muted" }, `generation ${lay.generation} · active slot ${lay.active_slot}`)),
+        strip,
+        h("div", { class: "legend" },
+          h("span", {}, h("i", { style: { background: "var(--barrier)" } }), "superblock slots"),
+          h("span", {}, h("i", { style: { background: "var(--axis)" } }), "catalog (one per retained generation)"),
+          h("span", {}, h("i", { style: { background: "var(--old)" } }), "document blocks (all retained versions)"),
+          h("span", {}, h("i", { style: { background: "var(--surface-3)", outline: "1px dashed var(--axis)" } }), "free")));
+    }
     fill(this.elDisk, 
       h("h3", {}, "Disk image after the crash"),
       h("p", { class: "muted small", style: { margin: "4px 0 10px" } }, "One square per 512-byte sector."),
@@ -269,6 +290,7 @@ export class LabView {
         h("span", {}, h("i", { style: { background: "var(--lucky)" } }), "unforced write that happened to land"),
         h("span", {}, h("i", { style: { background: "repeating-linear-gradient(45deg, var(--new) 0 3px, transparent 3px 6px), var(--new-soft)" } }), "torn write"),
       ),
+      blockMap,
     );
   }
 

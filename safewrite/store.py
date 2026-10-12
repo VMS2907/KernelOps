@@ -78,6 +78,10 @@ class SafeStore:
         #: Serialises transactions inside this process (isolation).  Plain
         #: reads do not take it: the cow engine serves them from MVCC snapshots.
         self._tx_lock = threading.RLock()
+        #: Set when a write or fsync fails.  After a failed fsync the kernel may
+        #: already have dropped the dirty pages (PostgreSQL's 2018 "fsyncgate"),
+        #: so retrying is unsafe: the only correct move is to reopen = recover.
+        self.failed: Optional[str] = None
 
     # ------------------------------------------------------------- opening
     @classmethod
@@ -150,11 +154,21 @@ class SafeStore:
     def get(self, key: str) -> Optional[bytes]:
         return self.engine.get(key)
 
+    def _commit(self, changes: Dict[str, Optional[bytes]]) -> None:
+        if self.failed:
+            raise StoreError(f"an earlier write failed ({self.failed}); reopen the store to recover "
+                             "before writing again")
+        try:
+            self.engine.commit(changes)
+        except OSError as e:
+            self.failed = f"{type(e).__name__}: {e}"
+            raise StoreError(f"write failed, store is now read-only until reopened: {self.failed}") from e
+
     def put(self, key: str, value: bytes) -> None:
-        self.engine.commit({key: bytes(value)})
+        self._commit({key: bytes(value)})
 
     def delete(self, key: str) -> None:
-        self.engine.commit({key: None})
+        self._commit({key: None})
 
     def keys(self) -> List[str]:
         return self.engine.keys()
@@ -178,7 +192,7 @@ class SafeStore:
             tx = Transaction(self)
             yield tx
             if tx.changes:
-                self.engine.commit(tx.changes)
+                self._commit(tx.changes)
 
     def update(self, key: str, fn: Callable[[Optional[bytes]], Optional[bytes]]) -> Optional[bytes]:
         """Atomic read-modify-write: ``new = fn(old)`` (``None`` deletes)."""

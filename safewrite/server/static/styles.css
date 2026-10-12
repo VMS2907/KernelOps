@@ -449,3 +449,9 @@ pre.preview .p-old { background: color-mix(in srgb, var(--old) 26%, transparent)
 pre.preview .p-new { background: color-mix(in srgb, var(--new) 30%, transparent); }
 pre.preview .p-zero { background: var(--zero); }
 pre.preview .p-junk { background: color-mix(in srgb, var(--junk) 40%, transparent); }
+
+.block { width: 18px; height: 18px; border-radius: 3px; background: var(--surface-3); }
+.block.b-sb { background: var(--barrier); }
+.block.b-cat { background: var(--axis); }
+.block.b-doc { background: var(--old); }
+.block.b-free { background: var(--surface-3); outline: 1px dashed var(--axis); outline-offset: -1px; }

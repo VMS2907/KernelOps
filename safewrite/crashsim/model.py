@@ -65,6 +65,11 @@ MODELS: Dict[str, Model] = {
 }
 
 
+def _num(op: Op) -> str:
+    """How a syscall is numbered for humans (1-based, protocol notes not counted)."""
+    return f"#{op.info.get('syscall', op.idx)}"
+
+
 @dataclass(frozen=True)
 class Tear:
     op: int                    # trace index of the torn write
@@ -74,13 +79,14 @@ class Tear:
 
     def describe(self, trace: Sequence[Op]) -> str:
         op = trace[self.op]
+        n = _num(op)
         if self.mode == "zeros":
-            return f"#{self.op} {op.describe()} persisted only as a size change (zeros)"
+            return f"{n} {op.describe()} persisted only as a size change (zeros)"
         if self.mode == "hole":
-            return (f"#{self.op} {op.describe()} torn: bytes {self.cut}-{self.end} never reached the disk, "
+            return (f"{n} {op.describe()} torn: bytes {self.cut}-{self.end} never reached the disk, "
                     "both ends did (sectors written out of order)")
         part = f"first {self.cut}" if self.mode == "prefix" else f"last {len(op.data) - self.cut}"
-        return f"#{self.op} {op.describe()} torn: only the {part} of {len(op.data)} bytes persisted"
+        return f"{n} {op.describe()} torn: only the {part} of {len(op.data)} bytes persisted"
 
 
 @dataclass
@@ -98,9 +104,10 @@ class CrashState:
     def describe(self, trace: Sequence[Op]) -> str:
         bits = []
         if self.lost:
-            bits.append("lost " + ", ".join(f"#{i} {trace[i].describe()}" for i in self.lost))
+            bits.append("lost " + ", ".join(f"{_num(trace[i])} {trace[i].describe()}" for i in self.lost))
         if self.ns_lost:
-            bits.append("namespace ops not persisted: " + ", ".join(f"#{i} {trace[i].describe()}" for i in self.ns_lost))
+            bits.append("namespace ops not persisted: " + ", ".join(f"{_num(trace[i])} {trace[i].describe()}"
+                                                                     for i in self.ns_lost))
         if self.tear:
             bits.append(self.tear.describe(trace))
         return "; ".join(bits) or "every issued operation reached the disk"

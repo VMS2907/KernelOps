@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-12 18:38:16",
+ "generated": "2026-10-12 18:48:06",
  "results": [
   {
    "spec": "naive",
@@ -703,7 +703,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   {
    "spec": "naive/trunc",
@@ -1146,7 +1146,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.0
+   "seconds": 0.001
   },
   {
    "spec": "naive/trunc",
@@ -2314,7 +2314,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   {
    "spec": "shadow/no-fsync",
@@ -2612,7 +2612,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   {
    "spec": "shadow/no-fsync",
@@ -3981,7 +3981,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   {
    "spec": "undo",
@@ -4743,7 +4743,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.008
+   "seconds": 0.009
   },
   {
    "spec": "undo",
@@ -4888,7 +4888,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.024
+   "seconds": 0.022
   },
   {
    "spec": "undo/no-journal-sync",
@@ -5862,7 +5862,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.022
+   "seconds": 0.023
   },
   {
    "spec": "wal",
@@ -6849,7 +6849,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.034
+   "seconds": 0.037
   },
   {
    "spec": "wal/no-checksum",
@@ -7981,7 +7981,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.006
+   "seconds": 0.007
   },
   {
    "spec": "wal/early-ack",
@@ -8152,7 +8152,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.01
+   "seconds": 0.011
   },
   {
    "spec": "wal/early-ack",
@@ -8310,7 +8310,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.006
   },
   {
    "spec": "wal/early-ack",
@@ -8600,7 +8600,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   {
    "spec": "wal/early-ack",
@@ -8732,7 +8732,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.032
+   "seconds": 0.033
   },
   {
    "spec": "cow",
@@ -10225,7 +10225,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   {
    "spec": "cow/one-super",
@@ -10344,7 +10344,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -10476,7 +10476,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -10595,7 +10595,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.001
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -10898,7 +10898,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   {
    "spec": "cow/one-super",
@@ -11017,7 +11017,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.006
   },
   {
    "spec": "naive",
@@ -11145,7 +11145,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-512 from the new version, bytes 512-1584 from the old version",
-     "crash": "lost #3 pwrite(docs/inventory.csv, off=512, len=512)"
+     "crash": "lost #2 pwrite(docs/inventory.csv, off=512, len=512)"
     },
     {
      "point": 4,
@@ -11153,7 +11153,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-512 from the old version, bytes 512-1024 from the new version, bytes 1024-1584 from the old version",
-     "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512)"
+     "crash": "lost #1 pwrite(docs/inventory.csv, off=0, len=512)"
     },
     {
      "point": 4,
@@ -11169,10 +11169,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143), #5 ftruncate(docs/inventory.csv, 1167)"
+     "crash": "lost #1 pwrite(docs/inventory.csv, off=0, len=512), #2 pwrite(docs/inventory.csv, off=512, len=512), #3 pwrite(docs/inventory.csv, off=1024, len=143), #4 ftruncate(docs/inventory.csv, 1167)"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.013
   },
   {
    "spec": "naive",
@@ -11290,7 +11290,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #2 ftruncate(docs/alice, 11)"
     },
     {
      "point": 4,
@@ -11298,7 +11298,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "alice: truncated: only the first 11 of 12 bytes of the old version",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11)"
     },
     {
      "point": 6,
@@ -11306,7 +11306,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #3 ftruncate(docs/alice, 11), #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #2 ftruncate(docs/alice, 11), #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 8,
@@ -11314,7 +11314,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11), #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11), #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 4,
@@ -11330,7 +11330,7 @@
      "state_index": 3,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11)"
     },
     {
      "point": 6,
@@ -11338,7 +11338,7 @@
      "state_index": 4,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 8,
@@ -11346,7 +11346,7 @@
      "state_index": 3,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11)"
     }
    ],
    "seconds": 0.003
@@ -11463,7 +11463,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "report.md: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512)"
     },
     {
      "point": 4,
@@ -11479,7 +11479,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "report.md: 512 bytes, all zeros",
-     "crash": "#3 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -11487,7 +11487,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512), #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512), #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -11495,7 +11495,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -11503,7 +11503,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -11511,7 +11511,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #1 creat(docs/report.md)"
     }
    ],
    "seconds": 0.003
@@ -11715,7 +11715,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-200 from the old version, bytes 200-312 are zeros",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 5,
@@ -11723,7 +11723,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 5,
@@ -11731,7 +11731,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-200 from the old version, bytes 200-312 are zeros",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -11739,7 +11739,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300)"
     },
     {
      "point": 8,
@@ -11747,7 +11747,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-200 from the old version, bytes 200-312 are zeros",
-     "crash": "lost #7 pwrite(docs/notes.txt, off=0, len=300); #2 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=300); #1 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -11763,7 +11763,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300), #8 ftruncate(docs/notes.txt, 300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300), #3 ftruncate(docs/notes.txt, 300)"
     },
     {
      "point": 11,
@@ -11771,7 +11771,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300), #8 ftruncate(docs/notes.txt, 300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300), #3 ftruncate(docs/notes.txt, 300)"
     }
    ],
    "seconds": 0.005
@@ -11930,7 +11930,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-512 from the new version, bytes 512-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 512 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 512 of 4096 bytes persisted"
     },
     {
      "point": 3,
@@ -11938,7 +11938,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-512 from the old version, bytes 512-4096 from the new version, bytes 4096-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 3584 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 3584 of 4096 bytes persisted"
     },
     {
      "point": 3,
@@ -11946,7 +11946,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-1536 from the new version, bytes 1536-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 1536 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 1536 of 4096 bytes persisted"
     },
     {
      "point": 10,
@@ -11954,10 +11954,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002)"
+     "crash": "lost #1 pwrite(docs/report.csv, off=0, len=4096), #2 pwrite(docs/report.csv, off=4096, len=4096), #3 pwrite(docs/report.csv, off=8192, len=4096), #4 pwrite(docs/report.csv, off=12288, len=4096), #5 pwrite(docs/report.csv, off=16384, len=4096), #6 pwrite(docs/report.csv, off=20480, len=1002)"
     }
    ],
-   "seconds": 3.62
+   "seconds": 4.105
   },
   {
    "spec": "naive/trunc",
@@ -12085,7 +12085,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "inventory.csv: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/inventory.csv, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512)"
     },
     {
      "point": 4,
@@ -12093,7 +12093,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-512 from the new version, bytes 512-1584 from the old version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0)"
     },
     {
      "point": 4,
@@ -12109,7 +12109,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143)"
     },
     {
      "point": 8,
@@ -12117,7 +12117,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #4 pwrite(docs/inventory.csv, off=512, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143); #3 pwrite(docs/inventory.csv, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143); #2 pwrite(docs/inventory.csv, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -12125,7 +12125,7 @@
      "state_index": 5,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143); #4 pwrite(docs/inventory.csv, off=512, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143); #3 pwrite(docs/inventory.csv, off=512, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -12133,10 +12133,10 @@
      "state_index": 7,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512); #5 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512); #4 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.012
+   "seconds": 0.011
   },
   {
    "spec": "naive/trunc",
@@ -12269,7 +12269,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/alice, off=0, len=11)"
+     "crash": "lost #2 pwrite(docs/alice, off=0, len=11)"
     },
     {
      "point": 4,
@@ -12277,7 +12277,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #2 ftruncate(docs/alice, 0)"
+     "crash": "lost #1 ftruncate(docs/alice, 0)"
     },
     {
      "point": 4,
@@ -12285,7 +12285,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "alice: 11 bytes, all zeros",
-     "crash": "#3 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 9,
@@ -12293,7 +12293,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 9,
@@ -12301,7 +12301,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11); #3 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11); #2 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 9,
@@ -12309,7 +12309,7 @@
      "state_index": 6,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0); #6 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0); #4 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 4,
@@ -12325,7 +12325,7 @@
      "state_index": 5,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 ftruncate(docs/bob, 0)"
+     "crash": "lost #3 ftruncate(docs/bob, 0)"
     },
     {
      "point": 7,
@@ -12333,7 +12333,7 @@
      "state_index": 5,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0)"
     },
     {
      "point": 7,
@@ -12341,7 +12341,7 @@
      "state_index": 7,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11)"
     }
    ],
    "seconds": 0.008
@@ -12458,7 +12458,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "report.md: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512)"
     },
     {
      "point": 4,
@@ -12474,7 +12474,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "report.md: 512 bytes, all zeros",
-     "crash": "#3 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -12482,7 +12482,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512), #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512), #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -12490,7 +12490,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -12498,7 +12498,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -12506,7 +12506,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512); namespace ops not persisted: #1 creat(docs/report.md)"
     }
    ],
    "seconds": 0.003
@@ -12732,7 +12732,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "notes.txt: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 4,
@@ -12740,7 +12740,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-200 from the old version, bytes 200-312 are zeros",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0); #3 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0); #2 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 4,
@@ -12748,7 +12748,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "notes.txt: 312 bytes, all zeros",
-     "crash": "#3 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 6,
@@ -12756,7 +12756,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 9,
@@ -12764,7 +12764,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0)"
     },
     {
      "point": 10,
@@ -12772,7 +12772,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0), #4 pwrite(docs/notes.txt, off=0, len=300)"
     },
     {
      "point": 12,
@@ -12780,10 +12780,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0), #4 pwrite(docs/notes.txt, off=0, len=300)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "naive/trunc",
@@ -12953,7 +12953,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "report.csv: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.csv, off=0, len=4096)"
+     "crash": "lost #2 pwrite(docs/report.csv, off=0, len=4096)"
     },
     {
      "point": 4,
@@ -12961,7 +12961,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-4096 from the new version, bytes 4096-15690 from the old version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0)"
     },
     {
      "point": 4,
@@ -12969,7 +12969,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-512 from the new version, bytes 512-15690 from the old version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0); #3 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 512 of 4096 bytes persisted"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0); #2 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 512 of 4096 bytes persisted"
     },
     {
      "point": 11,
@@ -12977,7 +12977,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=4096, len=4096), #5 pwrite(docs/report.csv, off=8192, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002)"
     },
     {
      "point": 11,
@@ -12985,7 +12985,7 @@
      "state_index": 10,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #4 pwrite(docs/report.csv, off=4096, len=4096), #5 pwrite(docs/report.csv, off=8192, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002); #3 pwrite(docs/report.csv, off=0, len=4096) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=4096, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002); #2 pwrite(docs/report.csv, off=0, len=4096) persisted only as a size change (zeros)"
     },
     {
      "point": 11,
@@ -12993,7 +12993,7 @@
      "state_index": 19,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #5 pwrite(docs/report.csv, off=8192, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002); #4 pwrite(docs/report.csv, off=4096, len=4096) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002); #3 pwrite(docs/report.csv, off=4096, len=4096) persisted only as a size change (zeros)"
     },
     {
      "point": 11,
@@ -13001,10 +13001,10 @@
      "state_index": 28,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=4096, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002); #5 pwrite(docs/report.csv, off=8192, len=4096) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002); #4 pwrite(docs/report.csv, off=8192, len=4096) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 4.864
+   "seconds": 4.359
   },
   {
    "spec": "shadow",
@@ -13332,7 +13332,7 @@
      "state_index": 0,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #13 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #6 creat(docs/bob~4.tmp)"
     },
     {
      "point": 14,
@@ -13858,7 +13858,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.015
+   "seconds": 0.013
   },
   {
    "spec": "shadow/no-fsync",
@@ -13974,7 +13974,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "inventory.csv: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191)"
+     "crash": "lost #2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191)"
     },
     {
      "point": 7,
@@ -13982,7 +13982,7 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 488",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
     },
     {
      "point": 7,
@@ -13990,7 +13990,7 @@
      "state_index": 19,
      "code": "DETECTED",
      "detail": "inventory.csv: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
     },
     {
      "point": 7,
@@ -13998,10 +13998,10 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1000",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.008
   },
   {
    "spec": "shadow/no-fsync",
@@ -14176,7 +14176,7 @@
      "state_index": 6,
      "code": "DETECTED",
      "detail": "alice: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/alice~3.tmp, off=0, len=35)"
+     "crash": "lost #2 pwrite(docs/alice~3.tmp, off=0, len=35)"
     },
     {
      "point": 7,
@@ -14184,7 +14184,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "alice: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/alice~3.tmp, off=0, len=35) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/alice~3.tmp, off=0, len=35) persisted only as a size change (zeros)"
     },
     {
      "point": 10,
@@ -14192,7 +14192,7 @@
      "state_index": 0,
      "code": "DETECTED",
      "detail": "alice: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/alice~3.tmp, off=0, len=35)"
+     "crash": "lost #2 pwrite(docs/alice~3.tmp, off=0, len=35)"
     },
     {
      "point": 10,
@@ -14200,7 +14200,7 @@
      "state_index": 2,
      "code": "DETECTED",
      "detail": "alice: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/alice~3.tmp, off=0, len=35) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/alice~3.tmp, off=0, len=35) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -14224,7 +14224,7 @@
      "state_index": 1,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     },
     {
      "point": 12,
@@ -14235,7 +14235,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.01
+   "seconds": 0.009
   },
   {
    "spec": "shadow/no-fsync",
@@ -14351,7 +14351,7 @@
      "state_index": 10,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/report.md~1.tmp, off=0, len=837)"
+     "crash": "lost #2 pwrite(docs/report.md~1.tmp, off=0, len=837)"
     },
     {
      "point": 7,
@@ -14359,7 +14359,7 @@
      "state_index": 12,
      "code": "DETECTED",
      "detail": "report.md: length mismatch: header says 813, file has 488",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 512 of 837 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 512 of 837 bytes persisted"
     },
     {
      "point": 7,
@@ -14367,7 +14367,7 @@
      "state_index": 13,
      "code": "DETECTED",
      "detail": "report.md: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the last 325 of 837 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the last 325 of 837 bytes persisted"
     },
     {
      "point": 7,
@@ -14375,10 +14375,10 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "report.md: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.005
+   "seconds": 0.004
   },
   {
    "spec": "shadow/no-fsync",
@@ -14644,7 +14644,7 @@
      "state_index": 6,
      "code": "DETECTED",
      "detail": "notes.txt: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
+     "crash": "lost #2 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
     },
     {
      "point": 7,
@@ -14652,7 +14652,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "notes.txt: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/notes.txt~2.tmp, off=0, len=336) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/notes.txt~2.tmp, off=0, len=336) persisted only as a size change (zeros)"
     },
     {
      "point": 10,
@@ -14660,7 +14660,7 @@
      "state_index": 0,
      "code": "DETECTED",
      "detail": "notes.txt: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
+     "crash": "lost #2 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
     },
     {
      "point": 10,
@@ -14668,10 +14668,10 @@
      "state_index": 2,
      "code": "DETECTED",
      "detail": "notes.txt: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/notes.txt~2.tmp, off=0, len=336) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/notes.txt~2.tmp, off=0, len=336) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.01
+   "seconds": 0.008
   },
   {
    "spec": "shadow/no-fsync",
@@ -14787,7 +14787,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "report.csv: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/report.csv~2.tmp, off=0, len=21506)"
+     "crash": "lost #2 pwrite(docs/report.csv~2.tmp, off=0, len=21506)"
     },
     {
      "point": 7,
@@ -14795,7 +14795,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 488",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
     },
     {
      "point": 7,
@@ -14803,7 +14803,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "report.csv: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
     },
     {
      "point": 7,
@@ -14811,10 +14811,10 @@
      "state_index": 32,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 7144",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.025
+   "seconds": 0.024
   },
   {
    "spec": "shadow/no-dirsync",
@@ -14928,7 +14928,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/inventory.csv~2.tmp), #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #1 creat(docs/inventory.csv~2.tmp), #4 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     },
     {
      "point": 11,
@@ -14936,10 +14936,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #4 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "shadow/no-dirsync",
@@ -15112,7 +15112,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/alice~3.tmp), #8 rename(docs/alice~3.tmp -> docs/alice), #11 creat(docs/bob~4.tmp), #17 rename(docs/bob~4.tmp -> docs/bob)"
+     "crash": "namespace ops not persisted: #1 creat(docs/alice~3.tmp), #4 rename(docs/alice~3.tmp -> docs/alice), #5 creat(docs/bob~4.tmp), #8 rename(docs/bob~4.tmp -> docs/bob)"
     },
     {
      "point": 20,
@@ -15120,7 +15120,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/alice~3.tmp -> docs/alice), #11 creat(docs/bob~4.tmp), #17 rename(docs/bob~4.tmp -> docs/bob)"
+     "crash": "namespace ops not persisted: #4 rename(docs/alice~3.tmp -> docs/alice), #5 creat(docs/bob~4.tmp), #8 rename(docs/bob~4.tmp -> docs/bob)"
     },
     {
      "point": 9,
@@ -15136,7 +15136,7 @@
      "state_index": 2,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     },
     {
      "point": 12,
@@ -15152,7 +15152,7 @@
      "state_index": 6,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #12 pwrite(docs/bob~4.tmp, off=0, len=35); namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "lost #6 pwrite(docs/bob~4.tmp, off=0, len=35); namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     }
    ],
    "seconds": 0.006
@@ -15269,7 +15269,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/report.md~1.tmp), #8 rename(docs/report.md~1.tmp -> docs/report.md)"
+     "crash": "namespace ops not persisted: #1 creat(docs/report.md~1.tmp), #4 rename(docs/report.md~1.tmp -> docs/report.md)"
     },
     {
      "point": 11,
@@ -15277,7 +15277,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/report.md~1.tmp -> docs/report.md)"
+     "crash": "namespace ops not persisted: #4 rename(docs/report.md~1.tmp -> docs/report.md)"
     }
    ],
    "seconds": 0.003
@@ -15355,7 +15355,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 unlink(docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #1 unlink(docs/inventory.csv)"
     }
    ],
    "seconds": 0.001
@@ -15542,7 +15542,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/notes.txt~2.tmp), #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
+     "crash": "namespace ops not persisted: #1 creat(docs/notes.txt~2.tmp), #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
     },
     {
      "point": 11,
@@ -15550,7 +15550,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
+     "crash": "namespace ops not persisted: #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
     },
     {
      "point": 14,
@@ -15558,7 +15558,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/notes.txt~2.tmp), #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
+     "crash": "namespace ops not persisted: #1 creat(docs/notes.txt~2.tmp), #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #5 creat(docs/notes.txt~3.tmp)"
     },
     {
      "point": 14,
@@ -15566,10 +15566,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
+     "crash": "namespace ops not persisted: #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #5 creat(docs/notes.txt~3.tmp)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   {
    "spec": "shadow/no-dirsync",
@@ -15683,7 +15683,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/report.csv~2.tmp), #8 rename(docs/report.csv~2.tmp -> docs/report.csv)"
+     "crash": "namespace ops not persisted: #1 creat(docs/report.csv~2.tmp), #4 rename(docs/report.csv~2.tmp -> docs/report.csv)"
     },
     {
      "point": 11,
@@ -15691,10 +15691,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/report.csv~2.tmp -> docs/report.csv)"
+     "crash": "namespace ops not persisted: #4 rename(docs/report.csv~2.tmp -> docs/report.csv)"
     }
    ],
-   "seconds": 0.015
+   "seconds": 0.014
   },
   {
    "spec": "undo",
@@ -15852,7 +15852,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.077
+   "seconds": 0.072
   },
   {
    "spec": "undo",
@@ -16207,7 +16207,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.009
+   "seconds": 0.008
   },
   {
    "spec": "undo",
@@ -16352,7 +16352,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.026
+   "seconds": 0.024
   },
   {
    "spec": "undo",
@@ -16614,7 +16614,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.021
+   "seconds": 0.02
   },
   {
    "spec": "undo",
@@ -16759,7 +16759,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.208
+   "seconds": 0.161
   },
   {
    "spec": "undo/no-journal-sync",
@@ -16913,7 +16913,7 @@
      "state_index": 12,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -16921,7 +16921,7 @@
      "state_index": 13,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -16929,7 +16929,7 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "inventory.csv: payload checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -16937,10 +16937,10 @@
      "state_index": 15,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.126
+   "seconds": 0.101
   },
   {
    "spec": "undo/no-journal-sync",
@@ -17124,7 +17124,7 @@
      "state_index": 4,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -17132,7 +17132,7 @@
      "state_index": 7,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -17140,7 +17140,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=101) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=101) persisted only as a size change (zeros)"
     },
     {
      "point": 6,
@@ -17148,7 +17148,7 @@
      "state_index": 9,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101)"
     },
     {
      "point": 7,
@@ -17156,7 +17156,7 @@
      "state_index": 14,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 7,
@@ -17164,7 +17164,7 @@
      "state_index": 19,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 7,
@@ -17172,7 +17172,7 @@
      "state_index": 20,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=101) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=101) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -17180,10 +17180,10 @@
      "state_index": 21,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101)"
     }
    ],
-   "seconds": 0.038
+   "seconds": 0.033
   },
   {
    "spec": "undo/no-journal-sync",
@@ -17350,7 +17350,7 @@
      "state_index": 6,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=20), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=20), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -17358,7 +17358,7 @@
      "state_index": 7,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -17366,7 +17366,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=20) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=20) persisted only as a size change (zeros)"
     },
     {
      "point": 6,
@@ -17374,10 +17374,10 @@
      "state_index": 9,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=20)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=20)"
     }
    ],
-   "seconds": 0.015
+   "seconds": 0.014
   },
   {
    "spec": "undo/no-journal-sync",
@@ -17509,7 +17509,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.038
+   "seconds": 0.035
   },
   {
    "spec": "undo/no-journal-sync",
@@ -17755,7 +17755,7 @@
      "state_index": 5,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 312",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
     },
     {
      "point": 6,
@@ -17763,7 +17763,7 @@
      "state_index": 10,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 312",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
     },
     {
      "point": 6,
@@ -17771,7 +17771,7 @@
      "state_index": 12,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 312",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244); #5 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244); #3 pwrite(docs/notes.txt, off=0, len=336) persisted only as a size change (zeros)"
     },
     {
      "point": 18,
@@ -17779,10 +17779,10 @@
      "state_index": 4,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 300, file has 312",
-     "crash": "lost #14 pwrite(undo.journal, off=512, len=356), #15 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #7 pwrite(undo.journal, off=512, len=356), #8 pwrite(undo.journal, off=0, len=512)"
     }
    ],
-   "seconds": 0.033
+   "seconds": 0.029
   },
   {
    "spec": "undo/no-journal-sync",
@@ -17922,7 +17922,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -17930,7 +17930,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -17938,7 +17938,7 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -17946,10 +17946,10 @@
      "state_index": 19,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.286
+   "seconds": 0.198
   },
   {
    "spec": "wal",
@@ -18107,7 +18107,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.059
+   "seconds": 0.047
   },
   {
    "spec": "wal",
@@ -18607,7 +18607,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   {
    "spec": "wal",
@@ -18791,7 +18791,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.018
+   "seconds": 0.017
   },
   {
    "spec": "wal",
@@ -18936,7 +18936,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.1
+   "seconds": 0.097
   },
   {
    "spec": "wal/no-checksum",
@@ -19102,10 +19102,10 @@
      "state_index": 6,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-464 from the new version, bytes 464-984 are zeros, bytes 984-1167 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=1250) torn: bytes 512-1024 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=1250) torn: bytes 512-1024 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.048
+   "seconds": 0.047
   },
   {
    "spec": "wal/no-checksum",
@@ -19460,7 +19460,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.019
+   "seconds": 0.02
   },
   {
    "spec": "wal/no-checksum",
@@ -19605,7 +19605,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.006
   },
   {
    "spec": "wal/no-checksum",
@@ -19789,7 +19789,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.017
+   "seconds": 0.025
   },
   {
    "spec": "wal/no-checksum",
@@ -19942,7 +19942,7 @@
      "state_index": 10,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-467 from the new version, bytes 467-983 are zeros, bytes 983-21482 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=21562) torn: bytes 512-1024 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=21562) torn: bytes 512-1024 never reached the disk, both ends did (sectors written out of order)"
     },
     {
      "point": 3,
@@ -19950,7 +19950,7 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-10707 from the new version, bytes 10707-11219 are zeros, bytes 11219-21482 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=21562) torn: bytes 10752-11264 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=21562) torn: bytes 10752-11264 never reached the disk, both ends did (sectors written out of order)"
     },
     {
      "point": 3,
@@ -19958,10 +19958,10 @@
      "state_index": 12,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-20947 from the new version, bytes 20947-21482 are zeros",
-     "crash": "#2 pwrite(wal.log, off=512, len=21562) torn: bytes 20992-21504 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=21562) torn: bytes 20992-21504 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.098
+   "seconds": 0.114
   },
   {
    "spec": "wal/early-ack",
@@ -20115,7 +20115,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250)"
     },
     {
      "point": 6,
@@ -20123,7 +20123,7 @@
      "state_index": 9,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 512 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -20131,7 +20131,7 @@
      "state_index": 10,
      "code": "DETECTED",
      "detail": "inventory.csv: payload checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the last 679 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -20139,10 +20139,10 @@
      "state_index": 11,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 1024 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.087
+   "seconds": 0.068
   },
   {
    "spec": "wal/early-ack",
@@ -20326,7 +20326,7 @@
      "state_index": 3,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135)"
     },
     {
      "point": 6,
@@ -20334,7 +20334,7 @@
      "state_index": 5,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
     },
     {
      "point": 7,
@@ -20342,7 +20342,7 @@
      "state_index": 3,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135), #6 ftruncate(data/alice, 35)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135), #3 ftruncate(data/alice, 35)"
     },
     {
      "point": 7,
@@ -20350,7 +20350,7 @@
      "state_index": 4,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 12, file has 11",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135), #5 pwrite(data/alice, off=0, len=35)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135), #2 pwrite(data/alice, off=0, len=35)"
     },
     {
      "point": 7,
@@ -20358,7 +20358,7 @@
      "state_index": 9,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135)"
     },
     {
      "point": 7,
@@ -20366,7 +20366,7 @@
      "state_index": 11,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -20374,7 +20374,7 @@
      "state_index": 0,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135)"
     },
     {
      "point": 8,
@@ -20382,10 +20382,10 @@
      "state_index": 2,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.044
+   "seconds": 0.025
   },
   {
    "spec": "wal/early-ack",
@@ -20552,7 +20552,7 @@
      "state_index": 5,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=892)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=892)"
     },
     {
      "point": 6,
@@ -20560,7 +20560,7 @@
      "state_index": 7,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the first 512 of 892 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: only the first 512 of 892 bytes persisted"
     },
     {
      "point": 6,
@@ -20568,7 +20568,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the last 380 of 892 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: only the last 380 of 892 bytes persisted"
     },
     {
      "point": 6,
@@ -20576,10 +20576,10 @@
      "state_index": 9,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.034
+   "seconds": 0.027
   },
   {
    "spec": "wal/early-ack",
@@ -20881,7 +20881,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391)"
     },
     {
      "point": 5,
@@ -20889,7 +20889,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "#2 pwrite(wal.log, off=512, len=391) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(wal.log, off=512, len=391) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -20897,7 +20897,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379)"
     },
     {
      "point": 8,
@@ -20905,7 +20905,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #7 pwrite(wal.log, off=903, len=379); #2 pwrite(wal.log, off=512, len=391) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(wal.log, off=903, len=379); #1 pwrite(wal.log, off=512, len=391) persisted only as a size change (zeros)"
     },
     {
      "point": 11,
@@ -20913,7 +20913,7 @@
      "state_index": 8,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 300",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) persisted only as a size change (zeros)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379); #3 pwrite(data/notes.txt, off=0, len=324) persisted only as a size change (zeros)"
     },
     {
      "point": 11,
@@ -20921,10 +20921,10 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 300",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391); #10 pwrite(data/notes.txt, off=0, len=324) persisted only as a size change (zeros)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391); #3 pwrite(data/notes.txt, off=0, len=324) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.048
+   "seconds": 0.045
   },
   {
    "spec": "wal/early-ack",
@@ -21064,7 +21064,7 @@
      "state_index": 15,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the first 512 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -21072,7 +21072,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the last 20994 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -21080,7 +21080,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -21088,10 +21088,10 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.137
+   "seconds": 0.126
   },
   {
    "spec": "cow",
@@ -21342,7 +21342,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "cow",
@@ -21461,7 +21461,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   {
    "spec": "cow",
@@ -21567,7 +21567,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.001
   },
   {
    "spec": "cow",
@@ -21883,7 +21883,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.016
+   "seconds": 0.012
   },
   {
    "spec": "cow/no-barrier",
@@ -21997,7 +21997,7 @@
      "state_index": 26,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=4096, len=1167)"
+     "crash": "lost #1 pwrite(volume.img, off=4096, len=1167)"
     },
     {
      "point": 7,
@@ -22005,7 +22005,7 @@
      "state_index": 29,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the first 512 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the first 512 of 1167 bytes persisted"
     },
     {
      "point": 7,
@@ -22013,7 +22013,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the last 655 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the last 655 of 1167 bytes persisted"
     },
     {
      "point": 7,
@@ -22021,10 +22021,10 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the first 1024 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the first 1024 of 1167 bytes persisted"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.006
   },
   {
    "spec": "cow/no-barrier",
@@ -22151,7 +22151,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=3072, len=11), #3 pwrite(volume.img, off=3584, len=11)"
+     "crash": "lost #1 pwrite(volume.img, off=3072, len=11), #2 pwrite(volume.img, off=3584, len=11)"
     },
     {
      "point": 8,
@@ -22159,7 +22159,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "bob: document 'bob' (generation 3) fails its checksum",
-     "crash": "lost #3 pwrite(volume.img, off=3584, len=11)"
+     "crash": "lost #2 pwrite(volume.img, off=3584, len=11)"
     },
     {
      "point": 8,
@@ -22167,7 +22167,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #3 pwrite(volume.img, off=3584, len=11); #2 pwrite(volume.img, off=3072, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(volume.img, off=3584, len=11); #1 pwrite(volume.img, off=3072, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -22175,10 +22175,10 @@
      "state_index": 33,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=3072, len=11)"
+     "crash": "lost #1 pwrite(volume.img, off=3072, len=11)"
     }
    ],
-   "seconds": 0.01
+   "seconds": 0.006
   },
   {
    "spec": "cow/no-barrier",
@@ -22292,7 +22292,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=1536, len=813)"
+     "crash": "lost #1 pwrite(volume.img, off=1536, len=813)"
     },
     {
      "point": 7,
@@ -22300,7 +22300,7 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the first 512 of 813 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) torn: only the first 512 of 813 bytes persisted"
     },
     {
      "point": 7,
@@ -22308,7 +22308,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the last 301 of 813 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) torn: only the last 301 of 813 bytes persisted"
     },
     {
      "point": 7,
@@ -22316,10 +22316,10 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.004
   },
   {
    "spec": "cow/no-barrier",
@@ -22412,7 +22412,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   {
    "spec": "cow/no-barrier",
@@ -22592,7 +22592,7 @@
      "state_index": 11,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=2560, len=312)"
+     "crash": "lost #1 pwrite(volume.img, off=2560, len=312)"
     },
     {
      "point": 7,
@@ -22600,7 +22600,7 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=2560, len=312) persisted only as a size change (zeros)"
+     "crash": "#1 pwrite(volume.img, off=2560, len=312) persisted only as a size change (zeros)"
     },
     {
      "point": 17,
@@ -22608,7 +22608,7 @@
      "state_index": 11,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 4) fails its checksum",
-     "crash": "lost #12 pwrite(volume.img, off=3584, len=300)"
+     "crash": "lost #5 pwrite(volume.img, off=3584, len=300)"
     },
     {
      "point": 17,
@@ -22616,10 +22616,10 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 4) fails its checksum",
-     "crash": "#12 pwrite(volume.img, off=3584, len=300) persisted only as a size change (zeros)"
+     "crash": "#5 pwrite(volume.img, off=3584, len=300) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.014
+   "seconds": 0.006
   },
   {
    "spec": "cow/no-barrier",
@@ -22733,7 +22733,7 @@
      "state_index": 44,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=32768, len=21482)"
+     "crash": "lost #1 pwrite(volume.img, off=32768, len=21482)"
     },
     {
      "point": 7,
@@ -22741,7 +22741,7 @@
      "state_index": 47,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the first 512 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the first 512 of 21482 bytes persisted"
     },
     {
      "point": 7,
@@ -22749,7 +22749,7 @@
      "state_index": 48,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the last 20970 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the last 20970 of 21482 bytes persisted"
     },
     {
      "point": 7,
@@ -22757,10 +22757,10 @@
      "state_index": 49,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the first 7168 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the first 7168 of 21482 bytes persisted"
     }
    ],
-   "seconds": 0.029
+   "seconds": 0.024
   },
   {
    "spec": "cow/one-super",
@@ -22879,7 +22879,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.004
   },
   {
    "spec": "cow/one-super",
@@ -23011,7 +23011,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "cow/one-super",
@@ -23130,7 +23130,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   {
    "spec": "cow/one-super",
@@ -23236,7 +23236,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.002
+   "seconds": 0.001
   },
   {
    "spec": "cow/one-super",
@@ -23552,7 +23552,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.019
+   "seconds": 0.011
   },
   {
    "spec": "naive",
@@ -23680,7 +23680,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-16 from the new version, bytes 16-1584 from the old version",
-     "crash": "#2 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "#1 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 3,
@@ -23688,7 +23688,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-512 from the new version, bytes 512-1584 from the old version",
-     "crash": "#2 pwrite(docs/inventory.csv, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
+     "crash": "#1 pwrite(docs/inventory.csv, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
     },
     {
      "point": 3,
@@ -23696,7 +23696,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-176 from the new version, bytes 176-1584 from the old version",
-     "crash": "#2 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 176 of 512 bytes persisted"
+     "crash": "#1 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 176 of 512 bytes persisted"
     },
     {
      "point": 8,
@@ -23704,10 +23704,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143), #5 ftruncate(docs/inventory.csv, 1167)"
+     "crash": "lost #1 pwrite(docs/inventory.csv, off=0, len=512), #2 pwrite(docs/inventory.csv, off=512, len=512), #3 pwrite(docs/inventory.csv, off=1024, len=143), #4 ftruncate(docs/inventory.csv, 1167)"
     }
    ],
-   "seconds": 0.202
+   "seconds": 0.13
   },
   {
    "spec": "naive",
@@ -23825,7 +23825,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #2 ftruncate(docs/alice, 11)"
     },
     {
      "point": 4,
@@ -23833,7 +23833,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "alice: truncated: only the first 11 of 12 bytes of the old version",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11)"
     },
     {
      "point": 6,
@@ -23841,7 +23841,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #3 ftruncate(docs/alice, 11), #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #2 ftruncate(docs/alice, 11), #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 8,
@@ -23849,7 +23849,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11), #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11), #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 4,
@@ -23865,7 +23865,7 @@
      "state_index": 3,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11)"
     },
     {
      "point": 6,
@@ -23873,7 +23873,7 @@
      "state_index": 4,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #3 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 8,
@@ -23881,10 +23881,10 @@
      "state_index": 3,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/alice, 11)"
+     "crash": "lost #1 pwrite(docs/alice, off=0, len=11), #2 ftruncate(docs/alice, 11)"
     }
    ],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   {
    "spec": "naive",
@@ -23998,7 +23998,7 @@
      "state_index": 14,
      "code": "CORRUPT",
      "detail": "report.md: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512)"
     },
     {
      "point": 4,
@@ -24014,7 +24014,7 @@
      "state_index": 16,
      "code": "CORRUPT",
      "detail": "report.md: truncated: only the first 16 of 813 bytes of the new version",
-     "crash": "#3 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 7,
@@ -24022,7 +24022,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512), #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512), #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -24030,7 +24030,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -24038,7 +24038,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 7,
@@ -24046,10 +24046,10 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.021
+   "seconds": 0.018
   },
   {
    "spec": "naive",
@@ -24127,7 +24127,7 @@
      "crash": "namespace ops not persisted: #1 unlink(docs/inventory.csv)"
     }
    ],
-   "seconds": 0.002
+   "seconds": 0.001
   },
   {
    "spec": "naive",
@@ -24250,7 +24250,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "notes.txt: 200 bytes: mixture of 82% old, 6% unrecognised bytes",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 16 of 312 bytes persisted"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 16 of 312 bytes persisted"
     },
     {
      "point": 3,
@@ -24258,7 +24258,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "notes.txt: 312 bytes: mixture of 90% unrecognised bytes, 4% old, 2% new",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 296 of 312 bytes persisted"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 296 of 312 bytes persisted"
     },
     {
      "point": 3,
@@ -24266,7 +24266,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-124 are unrecognised bytes, bytes 124-200 from the old version",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 112 of 312 bytes persisted"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 112 of 312 bytes persisted"
     },
     {
      "point": 3,
@@ -24274,7 +24274,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-155 from the old version, bytes 155-312 are unrecognised bytes",
-     "crash": "#2 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 200 of 312 bytes persisted"
+     "crash": "#1 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 200 of 312 bytes persisted"
     },
     {
      "point": 5,
@@ -24282,7 +24282,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 8,
@@ -24290,7 +24290,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300)"
     },
     {
      "point": 9,
@@ -24298,7 +24298,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300), #8 ftruncate(docs/notes.txt, 300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300), #3 ftruncate(docs/notes.txt, 300)"
     },
     {
      "point": 11,
@@ -24306,10 +24306,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312), #7 pwrite(docs/notes.txt, off=0, len=300), #8 ftruncate(docs/notes.txt, 300)"
+     "crash": "lost #1 pwrite(docs/notes.txt, off=0, len=312), #2 pwrite(docs/notes.txt, off=0, len=300), #3 ftruncate(docs/notes.txt, 300)"
     }
    ],
-   "seconds": 0.053
+   "seconds": 0.041
   },
   {
    "spec": "naive",
@@ -24465,7 +24465,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-61 from the new version, bytes 61-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 32 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 32 of 4096 bytes persisted"
     },
     {
      "point": 3,
@@ -24473,7 +24473,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-4096 from the new version, bytes 4096-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 4064 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 4064 of 4096 bytes persisted"
     },
     {
      "point": 3,
@@ -24481,7 +24481,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-1376 from the new version, bytes 1376-15690 from the old version",
-     "crash": "#2 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 1376 of 4096 bytes persisted"
+     "crash": "#1 pwrite(docs/report.csv, off=0, len=4096) torn: only the first 1376 of 4096 bytes persisted"
     },
     {
      "point": 10,
@@ -24489,10 +24489,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002)"
+     "crash": "lost #1 pwrite(docs/report.csv, off=0, len=4096), #2 pwrite(docs/report.csv, off=4096, len=4096), #3 pwrite(docs/report.csv, off=8192, len=4096), #4 pwrite(docs/report.csv, off=12288, len=4096), #5 pwrite(docs/report.csv, off=16384, len=4096), #6 pwrite(docs/report.csv, off=20480, len=1002)"
     }
    ],
-   "seconds": 4.322
+   "seconds": 4.323
   },
   {
    "spec": "naive/trunc",
@@ -24620,7 +24620,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "inventory.csv: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/inventory.csv, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/inventory.csv, off=0, len=512)"
     },
     {
      "point": 4,
@@ -24628,7 +24628,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-512 from the new version, bytes 512-1584 from the old version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0)"
     },
     {
      "point": 4,
@@ -24636,7 +24636,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-16 from the new version, bytes 16-1584 from the old version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0); #3 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0); #2 pwrite(docs/inventory.csv, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 8,
@@ -24644,7 +24644,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143)"
     },
     {
      "point": 8,
@@ -24652,7 +24652,7 @@
      "state_index": 14,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #4 pwrite(docs/inventory.csv, off=512, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143); #3 pwrite(docs/inventory.csv, off=0, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=512, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143); #2 pwrite(docs/inventory.csv, off=0, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -24660,7 +24660,7 @@
      "state_index": 27,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #5 pwrite(docs/inventory.csv, off=1024, len=143); #4 pwrite(docs/inventory.csv, off=512, len=512) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=1024, len=143); #3 pwrite(docs/inventory.csv, off=512, len=512) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -24668,10 +24668,10 @@
      "state_index": 40,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/inventory.csv, 0), #3 pwrite(docs/inventory.csv, off=0, len=512), #4 pwrite(docs/inventory.csv, off=512, len=512); #5 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/inventory.csv, 0), #2 pwrite(docs/inventory.csv, off=0, len=512), #3 pwrite(docs/inventory.csv, off=512, len=512); #4 pwrite(docs/inventory.csv, off=1024, len=143) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 0.136
+   "seconds": 0.156
   },
   {
    "spec": "naive/trunc",
@@ -24804,7 +24804,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "alice: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/alice, off=0, len=11)"
+     "crash": "lost #2 pwrite(docs/alice, off=0, len=11)"
     },
     {
      "point": 4,
@@ -24812,7 +24812,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "alice: mixture: bytes 0-11 from the new version, bytes 11-12 from the old version",
-     "crash": "lost #2 ftruncate(docs/alice, 0)"
+     "crash": "lost #1 ftruncate(docs/alice, 0)"
     },
     {
      "point": 4,
@@ -24820,7 +24820,7 @@
      "state_index": 5,
      "code": "CORRUPT",
      "detail": "alice: 11 bytes, all zeros",
-     "crash": "#3 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "#2 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 9,
@@ -24828,7 +24828,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11)"
     },
     {
      "point": 9,
@@ -24836,7 +24836,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11); #3 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11); #2 pwrite(docs/alice, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 9,
@@ -24844,7 +24844,7 @@
      "state_index": 6,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0); #6 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0); #4 pwrite(docs/bob, off=0, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 4,
@@ -24860,7 +24860,7 @@
      "state_index": 5,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 ftruncate(docs/bob, 0)"
+     "crash": "lost #3 ftruncate(docs/bob, 0)"
     },
     {
      "point": 7,
@@ -24868,7 +24868,7 @@
      "state_index": 5,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=old, bob=new",
-     "crash": "lost #2 ftruncate(docs/alice, 0), #3 pwrite(docs/alice, off=0, len=11), #5 ftruncate(docs/bob, 0)"
+     "crash": "lost #1 ftruncate(docs/alice, 0), #2 pwrite(docs/alice, off=0, len=11), #3 ftruncate(docs/bob, 0)"
     },
     {
      "point": 7,
@@ -24876,10 +24876,10 @@
      "state_index": 7,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #5 ftruncate(docs/bob, 0), #6 pwrite(docs/bob, off=0, len=11)"
+     "crash": "lost #3 ftruncate(docs/bob, 0), #4 pwrite(docs/bob, off=0, len=11)"
     }
    ],
-   "seconds": 0.007
+   "seconds": 0.009
   },
   {
    "spec": "naive/trunc",
@@ -24993,7 +24993,7 @@
      "state_index": 14,
      "code": "CORRUPT",
      "detail": "report.md: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512)"
     },
     {
      "point": 4,
@@ -25009,7 +25009,7 @@
      "state_index": 16,
      "code": "CORRUPT",
      "detail": "report.md: truncated: only the first 16 of 813 bytes of the new version",
-     "crash": "#3 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 7,
@@ -25017,7 +25017,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #3 pwrite(docs/report.md, off=0, len=512), #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #2 pwrite(docs/report.md, off=0, len=512), #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -25025,7 +25025,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md)"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md)"
     },
     {
      "point": 7,
@@ -25033,7 +25033,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) torn: only the first 16 of 512 bytes persisted"
     },
     {
      "point": 7,
@@ -25041,10 +25041,10 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #4 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #2 creat(docs/report.md); #3 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
+     "crash": "lost #3 pwrite(docs/report.md, off=512, len=301); namespace ops not persisted: #1 creat(docs/report.md); #2 pwrite(docs/report.md, off=0, len=512) torn: only the last 496 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.019
+   "seconds": 0.02
   },
   {
    "spec": "naive/trunc",
@@ -25267,7 +25267,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "notes.txt: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #2 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 4,
@@ -25275,7 +25275,7 @@
      "state_index": 3,
      "code": "CORRUPT",
      "detail": "notes.txt: 200 bytes: mixture of 82% old, 6% unrecognised bytes",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0); #3 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 16 of 312 bytes persisted"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0); #2 pwrite(docs/notes.txt, off=0, len=312) torn: only the first 16 of 312 bytes persisted"
     },
     {
      "point": 4,
@@ -25283,7 +25283,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "notes.txt: 312 bytes: mixture of 90% unrecognised bytes, 4% old, 2% new",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0); #3 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 296 of 312 bytes persisted"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0); #2 pwrite(docs/notes.txt, off=0, len=312) torn: only the last 296 of 312 bytes persisted"
     },
     {
      "point": 6,
@@ -25291,7 +25291,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312)"
     },
     {
      "point": 9,
@@ -25299,7 +25299,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0)"
     },
     {
      "point": 10,
@@ -25307,7 +25307,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0), #4 pwrite(docs/notes.txt, off=0, len=300)"
     },
     {
      "point": 12,
@@ -25315,10 +25315,10 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/notes.txt, 0), #3 pwrite(docs/notes.txt, off=0, len=312), #8 ftruncate(docs/notes.txt, 0), #9 pwrite(docs/notes.txt, off=0, len=300)"
+     "crash": "lost #1 ftruncate(docs/notes.txt, 0), #2 pwrite(docs/notes.txt, off=0, len=312), #3 ftruncate(docs/notes.txt, 0), #4 pwrite(docs/notes.txt, off=0, len=300)"
     }
    ],
-   "seconds": 0.044
+   "seconds": 0.051
   },
   {
    "spec": "naive/trunc",
@@ -25488,7 +25488,7 @@
      "state_index": 1,
      "code": "CORRUPT",
      "detail": "report.csv: empty file (0 bytes)",
-     "crash": "lost #3 pwrite(docs/report.csv, off=0, len=4096)"
+     "crash": "lost #2 pwrite(docs/report.csv, off=0, len=4096)"
     },
     {
      "point": 4,
@@ -25496,7 +25496,7 @@
      "state_index": 2,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-4096 from the new version, bytes 4096-15690 from the old version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0)"
     },
     {
      "point": 4,
@@ -25504,7 +25504,7 @@
      "state_index": 4,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-4096 from the new version, bytes 4096-15690 from the old version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0); #3 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 4080 of 4096 bytes persisted"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0); #2 pwrite(docs/report.csv, off=0, len=4096) torn: only the last 4080 of 4096 bytes persisted"
     },
     {
      "point": 11,
@@ -25512,7 +25512,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=4096, len=4096), #5 pwrite(docs/report.csv, off=8192, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002)"
     },
     {
      "point": 11,
@@ -25520,7 +25520,7 @@
      "state_index": 13,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #5 pwrite(docs/report.csv, off=8192, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002); #4 pwrite(docs/report.csv, off=4096, len=4096) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=8192, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002); #3 pwrite(docs/report.csv, off=4096, len=4096) persisted only as a size change (zeros)"
     },
     {
      "point": 11,
@@ -25528,10 +25528,10 @@
      "state_index": 22,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 ftruncate(docs/report.csv, 0), #3 pwrite(docs/report.csv, off=0, len=4096), #4 pwrite(docs/report.csv, off=4096, len=4096), #6 pwrite(docs/report.csv, off=12288, len=4096), #7 pwrite(docs/report.csv, off=16384, len=4096), #8 pwrite(docs/report.csv, off=20480, len=1002); #5 pwrite(docs/report.csv, off=8192, len=4096) persisted only as a size change (zeros)"
+     "crash": "lost #1 ftruncate(docs/report.csv, 0), #2 pwrite(docs/report.csv, off=0, len=4096), #3 pwrite(docs/report.csv, off=4096, len=4096), #5 pwrite(docs/report.csv, off=12288, len=4096), #6 pwrite(docs/report.csv, off=16384, len=4096), #7 pwrite(docs/report.csv, off=20480, len=1002); #4 pwrite(docs/report.csv, off=8192, len=4096) persisted only as a size change (zeros)"
     }
    ],
-   "seconds": 4.542
+   "seconds": 5.051
   },
   {
    "spec": "shadow",
@@ -25859,7 +25859,7 @@
      "state_index": 0,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #13 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #6 creat(docs/bob~4.tmp)"
     },
     {
      "point": 14,
@@ -25870,7 +25870,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.01
+   "seconds": 0.009
   },
   {
    "spec": "shadow",
@@ -26385,7 +26385,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.014
+   "seconds": 0.013
   },
   {
    "spec": "shadow/no-fsync",
@@ -26501,7 +26501,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "inventory.csv: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191)"
+     "crash": "lost #2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191)"
     },
     {
      "point": 7,
@@ -26509,7 +26509,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "inventory.csv: file is 16 bytes, shorter than the 24-byte header",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
     },
     {
      "point": 7,
@@ -26517,7 +26517,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "inventory.csv: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
     },
     {
      "point": 7,
@@ -26525,10 +26525,10 @@
      "state_index": 32,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 376",
-     "crash": "#3 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
+     "crash": "#2 pwrite(docs/inventory.csv~2.tmp, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.019
+   "seconds": 0.014
   },
   {
    "spec": "shadow/no-fsync",
@@ -26703,7 +26703,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "alice: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/alice~3.tmp, off=0, len=35)"
+     "crash": "lost #2 pwrite(docs/alice~3.tmp, off=0, len=35)"
     },
     {
      "point": 7,
@@ -26711,7 +26711,7 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "alice: file is 16 bytes, shorter than the 24-byte header",
-     "crash": "#3 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
+     "crash": "#2 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
     },
     {
      "point": 7,
@@ -26719,7 +26719,7 @@
      "state_index": 19,
      "code": "DETECTED",
      "detail": "alice: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
+     "crash": "#2 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
     },
     {
      "point": 7,
@@ -26727,7 +26727,7 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 8",
-     "crash": "#3 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
+     "crash": "#2 pwrite(docs/alice~3.tmp, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
     },
     {
      "point": 7,
@@ -26751,7 +26751,7 @@
      "state_index": 1,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     },
     {
      "point": 12,
@@ -26762,7 +26762,7 @@
      "crash": "every issued operation reached the disk"
     }
    ],
-   "seconds": 0.034
+   "seconds": 0.035
   },
   {
    "spec": "shadow/no-fsync",
@@ -26878,7 +26878,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/report.md~1.tmp, off=0, len=837)"
+     "crash": "lost #2 pwrite(docs/report.md~1.tmp, off=0, len=837)"
     },
     {
      "point": 7,
@@ -26886,7 +26886,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "report.md: file is 16 bytes, shorter than the 24-byte header",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 16 of 837 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 16 of 837 bytes persisted"
     },
     {
      "point": 7,
@@ -26894,7 +26894,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "report.md: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the last 821 of 837 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the last 821 of 837 bytes persisted"
     },
     {
      "point": 7,
@@ -26902,7 +26902,7 @@
      "state_index": 32,
      "code": "DETECTED",
      "detail": "report.md: length mismatch: header says 813, file has 264",
-     "crash": "#3 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 288 of 837 bytes persisted"
+     "crash": "#2 pwrite(docs/report.md~1.tmp, off=0, len=837) torn: only the first 288 of 837 bytes persisted"
     }
    ],
    "seconds": 0.011
@@ -27171,7 +27171,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "notes.txt: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
+     "crash": "lost #2 pwrite(docs/notes.txt~2.tmp, off=0, len=336)"
     },
     {
      "point": 7,
@@ -27179,7 +27179,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "notes.txt: file is 16 bytes, shorter than the 24-byte header",
-     "crash": "#3 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the first 16 of 336 bytes persisted"
+     "crash": "#2 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the first 16 of 336 bytes persisted"
     },
     {
      "point": 7,
@@ -27187,7 +27187,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "notes.txt: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the last 320 of 336 bytes persisted"
+     "crash": "#2 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the last 320 of 336 bytes persisted"
     },
     {
      "point": 7,
@@ -27195,10 +27195,10 @@
      "state_index": 32,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 312, file has 88",
-     "crash": "#3 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the first 112 of 336 bytes persisted"
+     "crash": "#2 pwrite(docs/notes.txt~2.tmp, off=0, len=336) torn: only the first 112 of 336 bytes persisted"
     }
    ],
-   "seconds": 0.039
+   "seconds": 0.044
   },
   {
    "spec": "shadow/no-fsync",
@@ -27314,7 +27314,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "report.csv: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(docs/report.csv~2.tmp, off=0, len=21506)"
+     "crash": "lost #2 pwrite(docs/report.csv~2.tmp, off=0, len=21506)"
     },
     {
      "point": 7,
@@ -27322,7 +27322,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "report.csv: file is 16 bytes, shorter than the 24-byte header",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
     },
     {
      "point": 7,
@@ -27330,7 +27330,7 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "report.csv: bad magic: not a SafeWrite document",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
     },
     {
      "point": 7,
@@ -27338,10 +27338,10 @@
      "state_index": 32,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 7144",
-     "crash": "#3 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "#2 pwrite(docs/report.csv~2.tmp, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.024
+   "seconds": 0.027
   },
   {
    "spec": "shadow/no-dirsync",
@@ -27455,7 +27455,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/inventory.csv~2.tmp), #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #1 creat(docs/inventory.csv~2.tmp), #4 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     },
     {
      "point": 11,
@@ -27463,10 +27463,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #4 rename(docs/inventory.csv~2.tmp -> docs/inventory.csv)"
     }
    ],
-   "seconds": 0.01
+   "seconds": 0.011
   },
   {
    "spec": "shadow/no-dirsync",
@@ -27639,7 +27639,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/alice~3.tmp), #8 rename(docs/alice~3.tmp -> docs/alice), #11 creat(docs/bob~4.tmp), #17 rename(docs/bob~4.tmp -> docs/bob)"
+     "crash": "namespace ops not persisted: #1 creat(docs/alice~3.tmp), #4 rename(docs/alice~3.tmp -> docs/alice), #5 creat(docs/bob~4.tmp), #8 rename(docs/bob~4.tmp -> docs/bob)"
     },
     {
      "point": 20,
@@ -27647,7 +27647,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/alice~3.tmp -> docs/alice), #11 creat(docs/bob~4.tmp), #17 rename(docs/bob~4.tmp -> docs/bob)"
+     "crash": "namespace ops not persisted: #4 rename(docs/alice~3.tmp -> docs/alice), #5 creat(docs/bob~4.tmp), #8 rename(docs/bob~4.tmp -> docs/bob)"
     },
     {
      "point": 9,
@@ -27663,7 +27663,7 @@
      "state_index": 2,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     },
     {
      "point": 12,
@@ -27679,7 +27679,7 @@
      "state_index": 16,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #12 pwrite(docs/bob~4.tmp, off=0, len=35); namespace ops not persisted: #11 creat(docs/bob~4.tmp)"
+     "crash": "lost #6 pwrite(docs/bob~4.tmp, off=0, len=35); namespace ops not persisted: #5 creat(docs/bob~4.tmp)"
     }
    ],
    "seconds": 0.011
@@ -27796,7 +27796,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/report.md~1.tmp), #8 rename(docs/report.md~1.tmp -> docs/report.md)"
+     "crash": "namespace ops not persisted: #1 creat(docs/report.md~1.tmp), #4 rename(docs/report.md~1.tmp -> docs/report.md)"
     },
     {
      "point": 11,
@@ -27804,7 +27804,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/report.md~1.tmp -> docs/report.md)"
+     "crash": "namespace ops not persisted: #4 rename(docs/report.md~1.tmp -> docs/report.md)"
     }
    ],
    "seconds": 0.007
@@ -27882,7 +27882,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 unlink(docs/inventory.csv)"
+     "crash": "namespace ops not persisted: #1 unlink(docs/inventory.csv)"
     }
    ],
    "seconds": 0.001
@@ -28069,7 +28069,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/notes.txt~2.tmp), #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
+     "crash": "namespace ops not persisted: #1 creat(docs/notes.txt~2.tmp), #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
     },
     {
      "point": 11,
@@ -28077,7 +28077,7 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
+     "crash": "namespace ops not persisted: #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt)"
     },
     {
      "point": 14,
@@ -28085,7 +28085,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/notes.txt~2.tmp), #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
+     "crash": "namespace ops not persisted: #1 creat(docs/notes.txt~2.tmp), #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #5 creat(docs/notes.txt~3.tmp)"
     },
     {
      "point": 14,
@@ -28093,10 +28093,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #13 creat(docs/notes.txt~3.tmp)"
+     "crash": "namespace ops not persisted: #4 rename(docs/notes.txt~2.tmp -> docs/notes.txt), #5 creat(docs/notes.txt~3.tmp)"
     }
    ],
-   "seconds": 0.021
+   "seconds": 0.02
   },
   {
    "spec": "shadow/no-dirsync",
@@ -28210,7 +28210,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #2 creat(docs/report.csv~2.tmp), #8 rename(docs/report.csv~2.tmp -> docs/report.csv)"
+     "crash": "namespace ops not persisted: #1 creat(docs/report.csv~2.tmp), #4 rename(docs/report.csv~2.tmp -> docs/report.csv)"
     },
     {
      "point": 11,
@@ -28218,10 +28218,10 @@
      "state_index": 1,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "namespace ops not persisted: #8 rename(docs/report.csv~2.tmp -> docs/report.csv)"
+     "crash": "namespace ops not persisted: #4 rename(docs/report.csv~2.tmp -> docs/report.csv)"
     }
    ],
-   "seconds": 0.017
+   "seconds": 0.015
   },
   {
    "spec": "undo",
@@ -28379,7 +28379,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.154
+   "seconds": 0.15
   },
   {
    "spec": "undo",
@@ -28563,7 +28563,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.144
+   "seconds": 0.145
   },
   {
    "spec": "undo",
@@ -28879,7 +28879,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.05
+   "seconds": 0.051
   },
   {
    "spec": "undo",
@@ -29141,7 +29141,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.126
+   "seconds": 0.125
   },
   {
    "spec": "undo",
@@ -29286,7 +29286,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.227
+   "seconds": 0.212
   },
   {
    "spec": "undo/no-journal-sync",
@@ -29440,7 +29440,7 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -29448,7 +29448,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "inventory.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -29456,7 +29456,7 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "inventory.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -29464,10 +29464,10 @@
      "state_index": 23,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=1632), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=1632), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.17
+   "seconds": 0.187
   },
   {
    "spec": "undo/no-journal-sync",
@@ -29652,7 +29652,7 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -29660,7 +29660,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "alice: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/alice, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/alice, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
     },
     {
      "point": 6,
@@ -29668,7 +29668,7 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "alice: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/alice, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/alice, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
     },
     {
      "point": 6,
@@ -29676,7 +29676,7 @@
      "state_index": 23,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/alice, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/alice, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
     },
     {
      "point": 7,
@@ -29684,7 +29684,7 @@
      "state_index": 93,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=101), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=101), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 7,
@@ -29692,7 +29692,7 @@
      "state_index": 140,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 7,
@@ -29700,7 +29700,7 @@
      "state_index": 141,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=101) torn: only the first 16 of 101 bytes persisted"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=101) torn: only the first 16 of 101 bytes persisted"
     },
     {
      "point": 7,
@@ -29708,10 +29708,10 @@
      "state_index": 142,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=101) torn: only the last 85 of 101 bytes persisted"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=101) torn: only the last 85 of 101 bytes persisted"
     }
    ],
-   "seconds": 0.18
+   "seconds": 0.195
   },
   {
    "spec": "undo/no-journal-sync",
@@ -29878,7 +29878,7 @@
      "state_index": 20,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=20), #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=20), #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -29886,7 +29886,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512)"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512)"
     },
     {
      "point": 6,
@@ -29894,7 +29894,7 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=20) torn: only the first 16 of 20 bytes persisted"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=20) torn: only the first 16 of 20 bytes persisted"
     },
     {
      "point": 6,
@@ -29902,10 +29902,10 @@
      "state_index": 23,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #3 pwrite(undo.journal, off=0, len=512); #2 pwrite(undo.journal, off=512, len=20) torn: only the last 4 of 20 bytes persisted"
+     "crash": "lost #2 pwrite(undo.journal, off=0, len=512); #1 pwrite(undo.journal, off=512, len=20) torn: only the last 4 of 20 bytes persisted"
     }
    ],
-   "seconds": 0.058
+   "seconds": 0.074
   },
   {
    "spec": "undo/no-journal-sync",
@@ -30037,7 +30037,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.064
+   "seconds": 0.107
   },
   {
    "spec": "undo/no-journal-sync",
@@ -30283,7 +30283,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "notes.txt: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) torn: only the first 16 of 336 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) torn: only the first 16 of 336 bytes persisted"
     },
     {
      "point": 6,
@@ -30291,7 +30291,7 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "notes.txt: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) torn: only the last 320 of 336 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) torn: only the last 320 of 336 bytes persisted"
     },
     {
      "point": 6,
@@ -30299,7 +30299,7 @@
      "state_index": 23,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 312, file has 200",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) torn: only the first 112 of 336 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) torn: only the first 112 of 336 bytes persisted"
     },
     {
      "point": 6,
@@ -30307,10 +30307,10 @@
      "state_index": 24,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 312",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=244), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/notes.txt, off=0, len=336) torn: only the last 224 of 336 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=244), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/notes.txt, off=0, len=336) torn: only the last 224 of 336 bytes persisted"
     }
    ],
-   "seconds": 0.114
+   "seconds": 0.184
   },
   {
    "spec": "undo/no-journal-sync",
@@ -30450,7 +30450,7 @@
      "state_index": 21,
      "code": "DETECTED",
      "detail": "report.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -30458,7 +30458,7 @@
      "state_index": 22,
      "code": "DETECTED",
      "detail": "report.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -30466,7 +30466,7 @@
      "state_index": 23,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -30474,10 +30474,10 @@
      "state_index": 24,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(undo.journal, off=512, len=15735), #3 pwrite(undo.journal, off=0, len=512); #5 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(undo.journal, off=512, len=15735), #2 pwrite(undo.journal, off=0, len=512); #3 pwrite(docs/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.116
+   "seconds": 0.145
   },
   {
    "spec": "wal",
@@ -30635,7 +30635,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.152
+   "seconds": 0.164
   },
   {
    "spec": "wal",
@@ -30819,7 +30819,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.104
+   "seconds": 0.109
   },
   {
    "spec": "wal",
@@ -30990,7 +30990,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.077
+   "seconds": 0.106
   },
   {
    "spec": "wal",
@@ -31135,7 +31135,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.024
+   "seconds": 0.037
   },
   {
    "spec": "wal",
@@ -31319,7 +31319,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.126
+   "seconds": 0.178
   },
   {
    "spec": "wal",
@@ -31464,7 +31464,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.128
+   "seconds": 0.176
   },
   {
    "spec": "wal/no-checksum",
@@ -31630,10 +31630,10 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "inventory.csv: mixture: bytes 0-576 from the new version, bytes 576-592 are zeros, bytes 592-1167 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=1250) torn: bytes 624-640 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=1250) torn: bytes 624-640 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.163
+   "seconds": 0.227
   },
   {
    "spec": "wal/no-checksum",
@@ -31817,7 +31817,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.107
+   "seconds": 0.132
   },
   {
    "spec": "wal/no-checksum",
@@ -31996,10 +31996,10 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "report.md: mixture: bytes 0-388 from the new version, bytes 388-404 are zeros, bytes 404-813 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: bytes 432-448 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: bytes 432-448 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.099
+   "seconds": 0.077
   },
   {
    "spec": "wal/no-checksum",
@@ -32144,7 +32144,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.025
+   "seconds": 0.022
   },
   {
    "spec": "wal/no-checksum",
@@ -32337,7 +32337,7 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-148 are unrecognised bytes, bytes 148-164 are zeros, bytes 164-312 are unrecognised bytes",
-     "crash": "#2 pwrite(wal.log, off=512, len=391) torn: bytes 192-208 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=391) torn: bytes 192-208 never reached the disk, both ends did (sectors written out of order)"
     },
     {
      "point": 10,
@@ -32345,10 +32345,10 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "notes.txt: mixture: bytes 0-141 from the new version, bytes 141-191 are zeros, bytes 191-300 from the new version",
-     "crash": "#9 pwrite(wal.log, off=903, len=379) torn: bytes 185-201 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#3 pwrite(wal.log, off=903, len=379) torn: bytes 185-201 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.122
+   "seconds": 0.116
   },
   {
    "spec": "wal/no-checksum",
@@ -32501,10 +32501,10 @@
      "state_index": 11,
      "code": "CORRUPT",
      "detail": "report.csv: mixture: bytes 0-10723 from the new version, bytes 10723-10740 are zeros, bytes 10740-21482 from the new version",
-     "crash": "#2 pwrite(wal.log, off=512, len=21562) torn: bytes 10768-10784 never reached the disk, both ends did (sectors written out of order)"
+     "crash": "#1 pwrite(wal.log, off=512, len=21562) torn: bytes 10768-10784 never reached the disk, both ends did (sectors written out of order)"
     }
    ],
-   "seconds": 0.116
+   "seconds": 0.121
   },
   {
    "spec": "wal/early-ack",
@@ -32658,7 +32658,7 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250)"
     },
     {
      "point": 6,
@@ -32666,7 +32666,7 @@
      "state_index": 15,
      "code": "DETECTED",
      "detail": "inventory.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 16 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -32674,7 +32674,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "inventory.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the last 1175 of 1191 bytes persisted"
     },
     {
      "point": 6,
@@ -32682,10 +32682,10 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "inventory.csv: length mismatch: header says 1167, file has 1584",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=1250); #5 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=1250); #2 pwrite(data/inventory.csv, off=0, len=1191) torn: only the first 400 of 1191 bytes persisted"
     }
    ],
-   "seconds": 0.154
+   "seconds": 0.18
   },
   {
    "spec": "wal/early-ack",
@@ -32870,7 +32870,7 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135)"
     },
     {
      "point": 6,
@@ -32878,7 +32878,7 @@
      "state_index": 15,
      "code": "DETECTED",
      "detail": "alice: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135); #5 pwrite(data/alice, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135); #2 pwrite(data/alice, off=0, len=35) torn: only the first 16 of 35 bytes persisted"
     },
     {
      "point": 6,
@@ -32886,7 +32886,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "alice: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135); #5 pwrite(data/alice, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135); #2 pwrite(data/alice, off=0, len=35) torn: only the last 19 of 35 bytes persisted"
     },
     {
      "point": 6,
@@ -32894,7 +32894,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "alice: length mismatch: header says 11, file has 12",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135); #5 pwrite(data/alice, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135); #2 pwrite(data/alice, off=0, len=35) torn: only the first 32 of 35 bytes persisted"
     },
     {
      "point": 7,
@@ -32902,7 +32902,7 @@
      "state_index": 52,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=135)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=135)"
     },
     {
      "point": 7,
@@ -32910,7 +32910,7 @@
      "state_index": 59,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) torn: only the first 16 of 135 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) torn: only the first 16 of 135 bytes persisted"
     },
     {
      "point": 7,
@@ -32918,7 +32918,7 @@
      "state_index": 60,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) torn: only the last 119 of 135 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) torn: only the last 119 of 135 bytes persisted"
     },
     {
      "point": 7,
@@ -32926,10 +32926,10 @@
      "state_index": 61,
      "code": "TORN_TX",
      "detail": "transaction half-applied: alice=new, bob=old",
-     "crash": "#2 pwrite(wal.log, off=512, len=135) torn: only the first 48 of 135 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=135) torn: only the first 48 of 135 bytes persisted"
     }
    ],
-   "seconds": 0.135
+   "seconds": 0.133
   },
   {
    "spec": "wal/early-ack",
@@ -33096,7 +33096,7 @@
      "state_index": 14,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=892)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=892)"
     },
     {
      "point": 6,
@@ -33104,7 +33104,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the first 16 of 892 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: only the first 16 of 892 bytes persisted"
     },
     {
      "point": 6,
@@ -33112,7 +33112,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the last 876 of 892 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: only the last 876 of 892 bytes persisted"
     },
     {
      "point": 6,
@@ -33120,10 +33120,10 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "report.md: file is 0 bytes, shorter than the 24-byte header",
-     "crash": "#2 pwrite(wal.log, off=512, len=892) torn: only the first 304 of 892 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=892) torn: only the first 304 of 892 bytes persisted"
     }
    ],
-   "seconds": 0.095
+   "seconds": 0.096
   },
   {
    "spec": "wal/early-ack",
@@ -33255,7 +33255,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.057
+   "seconds": 0.043
   },
   {
    "spec": "wal/early-ack",
@@ -33425,7 +33425,7 @@
      "state_index": 0,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391)"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391)"
     },
     {
      "point": 5,
@@ -33433,7 +33433,7 @@
      "state_index": 2,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "#2 pwrite(wal.log, off=512, len=391) torn: only the first 16 of 391 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=391) torn: only the first 16 of 391 bytes persisted"
     },
     {
      "point": 5,
@@ -33441,7 +33441,7 @@
      "state_index": 3,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "#2 pwrite(wal.log, off=512, len=391) torn: only the last 375 of 391 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=391) torn: only the last 375 of 391 bytes persisted"
     },
     {
      "point": 5,
@@ -33449,7 +33449,7 @@
      "state_index": 4,
      "code": "LOST",
      "detail": "commit was acknowledged, but recovery returned the previous version",
-     "crash": "#2 pwrite(wal.log, off=512, len=391) torn: only the first 128 of 391 bytes persisted"
+     "crash": "#1 pwrite(wal.log, off=512, len=391) torn: only the first 128 of 391 bytes persisted"
     },
     {
      "point": 11,
@@ -33457,7 +33457,7 @@
      "state_index": 28,
      "code": "DETECTED",
      "detail": "notes.txt: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) torn: only the first 16 of 324 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379); #3 pwrite(data/notes.txt, off=0, len=324) torn: only the first 16 of 324 bytes persisted"
     },
     {
      "point": 11,
@@ -33465,7 +33465,7 @@
      "state_index": 29,
      "code": "DETECTED",
      "detail": "notes.txt: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) torn: only the last 308 of 324 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379); #3 pwrite(data/notes.txt, off=0, len=324) torn: only the last 308 of 324 bytes persisted"
     },
     {
      "point": 11,
@@ -33473,7 +33473,7 @@
      "state_index": 30,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 300, file has 200",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) torn: only the first 112 of 324 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379); #3 pwrite(data/notes.txt, off=0, len=324) torn: only the first 112 of 324 bytes persisted"
     },
     {
      "point": 11,
@@ -33481,10 +33481,10 @@
      "state_index": 31,
      "code": "DETECTED",
      "detail": "notes.txt: length mismatch: header says 200, file has 300",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=391), #7 pwrite(wal.log, off=903, len=379); #10 pwrite(data/notes.txt, off=0, len=324) torn: only the last 212 of 324 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=391), #2 pwrite(wal.log, off=903, len=379); #3 pwrite(data/notes.txt, off=0, len=324) torn: only the last 212 of 324 bytes persisted"
     }
    ],
-   "seconds": 0.178
+   "seconds": 0.175
   },
   {
    "spec": "wal/early-ack",
@@ -33624,7 +33624,7 @@
      "state_index": 15,
      "code": "DETECTED",
      "detail": "report.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the first 16 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -33632,7 +33632,7 @@
      "state_index": 16,
      "code": "DETECTED",
      "detail": "report.csv: header checksum mismatch",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the last 21490 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -33640,7 +33640,7 @@
      "state_index": 17,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 21482, file has 15690",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the first 7168 of 21506 bytes persisted"
     },
     {
      "point": 6,
@@ -33648,10 +33648,10 @@
      "state_index": 18,
      "code": "DETECTED",
      "detail": "report.csv: length mismatch: header says 15690, file has 21482",
-     "crash": "lost #2 pwrite(wal.log, off=512, len=21562); #5 pwrite(data/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
+     "crash": "lost #1 pwrite(wal.log, off=512, len=21562); #2 pwrite(data/report.csv, off=0, len=21506) torn: only the last 14338 of 21506 bytes persisted"
     }
    ],
-   "seconds": 0.177
+   "seconds": 0.156
   },
   {
    "spec": "cow",
@@ -33770,7 +33770,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.011
+   "seconds": 0.01
   },
   {
    "spec": "cow",
@@ -33902,7 +33902,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.012
+   "seconds": 0.01
   },
   {
    "spec": "cow",
@@ -34021,7 +34021,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.01
+   "seconds": 0.008
   },
   {
    "spec": "cow",
@@ -34324,7 +34324,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.022
+   "seconds": 0.019
   },
   {
    "spec": "cow",
@@ -34443,7 +34443,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.021
+   "seconds": 0.018
   },
   {
    "spec": "cow/no-barrier",
@@ -34557,7 +34557,7 @@
      "state_index": 76,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=4096, len=1167)"
+     "crash": "lost #1 pwrite(volume.img, off=4096, len=1167)"
     },
     {
      "point": 7,
@@ -34565,7 +34565,7 @@
      "state_index": 95,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the first 16 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the first 16 of 1167 bytes persisted"
     },
     {
      "point": 7,
@@ -34573,7 +34573,7 @@
      "state_index": 96,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the last 1151 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the last 1151 of 1167 bytes persisted"
     },
     {
      "point": 7,
@@ -34581,10 +34581,10 @@
      "state_index": 97,
      "code": "DETECTED",
      "detail": "inventory.csv: document 'inventory.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=4096, len=1167) torn: only the first 384 of 1167 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=4096, len=1167) torn: only the first 384 of 1167 bytes persisted"
     }
    ],
-   "seconds": 0.027
+   "seconds": 0.022
   },
   {
    "spec": "cow/no-barrier",
@@ -34711,7 +34711,7 @@
      "state_index": 69,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=3072, len=11), #3 pwrite(volume.img, off=3584, len=11)"
+     "crash": "lost #1 pwrite(volume.img, off=3072, len=11), #2 pwrite(volume.img, off=3584, len=11)"
     },
     {
      "point": 8,
@@ -34719,7 +34719,7 @@
      "state_index": 110,
      "code": "DETECTED",
      "detail": "bob: document 'bob' (generation 3) fails its checksum",
-     "crash": "lost #3 pwrite(volume.img, off=3584, len=11)"
+     "crash": "lost #2 pwrite(volume.img, off=3584, len=11)"
     },
     {
      "point": 8,
@@ -34727,7 +34727,7 @@
      "state_index": 111,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #3 pwrite(volume.img, off=3584, len=11); #2 pwrite(volume.img, off=3072, len=11) persisted only as a size change (zeros)"
+     "crash": "lost #2 pwrite(volume.img, off=3584, len=11); #1 pwrite(volume.img, off=3072, len=11) persisted only as a size change (zeros)"
     },
     {
      "point": 8,
@@ -34735,10 +34735,10 @@
      "state_index": 129,
      "code": "DETECTED",
      "detail": "alice: document 'alice' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=3072, len=11)"
+     "crash": "lost #1 pwrite(volume.img, off=3072, len=11)"
     }
    ],
-   "seconds": 0.036
+   "seconds": 0.027
   },
   {
    "spec": "cow/no-barrier",
@@ -34852,7 +34852,7 @@
      "state_index": 82,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=1536, len=813)"
+     "crash": "lost #1 pwrite(volume.img, off=1536, len=813)"
     },
     {
      "point": 7,
@@ -34860,7 +34860,7 @@
      "state_index": 104,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the first 16 of 813 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) torn: only the first 16 of 813 bytes persisted"
     },
     {
      "point": 7,
@@ -34868,7 +34868,7 @@
      "state_index": 105,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the last 797 of 813 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) torn: only the last 797 of 813 bytes persisted"
     },
     {
      "point": 7,
@@ -34876,10 +34876,10 @@
      "state_index": 106,
      "code": "DETECTED",
      "detail": "report.md: document 'report.md' (generation 2) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=1536, len=813) torn: only the first 272 of 813 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=1536, len=813) torn: only the first 272 of 813 bytes persisted"
     }
    ],
-   "seconds": 0.027
+   "seconds": 0.018
   },
   {
    "spec": "cow/no-barrier",
@@ -34972,7 +34972,7 @@
     }
    ],
    "examples": [],
-   "seconds": 0.005
+   "seconds": 0.006
   },
   {
    "spec": "cow/no-barrier",
@@ -35152,7 +35152,7 @@
      "state_index": 76,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=2560, len=312)"
+     "crash": "lost #1 pwrite(volume.img, off=2560, len=312)"
     },
     {
      "point": 7,
@@ -35160,7 +35160,7 @@
      "state_index": 95,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=2560, len=312) torn: only the first 16 of 312 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=2560, len=312) torn: only the first 16 of 312 bytes persisted"
     },
     {
      "point": 7,
@@ -35168,7 +35168,7 @@
      "state_index": 96,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=2560, len=312) torn: only the last 296 of 312 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=2560, len=312) torn: only the last 296 of 312 bytes persisted"
     },
     {
      "point": 7,
@@ -35176,10 +35176,10 @@
      "state_index": 97,
      "code": "DETECTED",
      "detail": "notes.txt: document 'notes.txt' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=2560, len=312) torn: only the first 112 of 312 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=2560, len=312) torn: only the first 112 of 312 bytes persisted"
     }
    ],
-   "seconds": 0.041
+   "seconds": 0.04
   },
   {
    "spec": "cow/no-barrier",
@@ -35293,7 +35293,7 @@
      "state_index": 76,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "lost #2 pwrite(volume.img, off=32768, len=21482)"
+     "crash": "lost #1 pwrite(volume.img, off=32768, len=21482)"
     },
     {
      "point": 7,
@@ -35301,7 +35301,7 @@
      "state_index": 95,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the first 16 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the first 16 of 21482 bytes persisted"
     },
     {
      "point": 7,
@@ -35309,7 +35309,7 @@
      "state_index": 96,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the last 21466 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the last 21466 of 21482 bytes persisted"
     },
     {
      "point": 7,
@@ -35317,10 +35317,10 @@
      "state_index": 97,
      "code": "DETECTED",
      "detail": "report.csv: document 'report.csv' (generation 3) fails its checksum",
-     "crash": "#2 pwrite(volume.img, off=32768, len=21482) torn: only the first 7168 of 21482 bytes persisted"
+     "crash": "#1 pwrite(volume.img, off=32768, len=21482) torn: only the first 7168 of 21482 bytes persisted"
     }
    ],
-   "seconds": 0.04
+   "seconds": 0.05
   },
   {
    "spec": "cow/one-super",
@@ -35447,7 +35447,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35455,7 +35455,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35463,7 +35463,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35471,10 +35471,10 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.009
+   "seconds": 0.014
   },
   {
    "spec": "cow/one-super",
@@ -35614,7 +35614,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#9 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#5 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 10,
@@ -35622,7 +35622,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#9 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#5 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 10,
@@ -35630,7 +35630,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#9 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#5 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 10,
@@ -35638,10 +35638,10 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#9 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#5 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.015
   },
   {
    "spec": "cow/one-super",
@@ -35768,7 +35768,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35776,7 +35776,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35784,7 +35784,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -35792,10 +35792,10 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.011
+   "seconds": 0.008
   },
   {
    "spec": "cow/one-super",
@@ -35909,7 +35909,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#7 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#3 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 8,
@@ -35917,7 +35917,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#7 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#3 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 8,
@@ -35925,7 +35925,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#7 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#3 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 8,
@@ -35933,7 +35933,7 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#7 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#3 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
    "seconds": 0.003
@@ -36142,7 +36142,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36150,7 +36150,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36158,7 +36158,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36166,10 +36166,10 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.018
+   "seconds": 0.019
   },
   {
    "spec": "cow/one-super",
@@ -36296,7 +36296,7 @@
      "state_index": 2,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 32 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36304,7 +36304,7 @@
      "state_index": 3,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 480 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36312,7 +36312,7 @@
      "state_index": 4,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the first 48 of 512 bytes persisted"
     },
     {
      "point": 9,
@@ -36320,10 +36320,10 @@
      "state_index": 5,
      "code": "UNRECOVERABLE",
      "detail": "recovery failed: no valid superblock: no committed version can be trusted",
-     "crash": "#8 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
+     "crash": "#4 pwrite(volume.img, off=0, len=512) torn: only the last 464 of 512 bytes persisted"
     }
    ],
-   "seconds": 0.018
+   "seconds": 0.019
   }
  ]
 }

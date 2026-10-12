@@ -63,7 +63,7 @@ class RecoveryReport:
         if self.rolled_back:
             bits.append(f"rolled back {self.rolled_back} uncommitted change(s)")
         if self.discarded:
-            bits.append(f"discarded {self.discarded} incomplete item(s)")
+            bits.append(f"discarded {self.discarded} uncommitted item(s)")
         return "; ".join(bits) or "clean: nothing to repair"
 
 

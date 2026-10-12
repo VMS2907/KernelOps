@@ -1,0 +1,163 @@
+### WAREHOUSE INVENTORY - VERSION A ###
+version,item,quantity,shelf
+VERSION A,water bottles #000,116,shelf-1
+VERSION A,food packets #001,127,shelf-4
+VERSION A,medical kits #002,138,shelf-7
+VERSION A,blankets #003,149,shelf-1
+VERSION A,torches #004,160,shelf-4
+VERSION A,batteries #005,171,shelf-7
+VERSION A,tents #006,182,shelf-1
+VERSION A,radios #007,193,shelf-4
+VERSION A,fuel cans #008,204,shelf-7
+VERSION A,rope coils #009,215,shelf-1
+VERSION A,masks #010,226,shelf-4
+VERSION A,gloves #011,237,shelf-7
+VERSION A,water bottles #012,248,shelf-1
+VERSION A,food packets #013,259,shelf-4
+VERSION A,medical kits #014,270,shelf-7
+VERSION A,blankets #015,281,shelf-1
+VERSION A,torches #016,292,shelf-4
+VERSION A,batteries #017,303,shelf-7
+VERSION A,tents #018,314,shelf-1
+VERSION A,radios #019,325,shelf-4
+VERSION A,fuel cans #020,336,shelf-7
+VERSION A,rope coils #021,347,shelf-1
+VERSION A,masks #022,358,shelf-4
+VERSION A,gloves #023,369,shelf-7
+VERSION A,water bottles #024,380,shelf-1
+VERSION A,food packets #025,391,shelf-4
+VERSION A,medical kits #026,402,shelf-7
+VERSION A,blankets #027,013,shelf-1
+VERSION A,torches #028,024,shelf-4
+VERSION A,batteries #029,035,shelf-7
+VERSION A,tents #030,046,shelf-1
+VERSION A,radios #031,057,shelf-4
+VERSION A,fuel cans #032,068,shelf-7
+VERSION A,rope coils #033,079,shelf-1
+VERSION A,masks #034,090,shelf-4
+VERSION A,gloves #035,101,shelf-7
+VERSION A,water bottles #036,112,shelf-1
+VERSION A,food packets #037,123,shelf-4
+VERSION A,medical kits #038,134,shelf-7
+VERSION A,blankets #039,145,shelf-1
+VERSION A,torches #040,156,shelf-4
+VERSION A,batteries #041,167,shelf-7
+VERSION A,tents #042,178,shelf-1
+VERSION A,radios #043,189,shelf-4
+VERSION A,fuel cans #044,200,shelf-7
+VERSION A,rope coils #045,211,shelf-1
+VERSION A,masks #046,222,shelf-4
+VERSION A,gloves #047,233,shelf-7
+VERSION A,water bottles #048,244,shelf-1
+VERSION A,food packets #049,255,shelf-4
+VERSION A,medical kits #050,266,shelf-7
+VERSION A,blankets #051,277,shelf-1
+VERSION A,torches #052,288,shelf-4
+VERSION A,batteries #053,299,shelf-7
+VERSION A,tents #054,310,shelf-1
+VERSION A,radios #055,321,shelf-4
+VERSION A,fuel cans #056,332,shelf-7
+VERSION A,rope coils #057,343,shelf-1
+VERSION A,masks #058,354,shelf-4
+VERSION A,gloves #059,365,shelf-7
+VERSION A,water bottles #060,376,shelf-1
+VERSION A,food packets #061,387,shelf-4
+VERSION A,medical kits #062,398,shelf-7
+VERSION A,blankets #063,009,shelf-1
+VERSION A,torches #064,020,shelf-4
+VERSION A,batteries #065,031,shelf-7
+VERSION A,tents #066,042,shelf-1
+VERSION A,radios #067,053,shelf-4
+VERSION A,fuel cans #068,064,shelf-7
+VERSION A,rope coils #069,075,shelf-1
+VERSION A,masks #070,086,shelf-4
+VERSION A,gloves #071,097,shelf-7
+VERSION A,water bottles #072,108,shelf-1
+VERSION A,food packets #073,119,shelf-4
+VERSION A,medical kits #074,130,shelf-7
+VERSION A,blankets #075,141,shelf-1
+VERSION A,torches #076,152,shelf-4
+VERSION A,batteries #077,163,shelf-7
+VERSION A,tents #078,174,shelf-1
+VERSION A,radios #079,185,shelf-4
+VERSION A,fuel cans #080,196,shelf-7
+VERSION A,rope coils #081,207,shelf-1
+VERSION A,masks #082,218,shelf-4
+VERSION A,gloves #083,229,shelf-7
+VERSION A,water bottles #084,240,shelf-1
+VERSION A,food packets #085,251,shelf-4
+VERSION A,medical kits #086,262,shelf-7
+VERSION A,blankets #087,273,shelf-1
+VERSION A,torches #088,284,shelf-4
+VERSION A,batteries #089,295,shelf-7
+VERSION A,tents #090,306,shelf-1
+VERSION A,radios #091,317,shelf-4
+VERSION A,fuel cans #092,328,shelf-7
+VERSION A,rope coils #093,339,shelf-1
+VERSION A,masks #094,350,shelf-4
+VERSION A,gloves #095,361,shelf-7
+VERSION A,water bottles #096,372,shelf-1
+VERSION A,food packets #097,383,shelf-4
+VERSION A,medical kits #098,394,shelf-7
+VERSION A,blankets #099,005,shelf-1
+VERSION A,torches #100,016,shelf-4
+VERSION A,batteries #101,027,shelf-7
+VERSION A,tents #102,038,shelf-1
+VERSION A,radios #103,049,shelf-4
+VERSION A,fuel cans #104,060,shelf-7
+VERSION A,rope coils #105,071,shelf-1
+VERSION A,masks #106,082,shelf-4
+VERSION A,gloves #107,093,shelf-7
+VERSION A,water bottles #108,104,shelf-1
+VERSION A,food packets #109,115,shelf-4
+VERSION A,medical kits #110,126,shelf-7
+VERSION A,blankets #111,137,shelf-1
+VERSION A,torches #112,148,shelf-4
+VERSION A,batteries #113,159,shelf-7
+VERSION A,tents #114,170,shelf-1
+VERSION A,radios #115,181,shelf-4
+VERSION A,fuel cans #116,192,shelf-7
+VERSION A,rope coils #117,203,shelf-1
+VERSION A,masks #118,214,shelf-4
+VERSION A,gloves #119,225,shelf-7
+VERSION A,water bottles #120,236,shelf-1
+VERSION A,food packets #121,247,shelf-4
+VERSION A,medical kits #122,258,shelf-7
+VERSION A,blankets #123,269,shelf-1
+VERSION A,torches #124,280,shelf-4
+VERSION A,batteries #125,291,shelf-7
+VERSION A,tents #126,302,shelf-1
+VERSION A,radios #127,313,shelf-4
+VERSION A,fuel cans #128,324,shelf-7
+VERSION A,rope coils #129,335,shelf-1
+VERSION A,masks #130,346,shelf-4
+VERSION A,gloves #131,357,shelf-7
+VERSION A,water bottles #132,368,shelf-1
+VERSION A,food packets #133,379,shelf-4
+VERSION A,medical kits #134,390,shelf-7
+VERSION A,blankets #135,401,shelf-1
+VERSION A,torches #136,012,shelf-4
+VERSION A,batteries #137,023,shelf-7
+VERSION A,tents #138,034,shelf-1
+VERSION A,radios #139,045,shelf-4
+VERSION A,fuel cans #140,056,shelf-7
+VERSION A,rope coils #141,067,shelf-1
+VERSION A,masks #142,078,shelf-4
+VERSION A,gloves #143,089,shelf-7
+VERSION A,water bottles #144,100,shelf-1
+VERSION A,food packets #145,111,shelf-4
+VERSION A,medical kits #146,122,shelf-7
+VERSION A,blankets #147,133,shelf-1
+VERSION A,torches #148,144,shelf-4
+VERSION A,batteries #149,155,shelf-7
+VERSION A,tents #150,166,shelf-1
+VERSION A,radios #151,177,shelf-4
+VERSION A,fuel cans #152,188,shelf-7
+VERSION A,rope coils #153,199,shelf-1
+VERSION A,masks #154,210,shelf-4
+VERSION A,gloves #155,221,shelf-7
+VERSION A,water bottles #156,232,shelf-1
+VERSION A,food packets #157,243,shelf-4
+VERSION A,medical kits #158,254,shelf-7
+VERSION A,blankets #159,265,shelf-1
+### END OF VERSION A ###

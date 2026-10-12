@@ -1,0 +1,5 @@
+# Keep demo files byte-identical on every OS (no CRLF conversion), so a crash
+# after the first 4,096 bytes splits the file at the same line everywhere.
+examples/*.csv  -text
+*.png           binary
+*.pptx          binary

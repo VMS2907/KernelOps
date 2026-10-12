@@ -129,6 +129,19 @@ class WebAPI(unittest.TestCase):
             with urllib.request.urlopen(self.base + "/" + f, timeout=10) as r:
                 self.assertEqual(r.status, 200)
 
+    def test_crash_as_the_very_first_action(self):
+        from safewrite.server.app import Handler
+        old_dir = Handler.state.store_dir
+        Handler.state.close_store()
+        Handler.state.store_dir = os.path.join(self.tmp, "fresh-store")
+        try:
+            r = self.post("/api/store/crash", {"key": "big", "text": "line\n" * 20000, "at": 2})
+            self.assertEqual(r["crash"]["exit_code"], 77)
+            self.assertIn(r["crash"]["verdict"], ("absent", "new"))
+        finally:
+            Handler.state.close_store()
+            Handler.state.store_dir = old_dir
+
     def test_real_store_and_real_crash(self):
         s = self.post("/api/store/doc", {"key": "note", "text": "first"})
         self.assertTrue(s["ok"])

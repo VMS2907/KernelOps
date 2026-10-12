@@ -83,4 +83,4 @@ class NaiveEngine(Engine):
                         self.vfs.fsync(h)
                 finally:
                     self.vfs.close(h)
-            self.vfs.note("commit", detail="all chunks written")
+            self.vfs.note("overwrite-done")   # deliberately no commit point: that is the bug

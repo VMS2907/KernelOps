@@ -1,5 +1,7 @@
 # Stage demo script (7 minutes + Q&A)
 
+> For the hands-on version on real files (Notepad + real kills), see **[LIVE_DEMO.md](LIVE_DEMO.md)**.
+
 ## Before you go on stage (pre-flight checklist)
 
 ```bash

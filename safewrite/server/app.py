@@ -29,6 +29,7 @@ import os
 import random
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -345,14 +346,25 @@ class Handler(BaseHTTPRequestHandler):
         b = self.body()
         key, text = b["key"], b["text"]
         with self.state.store_mu:
+            self.state.open_store()                  # make sure the store exists (first-ever action)
             self.state.close_store()                 # release our lock: the child must own the store
             plan = self._plan(key, text)
             at = int(b.get("at") or 0) or random.randint(1, max(1, plan["syscalls"]))
             env = dict(os.environ, PYTHONPATH=ROOT + os.pathsep + os.environ.get("PYTHONPATH", ""),
                        NO_COLOR="1", PYTHONIOENCODING="utf-8")
-            proc = subprocess.run([sys.executable, "-m", "safewrite", "crash", self.state.store_dir, key,
-                                   "--text", text, "--at", str(at)],
-                                  capture_output=True, encoding="utf-8", errors="replace", env=env, timeout=60)
+            # The new text travels in a temp file: command lines are size-limited (32K on Windows).
+            fd, src = tempfile.mkstemp(prefix="safewrite-crash-", suffix=".txt")
+            try:
+                with os.fdopen(fd, "wb") as f:
+                    f.write(text.encode())
+                proc = subprocess.run([sys.executable, "-m", "safewrite", "crash", self.state.store_dir, key,
+                                       "--file", src, "--at", str(at)],
+                                      capture_output=True, encoding="utf-8", errors="replace", env=env, timeout=60)
+            finally:
+                try:
+                    os.unlink(src)
+                except OSError:
+                    pass
             t0 = time.perf_counter()
             s = self.state.open_store()               # <- recovery runs here, on the dead child's files
             rec_ms = (time.perf_counter() - t0) * 1e3

@@ -177,6 +177,7 @@ docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · img/
 ## Documents
 
 * **[docs/DESIGN.md](docs/DESIGN.md)**: the design document, covering all seven required deliverables in depth.
+* **[docs/LIVE_DEMO.md](docs/LIVE_DEMO.md)**: kill a real program mid-save on your own laptop and open the result in Notepad (copy-paste commands for Windows and macOS).
 * **[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)**: the 7-minute stage demo, click by click, with a fallback plan.
 * **[docs/JUDGE_QA.md](docs/JUDGE_QA.md)**: the questions we expect from judges, answered.
 * **[docs/PLAN.md](docs/PLAN.md)**: the build plan and gap analysis of our round-1 submission.

@@ -12,7 +12,9 @@ Quick start::
 
 __version__ = "1.0.0"
 
+from .errors import CommitAborted, PayloadTooLarge, SaveError, VisibleNotDurable, WriteConflict  # noqa: E402
 from .format import IntegrityError  # noqa: E402
 from .store import SafeStore, StoreError  # noqa: E402
 
-__all__ = ["SafeStore", "StoreError", "IntegrityError", "__version__"]
+__all__ = ["SafeStore", "StoreError", "IntegrityError", "SaveError", "CommitAborted", "PayloadTooLarge",
+           "WriteConflict", "VisibleNotDurable", "__version__"]

@@ -31,7 +31,8 @@ Switch the engine to <code>cow</code> and the same crash recovers a byte-identic
 | Lost-update race, 8 threads × 50 increments | unsynchronized ≈ **50/400**; `store.update()` **400/400** |
 | COW recovery time, 100 → 5,000 un-checkpointed commits | **~1 ms flat** (WAL replay: 23 → 77 ms) |
 | WAL group commit at 16 threads | **6.9 commits share one fsync** |
-| Tests | 53 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
+| Live technical challenges KO-16-C1…C5 | all five implemented; **49/49** checks (`python -m safewrite challenge`) |
+| Tests | 78 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
 
 Zero dependencies: Python ≥ 3.9 standard library only. Runs offline.
 
@@ -69,8 +70,28 @@ python -m safewrite explore --examples 1              # the full crash-state mat
 python -m safewrite torture --trials 200              # real kill -9 loop
 python -m safewrite race                              # lost-update race vs. synchronization
 python -m safewrite bench                             # latency, fsyncs, write amplification, recovery
+python -m safewrite challenge                         # the live technical challenges C1-C5
 ```
 </details>
+
+---
+
+## Live technical challenges (KO-16)
+
+All five challenge options are built, tested in CI and demoable with one command each. Full guide,
+expected output and talking points: **[docs/CHALLENGES.md](docs/CHALLENGES.md)**.
+
+```bash
+python -m safewrite challenge          # all five (~5 s); or: challenge c1 | c2 | c3 | c4 | c5
+```
+
+| # | Challenge | What the demo shows |
+|---|---|---|
+| C1 | SafeWrite crash points (Easy) | real `os._exit` at `during_write` / `after_validation` / `after_replace` → exactly A / A / B (64 × 0x41 / 0x42) |
+| C2 | Invalid destination refusal (Medium) | truncated header + valid uncommitted temp → temp **not promoted**, both kept byte-identical (`quarantine/`) |
+| C3 | Space/size constraint (Medium) | declared 1 MiB cap; ENOSPC halfway through the temp (controlled adapter) → A kept, actionable error, retry works |
+| C4 | Post-rename flush error (Hard) | `fsync(dir)` EIO after the rename → `VisibleNotDurable` (B visible), distinct from `CommitAborted` |
+| C5 | Concurrent writers (Hard) | two real writer processes + barrier: unique temps, `COMMIT` lock, recovery waits for live writers |
 
 ---
 
@@ -164,30 +185,37 @@ safewrite/
   engines/        naive.py · shadow.py · undo.py · wal.py · cow.py · base.py (the contract)
   crashsim/       model.py (persistence model + enumeration) · explorer.py (record/recover/judge)
                   scenarios.py · provenance.py (which byte came from which version)
-  concurrency.py  RWLock · ProcessLock (flock / msvcrt) · GroupCommit
-  store.py        SafeStore public API (lock → recover on open, transactions, update)
+  vfs/faulty.py   controlled fault adapter: simulated full disk (short write + ENOSPC), injected EIO
+  concurrency.py  RWLock · FileLock / ProcessLock (flock / LockFileEx, shared + exclusive) · GroupCommit
+  store.py        SafeStore public API (lock → recover on open, transactions, update, multi-writer)
+  errors.py       the save error contract: CommitAborted vs VisibleNotDurable
+  challenges.py   the live technical challenges C1-C5, narrated
   torture.py      real kill -9 harness        race.py   lost-update demo
   bench.py        measurements                demo.py   narrated terminal demo
   cli.py          python -m safewrite …       server/   Crash Lab (stdlib http.server + vanilla JS)
-tests/            53 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API
+tests/            78 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API, challenges
 results/          explore.json · bench.json (pre-generated, loaded by the UI)
-docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · img/
+docs/             DESIGN.md · CHALLENGES.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · VIDEO_PLAN.md · img/ · media/
+video/            the launch film, built from code (footage capture, motion graphics, synthesized score)
 ```
 
 ## Documents
 
 * **[docs/DESIGN.md](docs/DESIGN.md)**: the design document, covering all seven required deliverables in depth.
+* **[docs/CHALLENGES.md](docs/CHALLENGES.md)**: the five live technical challenges (KO-16-C1…C5): what each asks, what we built, how to demo it, what to say.
 * **[docs/LIVE_DEMO.md](docs/LIVE_DEMO.md)**: kill a real program mid-save on your own laptop and open the result in Notepad (copy-paste commands for Windows and macOS).
 * **[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)**: the 7-minute stage demo, click by click, with a fallback plan.
 * **[docs/JUDGE_QA.md](docs/JUDGE_QA.md)**: the questions we expect from judges, answered.
 * **[docs/PLAN.md](docs/PLAN.md)**: the build plan and gap analysis of our round-1 submission.
 * **[docs/Team_VAT_SafeWrite_Final_Round.pptx](docs/Team_VAT_SafeWrite_Final_Round.pptx)**: the final-round slide deck (Kernel Ops template).
+* **[docs/media/SafeWrite_launch.mp4](docs/media/SafeWrite_launch.mp4)**: the 100-second launch film: real product footage, real CLI output, original score. Built from code: [video/README.md](video/README.md); storyboard and voiceover script: [docs/VIDEO_PLAN.md](docs/VIDEO_PLAN.md).
 
 ## Honest limitations
 
 Durability assumes the drive honours flush requests (no software can survive a disk that lies about
 its cache). The power model assumes journaled metadata (ext4, XFS, NTFS, APFS). One writer process at a
-time (enforced with `flock`), many threads inside it. Crash states are exhaustive per crash point up
+time for undo/wal/cow (enforced with `flock`), many threads inside it; the shadow engine also has a
+multi-writer mode (local file systems only). Crash states are exhaustive per crash point up
 to a budget; larger traces are sampled, always including every prefix, every single-drop and every
 single-keep subset. Details in [DESIGN.md §6](docs/DESIGN.md#6-trade-offs-limitations-and-future-work).
 

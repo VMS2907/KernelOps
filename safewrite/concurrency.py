@@ -7,11 +7,13 @@ Three different problems need three different tools:
     update files *in place* (naive, undo), where a reader could otherwise
     observe a half-written document.
 
-``ProcessLock``
-    Processes.  An advisory ``flock`` on ``<store>/LOCK``.  The kernel releases
-    it automatically when the holding process dies, *including* by
-    ``kill -9``, so a crash can never leave a stale lock behind.  A plain
-    "lock file that exists" would.
+``FileLock`` / ``ProcessLock``
+    Processes.  An advisory ``flock`` (``LockFileEx`` on Windows) on
+    ``<store>/LOCK``, shared or exclusive.  The kernel releases it
+    automatically when the holding process dies, *including* by ``kill -9``,
+    so a crash can never leave a stale lock behind.  A plain "lock file that
+    exists" would.  Multi-writer stores also serialise commits on
+    ``<store>/COMMIT``.
 
 ``GroupCommit``
     Coordination, not just exclusion.  Concurrent committers queue their log
@@ -24,6 +26,7 @@ from __future__ import annotations
 
 import os
 import threading
+import time
 from contextlib import contextmanager
 from typing import Callable, Iterator, List, Optional, Tuple
 
@@ -80,54 +83,181 @@ class StoreLocked(Exception):
     pass
 
 
-class ProcessLock:
-    """Exclusive inter-process lock on a file, released by the kernel on death."""
+if os.name == "nt":  # pragma: no cover - Windows
+    import ctypes
+    from ctypes import wintypes
+
+    class _OVERLAPPED(ctypes.Structure):
+        _fields_ = [("Internal", ctypes.c_void_p), ("InternalHigh", ctypes.c_void_p),
+                    ("Offset", wintypes.DWORD), ("OffsetHigh", wintypes.DWORD),
+                    ("hEvent", wintypes.HANDLE)]
+
+    _k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    _k32.LockFileEx.argtypes = [wintypes.HANDLE, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD,
+                                wintypes.DWORD, ctypes.POINTER(_OVERLAPPED)]
+    _k32.LockFileEx.restype = wintypes.BOOL
+    _k32.UnlockFileEx.argtypes = [wintypes.HANDLE, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD,
+                                  ctypes.POINTER(_OVERLAPPED)]
+    _k32.UnlockFileEx.restype = wintypes.BOOL
+    _LOCKFILE_FAIL_IMMEDIATELY, _LOCKFILE_EXCLUSIVE_LOCK = 0x1, 0x2
+    _ERROR_LOCK_VIOLATION = 33
+
+    def _overlapped() -> "_OVERLAPPED":
+        ov = _OVERLAPPED()
+        ov.OffsetHigh = 1        # lock byte 4 GiB: far past the file's real contents
+        return ov
+
+    def _os_lock(fd: int, shared: bool, blocking: bool) -> bool:
+        flags = (0 if shared else _LOCKFILE_EXCLUSIVE_LOCK) | (0 if blocking else _LOCKFILE_FAIL_IMMEDIATELY)
+        h = wintypes.HANDLE(msvcrt.get_osfhandle(fd))
+        if _k32.LockFileEx(h, flags, 0, 1, 0, ctypes.byref(_overlapped())):
+            return True
+        err = ctypes.get_last_error()
+        if err == _ERROR_LOCK_VIOLATION and not blocking:
+            return False
+        raise ctypes.WinError(err)
+
+    def _os_unlock(fd: int) -> None:
+        h = wintypes.HANDLE(msvcrt.get_osfhandle(fd))
+        if not _k32.UnlockFileEx(h, 0, 1, 0, ctypes.byref(_overlapped())):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+    def _os_downgrade(fd: int) -> None:
+        # A handle may add a shared lock over its own exclusive one; the first
+        # unlock then drops the exclusive lock, so nobody can slip in between.
+        if _os_lock(fd, shared=True, blocking=False):
+            _os_unlock(fd)
+            return
+        _os_unlock(fd)                      # fallback: release, then wait for shared
+        _os_lock(fd, shared=True, blocking=True)
+else:
+    def _os_lock(fd: int, shared: bool, blocking: bool) -> bool:
+        flags = (fcntl.LOCK_SH if shared else fcntl.LOCK_EX) | (0 if blocking else fcntl.LOCK_NB)
+        try:
+            fcntl.flock(fd, flags)
+        except BlockingIOError:
+            return False
+        return True
+
+    def _os_unlock(fd: int) -> None:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+
+    def _os_downgrade(fd: int) -> None:
+        fcntl.flock(fd, fcntl.LOCK_SH)     # converts the lock in place
+
+
+class FileLock:
+    """An advisory file lock with shared and exclusive modes.
+
+    POSIX ``flock(2)``; Windows ``LockFileEx`` on one byte far past the end of
+    the file, so the file's contents stay readable.  Either way the *kernel*
+    drops the lock when the holding process dies, ``kill -9`` included, so a
+    crash can never leave a stale lock.  Every acquisition opens its own
+    descriptor, so two threads of one process exclude each other as well.
+
+    ``with lock:`` takes it exclusively and waits as long as needed.
+    """
 
     def __init__(self, path: str) -> None:
         self.path = path
         self._fd: Optional[int] = None
+        self.mode = ""           # "shared" | "exclusive" while held
 
-    def acquire(self, blocking: bool = False) -> None:
+    @property
+    def fd(self) -> Optional[int]:
+        return self._fd
+
+    def acquire(self, shared: bool = False, blocking: bool = True,
+                timeout: Optional[float] = None) -> bool:
+        """Take the lock; ``False`` if ``blocking`` is off (or ``timeout``
+        seconds pass) while someone else holds a conflicting lock."""
+        if self._fd is not None:
+            raise RuntimeError(f"{self.path}: lock already held by this object")
         fd = os.open(self.path, os.O_RDWR | os.O_CREAT | getattr(os, "O_BINARY", 0), 0o644)
         try:
-            if fcntl is not None:
-                flags = fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB)
-                fcntl.flock(fd, flags)
-            elif msvcrt is not None:  # pragma: no cover - Windows
-                os.lseek(fd, 0, os.SEEK_SET)
-                msvcrt.locking(fd, msvcrt.LK_LOCK if blocking else msvcrt.LK_NBLCK, 1)
-        except OSError:
-            holder = ""
-            try:
-                os.lseek(fd, 0, os.SEEK_SET)
-                holder = os.read(fd, 32).split(b"\0")[0].decode("ascii", "replace").strip()
-            except OSError:
-                pass
+            if timeout is None:
+                got = _os_lock(fd, shared, blocking)
+            else:
+                deadline = time.monotonic() + timeout
+                while not (got := _os_lock(fd, shared, False)) and time.monotonic() < deadline:
+                    time.sleep(0.005)
+        except BaseException:
             os.close(fd)
-            raise StoreLocked("store is in use by another process"
-                              + (f" ({holder})" if holder else "")) from None
-        # Record the holder for humans.  Informational only.  The lock itself is
-        # the kernel's flock, which disappears when this process dies.
-        if fcntl is not None:
-            try:
-                os.ftruncate(fd, 0)
-                os.write(fd, f"pid {os.getpid()}".encode())
-            except OSError:
-                pass
+            raise
+        if not got:
+            os.close(fd)
+            return False
         self._fd = fd
+        self.mode = "shared" if shared else "exclusive"
+        return True
+
+    def downgrade(self) -> None:
+        """Exclusive -> shared without letting a writer in between (Windows);
+        on POSIX ``flock`` converts in place."""
+        if self._fd is None or self.mode != "exclusive":
+            raise RuntimeError(f"{self.path}: not held exclusively")
+        _os_downgrade(self._fd)
+        self.mode = "shared"
 
     def release(self) -> None:
         if self._fd is None:
             return
         try:
-            if fcntl is not None:
-                fcntl.flock(self._fd, fcntl.LOCK_UN)
-            elif msvcrt is not None:  # pragma: no cover - Windows
-                os.lseek(self._fd, 0, os.SEEK_SET)
-                msvcrt.locking(self._fd, msvcrt.LK_UNLCK, 1)
+            _os_unlock(self._fd)
         finally:
             os.close(self._fd)
             self._fd = None
+            self.mode = ""
+
+    def __enter__(self) -> "FileLock":
+        self.acquire()
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        self.release()
+
+
+class ProcessLock:
+    """The store's session lock, released by the kernel when the holder dies.
+
+    A normal (single-writer) session holds it *exclusively*.  A multi-writer
+    session (shadow engine only) holds it *shared*, so writers coexist with
+    each other but never with a single-writer session or an exclusive recovery.
+    """
+
+    def __init__(self, path: str) -> None:
+        self.path = path
+        self._lock = FileLock(path)
+
+    @property
+    def mode(self) -> str:
+        return self._lock.mode
+
+    def acquire(self, blocking: bool = False, shared: bool = False,
+                timeout: Optional[float] = None) -> None:
+        if not self._lock.acquire(shared=shared, blocking=blocking, timeout=timeout):
+            holder = ""
+            try:
+                with open(self.path, "rb") as f:
+                    holder = f.read(32).split(b"\0")[0].decode("ascii", "replace").strip()
+            except OSError:
+                pass
+            raise StoreLocked("store is in use by another process"
+                              + (f" ({holder})" if holder else "")) from None
+        if not shared:
+            # Record the holder for humans.  Informational only.  The lock itself
+            # is the kernel's, which disappears when this process dies.
+            try:
+                os.ftruncate(self._lock.fd, 0)            # type: ignore[arg-type]
+                os.write(self._lock.fd, f"pid {os.getpid()}".encode())  # type: ignore[arg-type]
+            except OSError:
+                pass
+
+    def downgrade(self) -> None:
+        self._lock.downgrade()
+
+    def release(self) -> None:
+        self._lock.release()
 
 
 class GroupCommit:

@@ -16,6 +16,7 @@ Proof commands::
     bench     latency / fsyncs / write amplification / recovery time
     serve     the Crash Lab web UI
     demo      a narrated walk-through in the terminal
+    challenge the live technical challenges KO-16-C1..C5
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ from typing import Any, Dict, List, Optional, Sequence
 from . import __version__
 from .engines import all_specs, make, spec_info
 from .format import IntegrityError, sha256
-from .store import LOCK, META, SafeStore, StoreError
+from .store import COMMIT, LOCK, META, SafeStore, StoreError
 
 # ----------------------------------------------------------------------------
 # terminal styling
@@ -91,6 +92,10 @@ def cmd_init(a: argparse.Namespace) -> int:
     opts: Dict[str, Any] = {}
     if a.block_size:
         opts["block_size"] = a.block_size
+    if a.temp_names:
+        if a.engine.split("/")[0] != "shadow":
+            raise SystemExit("--temp-names applies to the shadow engine only")
+        opts["temp_names"] = a.temp_names
     with SafeStore.create(a.store, engine=a.engine, **opts) as s:
         info = s.info()
     ok(f"created {a.engine} store at {info['path']}")
@@ -105,8 +110,12 @@ def cmd_put(a: argparse.Namespace) -> int:
         t0 = time.perf_counter()
         s.put(a.key, value)
         dt = time.perf_counter() - t0
-    ok(f"{a.key}: {len(value)} bytes committed and durable in {dt * 1000:.2f} ms "
-       f"(sha256 {sha256(value)[:12]})")
+    if s.engine.safe and "/" not in s.spec:
+        ok(f"{a.key}: {len(value)} bytes committed and durable in {dt * 1000:.2f} ms "
+           f"(sha256 {sha256(value)[:12]})")
+    else:
+        note(f"{a.key}: {len(value)} bytes written in {dt * 1000:.2f} ms with engine {s.spec}: "
+             "NOT crash-safe (no commit point)")
     return 0
 
 
@@ -243,6 +252,7 @@ def cmd_crash(a: argparse.Namespace) -> int:
     # Dry run on an in-memory copy to show the numbered syscall plan.
     snap = OsVFS(path).snapshot()
     snap.pop(LOCK, None)
+    snap.pop(COMMIT, None)
     mem = MemVFS(snap, OsVFS(path).walk_dirs())
     rec = RecordingVFS(mem)
     eng = make(spec, rec, **options)
@@ -250,12 +260,18 @@ def cmd_crash(a: argparse.Namespace) -> int:
     rec.reset()
     eng.commit({a.key: value})
     plan = rec.trace
+    points = type(eng).CRASH_POINTS
     if a.list or (a.at is None and a.phase is None):
         head(f"syscall plan for put({a.key!r}) with engine {spec}:")
         _print_trace(plan)
         print("\nre-run with --at N to kill the process just before syscall [N] "
               "(or --phase NAME to kill at a protocol phase)")
+        for name, cp in points.items():
+            note(f"--phase {name}: {cp['means']}")
         return 0
+    named = a.phase if a.phase in points else None
+    if named:
+        a.at, a.phase, a.partial = resolve_crash_point(plan, points[named], a.partial)
 
     lock = SafeStore._lock_for(path)
     rvfs = RecordingVFS(OsVFS(path))
@@ -265,13 +281,20 @@ def cmd_crash(a: argparse.Namespace) -> int:
 
     def die(op: Any) -> None:
         sys.stdout.flush()
-        where = (f"at phase '{op.label}'" if op.kind == "note"
-                 else f"just before syscall [{op.info.get('syscall')}] {op.describe()}")
+        if op.kind == "note":
+            where = f"at phase '{op.label}'"
+        elif op.kind == "write" and rvfs.partial_write and int(len(op.data) * rvfs.partial_write):
+            where = (f"inside syscall [{op.info.get('syscall')}] {op.describe()}, after "
+                     f"{int(len(op.data) * rvfs.partial_write)} of {len(op.data)} bytes")
+        else:
+            where = f"just before syscall [{op.info.get('syscall')}] {op.describe()}"
         print(c(f"\n  ⚡ CRASH: process killed with os._exit(77) {where}", "red", "bold"), flush=True)
         print(c(f"     run:  python -m safewrite recover {path} --key {a.key}", "grey"), flush=True)
         os._exit(77)
 
     head(f"put({a.key!r}) with engine {spec}; real crash armed")
+    if named:
+        note(f"crash point {named}: {points[named]['means']}")
     rvfs.on_crash = die
     rvfs.partial_write = a.partial
     if a.phase:
@@ -296,6 +319,20 @@ def cmd_crash(a: argparse.Namespace) -> int:
     lock.release()
     ok("the crash point was never reached: the save completed normally")
     return 0
+
+
+def resolve_crash_point(plan: Sequence[Any], cp: Dict[str, Any], partial: Optional[float] = None
+                        ) -> "tuple[Optional[int], Optional[str], Optional[float]]":
+    """A documented crash point -> (syscall number, phase label, partial fraction)."""
+    if "phase" in cp:
+        return None, cp["phase"], partial
+    armed = False
+    for op in plan:
+        if op.kind == "note" and op.label == cp["after"]:
+            armed = True
+        elif armed and op.kind == cp["op"]:
+            return op.info["syscall"], None, cp.get("partial") if partial is None else partial
+    raise SystemExit(f"crash point not found in the plan: {cp}")
 
 
 # ----------------------------------------------------------------------------
@@ -445,6 +482,11 @@ def cmd_serve(a: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_challenge(a: argparse.Namespace) -> int:
+    from .challenges import run
+    return run(a.which, a.dir, a.keep)
+
+
 def cmd_demo(a: argparse.Namespace) -> int:
     from .demo import run_demo
     return run_demo(pause=not a.no_pause)
@@ -461,6 +503,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("store")
     s.add_argument("--engine", default="cow", choices=all_specs())
     s.add_argument("--block-size", type=int, help="cow only")
+    s.add_argument("--temp-names", choices=["unique", "fixed"],
+                   help="shadow only: one fixed temp name per document (the round-1 layout) or unique ones")
     s.set_defaults(fn=cmd_init)
 
     for name, fn, hlp in (("put", cmd_put, "save a document (atomic + durable)"),):
@@ -502,7 +546,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--text")
     s.add_argument("--file")
     s.add_argument("--at", type=int, help="kill just before this syscall number (see --list)")
-    s.add_argument("--phase", help="kill when this protocol phase starts (e.g. rename, flip-superblock)")
+    s.add_argument("--phase", help="kill when this protocol phase starts (e.g. rename, flip-superblock), "
+                   "or at a documented crash point (shadow: during_write, after_validation, after_replace)")
     s.add_argument("--partial", type=float, help="if the victim is a write, persist this fraction first")
     s.add_argument("--list", action="store_true", help="print the numbered syscall plan and exit")
     s.set_defaults(fn=cmd_crash)
@@ -551,6 +596,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--store", default="demo-store", help="real store for the Documents tab")
     s.add_argument("--no-browser", action="store_true")
     s.set_defaults(fn=cmd_serve)
+
+    s = sub.add_parser("challenge", help="live technical challenges KO-16-C1..C5 (all by default)")
+    s.add_argument("which", nargs="*", help="c1 c2 c3 c4 c5 (default: all)")
+    s.add_argument("--dir", help="work here and keep the files (default: a temp dir, removed)")
+    s.add_argument("--keep", action="store_true", help="keep the temp dir and print its path")
+    s.set_defaults(fn=cmd_challenge)
 
     s = sub.add_parser("demo", help="narrated terminal demo")
     s.add_argument("--no-pause", action="store_true")

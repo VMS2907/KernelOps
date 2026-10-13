@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SafeWrite launch film</title>
+<style>
+  :root {
+    --bg: #050608;
+    --ink: #f5f5f2;
+    --dim: #8d8d88;
+    --faint: #3a3b3f;
+    --old: #3d8bff;
+    --new: #ff7a1a;
+    --good: #22c55e;
+    --bad: #ff4d4d;
+    --brand-a: #f7941d;
+    --brand-b: #3d8bff;
+    --mono: "DejaVu Sans Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --display: "Inter Display", "Inter", system-ui, sans-serif;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+  html, body { margin: 0; background: #000; }
+  #stage {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg);
+    font-family: var(--sans); color: var(--ink);
+  }
+  .scene { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .h1 { font-family: var(--display); font-weight: 800; font-size: 118px; letter-spacing: -0.035em; line-height: 1.02; }
+  .h2 { font-family: var(--display); font-weight: 700; font-size: 76px; letter-spacing: -0.03em; line-height: 1.08; }
+  .h3 { font-family: var(--display); font-weight: 600; font-size: 46px; letter-spacing: -0.02em; line-height: 1.2; }
+  .sub { font-family: var(--sans); font-weight: 500; font-size: 40px; color: var(--dim); letter-spacing: -0.01em; }
+  .mono { font-family: var(--mono); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 12px; padding: 10px 20px; border-radius: 999px;
+    font-family: var(--sans); font-weight: 600; font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase;
+    background: rgba(255,255,255,.07); color: #d9d9d4; border: 1px solid rgba(255,255,255,.12);
+  }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 12px var(--bad); }
+  .grad { background: linear-gradient(90deg, var(--brand-a), #ffb347 40%, var(--brand-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #grain { position: absolute; inset: -60px; pointer-events: none; opacity: .055; mix-blend-mode: screen; z-index: 50; }
+  #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 49;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 60; pointer-events: none; }
+  .window {
+    position: absolute; border-radius: 18px; overflow: hidden; background: #0e0f12;
+    box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .window .bar { height: 46px; display: flex; align-items: center; gap: 10px; padding: 0 18px; background: #16171b; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .window .bar i { width: 13px; height: 13px; border-radius: 50%; display: inline-block; }
+  .window .bar .url { margin-left: 18px; padding: 6px 16px; border-radius: 8px; background: #0b0c0f; color: #9b9b96; font-size: 17px; font-family: var(--sans); }
+  .window .view { position: absolute; left: 0; right: 0; bottom: 0; top: 46px; overflow: hidden; background: #0d0d0d; }
+  .window .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .window .cam img { display: block; }
+  .term { font-family: var(--mono); font-size: 25px; line-height: 1.5; color: #e8e8e3; white-space: pre-wrap; word-break: break-all; padding: 26px 34px; }
+  .block { position: absolute; border-radius: 14px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="layer"></div>
+  <div id="vignette"></div>
+  <svg id="grain" width="2040" height="1200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+  <div id="flash"></div>
+</div>
+<script src="scenes.js"></script>
+</body>
+</html>

@@ -156,6 +156,20 @@ It walks through everything above with real crashes; press Enter between steps.
 
 ---
 
+## The live technical challenges (C1–C5)
+
+If the organizers assign one of the five challenges, run it with one command (all five: ~5 seconds):
+
+```powershell
+python -m safewrite challenge c1      # or c2, c3, c4, c5; no argument = all five
+```
+
+Everything it does, what it prints and what to say: **[CHALLENGES.md](CHALLENGES.md)**. C1 can also
+be done by hand on real files with `init --temp-names fixed`, `put`, `crash --phase during_write`
+(or `after_validation`, `after_replace`) and `recover`, exactly like Demo 1 above.
+
+---
+
 ## Reset between rehearsals
 
 | Windows (PowerShell) | macOS / Linux |

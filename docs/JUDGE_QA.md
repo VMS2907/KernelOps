@@ -123,22 +123,26 @@ still contain a half-overwritten document (that's `naive`). We provide applicati
 on top.
 
 **21. What happens if the disk is full or fsync fails?**
-**The commit raises, nothing is published, and the store goes read-only until reopened.** After a
-failed fsync the kernel may already have dropped the dirty pages, so retrying is unsafe. That was
-PostgreSQL's 2018 "fsyncgate". Reopening runs recovery, which yields A or B. We inject ENOSPC/EIO at
-every syscall in tests.
+**The error says which side of the commit point it happened on.** Before the rename (disk full while
+writing the temp, a failed temp fsync): `CommitAborted`, A is untouched, the temp is removed and the
+store stays writable. After the rename (a failed directory fsync): `VisibleNotDurable`, B is already
+visible but not confirmed durable, and the store goes read-only until reopened, because after a
+failed fsync the kernel may already have dropped the error, so retrying is unsafe. That was
+PostgreSQL's 2018 "fsyncgate". We inject ENOSPC/EIO at every syscall in tests; challenges C3 and C4
+show both cases live (see [CHALLENGES.md](CHALLENGES.md)).
 
 **22. What about Windows?**
 **CI runs every test on Windows.** NTFS can't fsync a directory (it journals its own metadata), so
-that call is a no-op there. Locking uses `msvcrt`, kills use `TerminateProcess`, and files are opened
-in binary mode.
+that call is a no-op there. Locking uses `LockFileEx` (shared and exclusive), kills use
+`TerminateProcess`, and files are opened in binary mode.
 
 ### Honesty
 
 **23. What can't you handle?**
 **A drive that lies about flushing its cache:** no software can. Other limits: one writer process at
-a time; non-journaled file systems such as FAT may reorder metadata; the COW catalog is O(#docs) per
-commit, which suits thousands of documents, not millions.
+a time for undo/wal/cow (the shadow engine has a multi-writer mode, local file systems only);
+non-journaled file systems such as FAT may reorder metadata; the COW catalog is O(#docs) per commit,
+which suits thousands of documents, not millions.
 
 **24. Why Python? Isn't that far from the OS?**
 **Every operation is a direct system call** (`os.pwrite`, `os.fsync`, `os.replace`, `fcntl.flock`),

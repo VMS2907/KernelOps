@@ -12,6 +12,12 @@ The marker file is the last thing written when a store is created, with the
 same temp + fsync + rename protocol as the ``shadow`` engine.  A crash during
 creation therefore leaves a directory that is clearly "not a store yet",
 never a half-made one.
+
+**Multi-writer mode** (``open(path, multi_writer=True)``, shadow engine only):
+several processes may save at once.  Each holds the session lock *shared* and
+names its temp files with its own writer id; renames are serialised on the
+``COMMIT`` lock; recovery sweeps temp files only while it holds the session
+lock *exclusively*, so it can never delete a save that is still in flight.
 """
 
 from __future__ import annotations
@@ -22,17 +28,18 @@ import threading
 from contextlib import contextmanager
 from typing import Any, Callable, Dict, Iterator, List, Optional
 
-from .concurrency import ProcessLock, StoreLocked
+from .concurrency import FileLock, ProcessLock, StoreLocked
 from .engines import Engine, RecoveryReport, Version, make, parse_spec
+from .errors import CommitAborted, StoreError, VisibleNotDurable, WriteConflict
+from .format import sha256
 from .vfs.base import VFS
 from .vfs.osfs import OsVFS
 
 META = "SAFEWRITE.json"
 LOCK = "LOCK"
-
-
-class StoreError(Exception):
-    pass
+#: Multi-writer stores serialise their commit points on this lock file.
+COMMIT = "COMMIT"
+_UNSET = object()
 
 
 def atomic_write(vfs: VFS, path: str, data: bytes) -> None:
@@ -69,11 +76,12 @@ class Transaction:
 
 class SafeStore:
     def __init__(self, path: str, spec: str, engine: Engine, lock: ProcessLock,
-                 report: RecoveryReport) -> None:
+                 report: RecoveryReport, multi_writer: bool = False) -> None:
         self.path = path
         self.spec = spec
         self.engine = engine
         self.recovery = report
+        self.multi_writer = multi_writer
         self._lock = lock
         #: Serialises transactions inside this process (isolation).  Plain
         #: reads do not take it: the cow engine serves them from MVCC snapshots.
@@ -109,7 +117,10 @@ class SafeStore:
 
     @classmethod
     def open(cls, path: str, engine: Optional[str] = None, create: bool = False,
-             **options: Any) -> "SafeStore":
+             multi_writer: bool = False, wait: Optional[float] = None, **options: Any) -> "SafeStore":
+        """Open (and recover) a store.  ``multi_writer``: share it with other
+        writer processes (shadow engine).  ``wait``: seconds to wait for the
+        session lock instead of failing at once."""
         meta_path = os.path.join(path, META)
         if not os.path.exists(meta_path):
             if create:
@@ -120,7 +131,10 @@ class SafeStore:
         spec = meta["engine"]
         if engine and engine != spec:
             raise StoreError(f"{path} was created with engine {spec!r}, not {engine!r}")
-        lock = cls._lock_for(path)
+        if multi_writer:
+            return cls._open_multi_writer(path, spec, {**meta.get("options", {}), **options},
+                                          timeout=10.0 if wait is None else wait)
+        lock = cls._lock_for(path, wait)
         try:
             eng = make(spec, OsVFS(path), **{**meta.get("options", {}), **options})
             report = eng.open()
@@ -129,11 +143,40 @@ class SafeStore:
             raise
         return cls(path, spec, eng, lock, report)
 
+    @classmethod
+    def _open_multi_writer(cls, path: str, spec: str, options: Dict[str, Any],
+                           timeout: float = 10.0) -> "SafeStore":
+        if parse_spec(spec)[0].name != "shadow":
+            raise StoreError(f"multi-writer mode needs the shadow engine; {spec!r} keeps per-process "
+                             "state in memory (log position, catalog), so it allows one writer process")
+        lock = ProcessLock(os.path.join(path, LOCK))
+        eng = make(spec, OsVFS(path), **options)
+        eng.writer_id = f"w{os.getpid()}-{os.urandom(2).hex()}"    # type: ignore[attr-defined]
+        eng.commit_lock = FileLock(os.path.join(path, COMMIT))     # type: ignore[attr-defined]
+        try:
+            try:
+                # Alone?  Then every temp file is an orphan of a dead writer, and an
+                # exclusive (sweeping) recovery is safe.  Then share the store.
+                lock.acquire(blocking=False)
+                report = eng.open()
+                lock.downgrade()
+            except StoreLocked:
+                # Other sessions are live: their temp files may be saves in flight.
+                lock.acquire(shared=True, timeout=timeout)
+                eng.live_peers = True                               # type: ignore[attr-defined]
+                report = eng.open()
+        except StoreLocked as e:
+            raise StoreError(f"{e} (a single-writer session excludes multi-writer sessions)") from None
+        except BaseException:
+            lock.release()
+            raise
+        return cls(path, spec, eng, lock, report, multi_writer=True)
+
     @staticmethod
-    def _lock_for(path: str) -> ProcessLock:
+    def _lock_for(path: str, wait: Optional[float] = None) -> ProcessLock:
         lock = ProcessLock(os.path.join(path, LOCK))
         try:
-            lock.acquire()
+            lock.acquire(timeout=wait)
         except StoreLocked as e:
             raise StoreError(str(e)) from None
         return lock
@@ -154,18 +197,46 @@ class SafeStore:
     def get(self, key: str) -> Optional[bytes]:
         return self.engine.get(key)
 
-    def _commit(self, changes: Dict[str, Optional[bytes]]) -> None:
+    def _guarded(self, fn: Callable[[], None]) -> None:
+        """Run an engine write under the store's error contract.
+
+        * :class:`CommitAborted`: nothing changed and nothing is poisoned, so
+          the store stays writable (fix the cause and retry).
+        * :class:`VisibleNotDurable`: the new state is visible but durability is
+          unknown; retrying fsync is unsafe (PostgreSQL's 2018 "fsyncgate"), so
+          the store refuses writes until it is reopened (= recovered).
+        * any other ``OSError`` (engines without the split contract): same as
+          above, read-only until reopened.
+        """
         if self.failed:
             raise StoreError(f"an earlier write failed ({self.failed}); reopen the store to recover "
                              "before writing again")
         try:
-            self.engine.commit(changes)
+            fn()
+        except CommitAborted:
+            raise
+        except VisibleNotDurable as e:
+            self.failed = f"{e.phase}: {e.strerror or type(e).__name__}"
+            raise
         except OSError as e:
             self.failed = f"{type(e).__name__}: {e}"
             raise StoreError(f"write failed, store is now read-only until reopened: {self.failed}") from e
 
-    def put(self, key: str, value: bytes) -> None:
-        self._commit({key: bytes(value)})
+    def _commit(self, changes: Dict[str, Optional[bytes]]) -> None:
+        self._guarded(lambda: self.engine.commit(changes))
+
+    def put(self, key: str, value: bytes, expect: Any = _UNSET) -> None:
+        """Save ``key``.  With ``expect`` (shadow engine) the save is conditional:
+        ``expect`` is the sha256 of the payload this edit is based on (``None``
+        = the document must not exist); if another writer committed meanwhile,
+        :class:`~safewrite.errors.WriteConflict` is raised and nothing changes."""
+        if expect is _UNSET:
+            self._commit({key: bytes(value)})
+            return
+        cond = getattr(self.engine, "prepare", None) and getattr(self.engine, "put")
+        if not cond:
+            raise StoreError(f"conditional put needs the shadow engine, not {self.spec!r}")
+        self._guarded(lambda: cond(key, bytes(value), expect=expect))
 
     def delete(self, key: str) -> None:
         self._commit({key: None})
@@ -195,7 +266,26 @@ class SafeStore:
                 self._commit(tx.changes)
 
     def update(self, key: str, fn: Callable[[Optional[bytes]], Optional[bytes]]) -> Optional[bytes]:
-        """Atomic read-modify-write: ``new = fn(old)`` (``None`` deletes)."""
+        """Atomic read-modify-write: ``new = fn(old)`` (``None`` deletes).
+
+        In multi-writer mode the in-process lock cannot see other processes, so
+        the write is conditional on what was read, and retried on conflict
+        (optimistic concurrency): no update is ever lost.
+        """
+        if self.multi_writer:
+            for _ in range(1000):
+                with self._tx_lock:
+                    old = self.get(key)
+                    new = fn(old)
+                    if new is None:
+                        self.delete(key)
+                        return None
+                    try:
+                        self.put(key, new, expect=None if old is None else sha256(old))
+                        return new
+                    except WriteConflict:
+                        continue
+            raise StoreError(f"update of {key!r} kept conflicting with other writers; giving up")
         with self.transaction() as tx:
             new = fn(tx.get(key))
             if new is None:
@@ -212,6 +302,7 @@ class SafeStore:
             "commit_point": self.engine.commit_point,
             "recovers_to": self.engine.recovers_to,
             "atomic_tx": self.engine.atomic_tx,
+            "multi_writer": self.multi_writer,
             "documents": len(self.keys()),
             "recovery": self.recovery.to_json(),
         }

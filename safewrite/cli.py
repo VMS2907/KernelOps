@@ -455,7 +455,7 @@ def cmd_arena(a: argparse.Namespace) -> int:
     return serve_arena(a.host, a.port, pool=a.pool, naive=a.naive_variant, safe=a.safe_engine, size=a.size,
                        queue_max=a.queue, per_phone=a.per_phone_queue, max_phones=a.max_phones, rate=a.rate,
                        autotap_rate=a.autotap_rate, lanes=a.lanes, url_host=a.url_host, token=a.token,
-                       store_dir=a.store, open_browser=not a.no_browser)
+                       store_dir=a.store, open_browser=not a.no_browser, tap_sound=a.tap_sound)
 
 
 def cmd_demo(a: argparse.Namespace) -> int:
@@ -584,6 +584,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--url-host", help="address printed in the QR code, if auto-detection picks the wrong one")
     s.add_argument("--token", help="host token (default: random, printed at startup)")
     s.add_argument("--store", default="demo-store", help="real store for the Crash Lab's Documents tab")
+    s.add_argument("--tap-sound", metavar="FILE",
+                   help="audio clip (mp3/m4a/ogg/wav) every phone plays on each tap "
+                        "(default: the bundled faah.mp3; 'synth' = a sound synthesized in the browser)")
     s.add_argument("--no-browser", action="store_true")
     s.set_defaults(fn=cmd_arena)
 

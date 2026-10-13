@@ -202,4 +202,4 @@ busy, they wait or are dropped, and both are still counted.
 | undo write amplification | **2.19×** |
 | race | **50 / 400** vs **400 / 400** |
 | Crash Arena (30 phones × 60 s) | **1,547** crash pairs, naive/trunc **61%** corrupted, cow **0**; ~25 pairs/s on 4 cores |
-| tests | **70**, CI on Linux / macOS / Windows |
+| tests | **71**, CI on Linux / macOS / Windows |

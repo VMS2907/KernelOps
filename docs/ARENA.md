@@ -2,8 +2,8 @@
 
 > The audience crashes SafeWrite live from their phones. Every tap **really kills** two writer
 > processes in the middle of saving `Final_Assignment.txt`, one saving the way most apps do and
-> one using SafeWrite. Each phone honks a "bhoo-bhoo" bulb horn (*bhopu*) on every tap, and the
-> projector counts what survived. Up to **30 phones** can play at once.
+> one using SafeWrite. Each phone has one giant **😈 Press for MARKS** button that plays a "FAAAH"
+> on every tap, and the projector counts what survived. Up to **30 phones** can play at once.
 
 ![Crash Arena projector, live](img/arena-live.png)
 
@@ -147,12 +147,16 @@ SafeWrite Crash Arena: warming up writers ...
   Crash Lab endpoint answers only on this laptop, so nobody in the audience can start a heavy
   exploration mid-demo.
 
-**On the phones:** a name screen, then one giant red **⚡ PULL THE PLUG** button. Every press
-vibrates and honks a "bhoo-bhoo" bulb horn. The horn is synthesized in the browser, so there is no
-sound file and it works offline. Each press has a slightly different pitch, at most three horns
-overlap per phone, and the 🔊 button mutes it. Below the button each phone sees how many saves it
-crashed and its latest verdict on both sides. Phones need the volume up and silent mode off, or
-there is no horn (iPhones obey the silent switch).
+**On the phones:** a name screen, then one giant red **😈 Press for MARKS** button. Every press
+vibrates and plays the "FAAAH" sound (`safewrite/server/static/sounds/faah.mp3`, 2.5 s, 41 KB),
+which each phone downloads once from the laptop, so it works offline. Every tap makes a sound
+with a slightly different pitch. At most three overlap per phone (a new tap fades out the oldest),
+and the 🔊 button mutes it. Below the button each phone sees how many saves it crashed and its
+latest verdict on both sides. Phones need the volume up and silent mode off (iPhones obey the
+silent switch).
+
+* `--tap-sound other.mp3` plays a different clip (mp3, m4a, ogg or wav, under 5 MB).
+* `--tap-sound synth` plays a "FAAAH" synthesized in the browser instead of any file.
 
 **The 30-phone cap.** The 31st phone sees "The arena is full: 30 phones are playing" and can try
 again later. A phone that has been silent for a minute (tab closed, or locked for a long time)
@@ -176,6 +180,7 @@ right corner.
 | `--safe-engine E` | `cow` | right side: `cow`, `wal`, `undo` or `shadow` |
 | `--size BYTES` | 65536 | average document size |
 | `--autotap-rate R` | 10 | taps per second when auto-tap is on |
+| `--tap-sound FILE` | bundled `faah.mp3` | sound on every tap; `synth` = generated in the browser |
 | `--url-host IP` | auto | address in the QR code |
 | `--port P` | 8765 | |
 
@@ -290,7 +295,7 @@ python tools/arena_load.py --url http://127.0.0.1:8765 --token TOKEN   # against
 
 | Problem | Do this | Say this |
 |---|---|---|
-| No horn on a phone | Volume up, silent mode off, tap 🔊 once. The horn needs one real tap to unlock audio. | "Turn your volume up!" |
+| No sound on a phone | Volume up, silent mode off, tap 🔊 once. Browsers only allow sound after one real tap. | "Turn your volume up!" |
 | "The arena is full" on a phone | Expected beyond 30 phones. A seat frees up a minute after someone leaves. | "30 at a time: share with your neighbour." |
 | Phones cannot connect | Press **A** (auto-tap). Crashes continue at 10/s, labelled **AUTO**. | "The Wi-Fi isn't cooperating, so the laptop is tapping for you. Every one is still a real kill. See the AUTO labels." |
 | Some phones connect, some don't | Switch to 10-volunteer mode: hand the working phones to volunteers. | "Let's get ten volunteers up here." |

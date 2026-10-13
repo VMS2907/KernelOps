@@ -32,7 +32,7 @@ Switch the engine to <code>cow</code> and the same crash recovers a byte-identic
 | COW recovery time, 100 → 5,000 un-checkpointed commits | **~1 ms flat** (WAL replay: 23 → 77 ms) |
 | WAL group commit at 16 threads | **6.9 commits share one fsync** |
 | **Crash Arena**: 30 phones tapping for 60 s ([load test](docs/ARENA.md#7-capacity-ram-and-the---pool-value)) | 9,730 taps → **1,547 real crash pairs** (24.9/s per side, 0 HTTP errors); `naive/trunc` corrupted **61%**, `cow` **0** |
-| Tests | 70 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
+| Tests | 71 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
 
 Zero dependencies: Python ≥ 3.9 standard library only. Runs offline.
 
@@ -152,7 +152,7 @@ This is the methodology of the OSDI research tools **ALICE** (2014) and **CrashM
 | **Trade-offs** | Measured saves/s, fsyncs/commit, write amplification, recovery scaling, concurrency. |
 | **Documents** | A *real* store on disk: edit, save, browse/restore versions, and **Save & kill -9 mid-save** (a child process is killed for real, then recovery runs). |
 | **OS concepts** | Concept → code → evidence mapping, architecture, assumptions and limitations. |
-| **Arena** (`/arena`, `/tap`) | `python -m safewrite arena`: the room scans a QR code and every phone gets one giant ⚡ button with a "bhoo-bhoo" horn. Each tap **really** kills a `naive/trunc` writer and a `cow` writer mid-save with the same delay; the projector counts corrupted files live (normal save ≈ 60%, SafeWrite 0). Up to 30 phones; host keys S/F/R/A. Runbook: [docs/ARENA.md](docs/ARENA.md). |
+| **Arena** (`/arena`, `/tap`) | `python -m safewrite arena`: the room scans a QR code and every phone gets one giant 😈 **Press for MARKS** button that plays a "FAAAH" on every tap. Each tap **really** kills a `naive/trunc` writer and a `cow` writer mid-save with the same delay; the projector counts corrupted files live (normal save ≈ 60%, SafeWrite 0). Up to 30 phones; host keys S/F/R/A. Runbook: [docs/ARENA.md](docs/ARENA.md). |
 
 | | |
 |---|---|
@@ -177,7 +177,7 @@ safewrite/
   arena.py        Crash Arena: warm writer pools, paired kill lanes, honest counters
   bench.py        measurements                demo.py   narrated terminal demo
   cli.py          python -m safewrite …       server/   Crash Lab (stdlib http.server + vanilla JS)
-tests/            70 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API, arena
+tests/            71 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API, arena
 tools/            arena_load.py: N simulated phones against the arena, invariants checked
 results/          explore.json · bench.json (pre-generated, loaded by the UI)
 docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · VIDEO_PLAN.md · img/ · media/

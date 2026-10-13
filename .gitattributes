@@ -5,3 +5,4 @@ examples/*.csv  -text
 *.pptx          binary
 # Vendored third-party code stays byte-identical to the published package (see its LICENSE).
 safewrite/server/static/vendor/*  -text
+*.mp3           binary

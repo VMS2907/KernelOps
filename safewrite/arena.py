@@ -54,8 +54,9 @@ from collections import OrderedDict, deque
 from dataclasses import dataclass
 from typing import Any, Callable, Deque, Dict, List, Optional, Tuple
 
+from .concurrency import ProcessLock, StoreLocked
 from .engines import spec_info
-from .store import SafeStore
+from .store import LOCK, SafeStore
 from .torture import (KEY, _judge, _read_acks, _send_kill, _spawn, _wait_ready, calibrate,
                       content_for, version_of)
 
@@ -126,6 +127,28 @@ class Scenario:
         raise NotImplementedError
 
 
+def wait_for_lock_release(path: str, timeout: float = 5.0) -> None:
+    """Wait until the dead writer's store lock is gone.
+
+    On Linux and macOS the kernel drops a flock the moment the process dies.  On
+    Windows a lock held by a process killed with TerminateProcess can linger for
+    a few milliseconds after the process handle is signalled, and opening the
+    store then would fail with "in use", which is not a crash outcome at all.
+    """
+    end = time.monotonic() + timeout
+    while True:
+        lock = ProcessLock(os.path.join(path, LOCK))
+        try:
+            lock.acquire()
+        except StoreLocked:
+            if time.monotonic() >= end:
+                return                     # let the judge report what it finds
+            time.sleep(0.005)
+            continue
+        lock.release()
+        return
+
+
 class DocumentScenario(Scenario):
     """One document saved over and over: the kill -9 torture workload, unchanged."""
 
@@ -165,6 +188,7 @@ class DocumentScenario(Scenario):
 
     def judge(self, path: str, state: int, acked: int) -> Verdict:
         last = acked if acked >= 0 else state
+        wait_for_lock_release(path)
         raw, detail, recovered = _judge(path, state, last, self.size)
         code = {"OK_OLD": "OLD", "OK_NEW": "NEW"}.get(raw, raw)
         if raw == "CORRUPT":

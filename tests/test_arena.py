@@ -299,12 +299,31 @@ class HTTP(unittest.TestCase):
             return e.code, e.read(), dict(e.headers)
 
     def test_pages(self):
-        for path, text in (("/tap", b"Pull the plug"), ("/tap.js", b"PULL THE PLUG"),
+        for path, text in (("/tap", "Press for MARKS".encode()), ("/tap", "😈".encode()), ("/tap.js", b"Press for MARKS"),
                            ("/arena", b"Final_Assignment.txt"), ("/arena.js", b"EventSource"),
                            ("/vendor/qrcode.js", b"Copyright (c) 2009 Kazuhiko Arase")):
             code, body, _ = self.req(path)
             self.assertEqual(code, 200, path)
             self.assertTrue(text in body, f"{path} should contain {text!r}")
+
+    def test_custom_tap_sound(self):
+        from safewrite.server.app import check_tap_sound
+        self.assertEqual(self.req("/tap-sound")[0], 404)            # default: phones synthesize "faah"
+        clip = os.path.join(self.tmp, "faah.wav")
+        with open(clip, "wb") as f:
+            f.write(b"RIFF" + b"\0" * 60)
+        cls = self.httpd.RequestHandlerClass
+        cls.tap_sound = check_tap_sound(clip)
+        cls.loopback = frozenset()                                 # phones on the Wi-Fi may fetch it
+        try:
+            code, body, headers = self.req("/tap-sound")
+            self.assertEqual((code, headers["Content-Type"], body[:4]), (200, "audio/wav", b"RIFF"))
+        finally:
+            cls.tap_sound = None
+        with self.assertRaises(ValueError):
+            check_tap_sound(os.path.join(self.tmp, "faah.exe"))
+        with self.assertRaises(ValueError):
+            check_tap_sound(os.path.join(self.tmp, "missing.mp3"))
 
     def test_control_requires_the_host_token(self):
         self.assertEqual(self.req("/api/arena/control", {"action": "start"})[0], 403)

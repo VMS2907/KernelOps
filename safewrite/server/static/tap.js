@@ -49,55 +49,91 @@
   }
 
 
-  // ------------------------------------------------------------- the bhopu (bulb horn)
-  // Synthesized with Web Audio, so there is no sound file and it works offline: two
-  // squeezes of a rubber-bulb reed horn, "bhoo-bhoo". A sawtooth and a slightly detuned
-  // square go through a soft clipper (the brassy rasp) and a nasal band-pass. The pitch
-  // scoops up as the bulb is squeezed and sags as it lets go.
-  var HONK_CURVE = (function () {
-    var n = 1024, c = new Float32Array(n);
-    for (var i = 0; i < n; i++) { var x = (i * 2) / n - 1; c[i] = Math.tanh(3 * x); }
-    return c;
-  })();
+  // ------------------------------------------------------------- the tap sound: "FAAAH"
+  // Every tap plays a sound. If the laptop was started with --tap-sound FILE, the phones
+  // download that clip once (GET /tap-sound) and play it. Otherwise they synthesize a
+  // "FAAAH" with Web Audio: an "f" hiss, then a voice-like "aaah" (a buzzing source
+  // through the three formants of the vowel /a/) that slides down in pitch with a wobble.
+  // No sound file is needed and it works offline.
+  var noiseBuf = null;
+  function noise(ctx) {
+    if (!noiseBuf || noiseBuf.sampleRate !== ctx.sampleRate) {
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    var n = ctx.createBufferSource();
+    n.buffer = noiseBuf;
+    n.loop = true;
+    return n;
+  }
 
-  function bhoo(ctx, out, t, f0, len) {
-    var mix = ctx.createGain(), shaper = ctx.createWaveShaper(), g = ctx.createGain();
-    var nasal = ctx.createBiquadFilter(), body = ctx.createBiquadFilter();
-    mix.gain.value = 0.45;
-    shaper.curve = HONK_CURVE;
-    nasal.type = "bandpass"; nasal.frequency.value = f0 * 2.7; nasal.Q.value = 1.3;
-    body.type = "lowpass"; body.frequency.value = 2200;
-    [["sawtooth", 1], ["square", 1.008]].forEach(function (spec) {
-      var o = ctx.createOscillator(), f = o.frequency, k = spec[1];
+  function env(param, points) {             // [[time, value], ...], exponential between points
+    param.setValueAtTime(points[0][1], points[0][0]);
+    for (var i = 1; i < points.length; i++) param.exponentialRampToValueAtTime(points[i][1], points[i][0]);
+  }
+
+  // Returns the time the sound ends.
+  function faah(ctx, out, t, pitch) {
+    var k = pitch || 1, end = t + 1.25;
+    // "F": breath through the teeth
+    var hiss = noise(ctx), hp = ctx.createBiquadFilter(), hg = ctx.createGain();
+    hp.type = "highpass"; hp.frequency.value = 2200;
+    env(hg.gain, [[t, 0.001], [t + 0.03, 0.32], [t + 0.12, 0.28], [t + 0.2, 0.001]]);
+    hiss.connect(hp); hp.connect(hg); hg.connect(out);
+    hiss.start(t); hiss.stop(t + 0.22);
+    // "AAAH": a voice. Two buzzing oscillators plus some breath, shaped by the vowel's formants.
+    var src = ctx.createGain(), voice = ctx.createGain(), vg = ctx.createGain();
+    src.gain.value = 1;
+    var lfo = ctx.createOscillator(), lfoDepth = ctx.createGain();
+    lfo.frequency.value = 5.5;
+    env(lfoDepth.gain, [[t + 0.1, 0.01], [t + 0.45, 0.01], [t + 0.75, 9 * k]]);
+    lfo.connect(lfoDepth);
+    [["sawtooth", 1], ["sawtooth", 1.006]].forEach(function (spec) {
+      var o = ctx.createOscillator(), f = o.frequency, m = spec[1] * k;
       o.type = spec[0];
-      f.setValueAtTime(f0 * 0.8 * k, t);
-      f.exponentialRampToValueAtTime(f0 * k, t + 0.04);
-      f.setValueAtTime(f0 * k, t + len * 0.65);
-      f.exponentialRampToValueAtTime(f0 * 0.86 * k, t + len);
-      o.connect(mix);
-      o.start(t);
-      o.stop(t + len + 0.03);
+      env(f, [[t + 0.1, 240 * m], [t + 0.25, 290 * m], [t + 0.55, 250 * m], [end, 150 * m]]);
+      lfoDepth.connect(f);
+      o.connect(src);
+      o.start(t + 0.1);
+      o.stop(end + 0.05);
     });
-    mix.connect(shaper);
-    shaper.connect(nasal); shaper.connect(body);
-    nasal.connect(g); body.connect(g);
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.3, t + 0.025);
-    g.gain.setValueAtTime(0.27, t + len - 0.06);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
-    g.connect(out);
+    var breath = noise(ctx), bg = ctx.createGain();
+    bg.gain.value = 0.18;
+    breath.connect(bg); bg.connect(src);
+    breath.start(t + 0.1); breath.stop(end + 0.05);
+    [[780, 7, 1.0], [1180, 9, 0.55], [2550, 11, 0.22]].forEach(function (fm) {   // vowel /a/
+      var bp = ctx.createBiquadFilter(), g = ctx.createGain();
+      bp.type = "bandpass"; bp.frequency.value = fm[0]; bp.Q.value = fm[1];
+      g.gain.value = fm[2];
+      src.connect(bp); bp.connect(g); g.connect(voice);
+    });
+    voice.connect(vg);
+    env(vg.gain, [[t + 0.1, 0.001], [t + 0.17, 1.5], [t + 0.5, 1.35], [end - 0.25, 0.9], [end, 0.001]]);
+    vg.connect(out);
+    lfo.start(t + 0.1); lfo.stop(end + 0.05);
+    return end;
   }
+  window.SafeWriteFaah = faah;              // lets a test render it offline
 
-  // "bhoo-bhoo": returns the time the horn falls silent.
-  function bhopu(ctx, out, t, pitch) {
-    var f0 = 300 * (pitch || 1);
-    bhoo(ctx, out, t, f0, 0.16);
-    bhoo(ctx, out, t + 0.22, f0 * 0.93, 0.24);
-    return t + 0.48;
+  var audio = { ctx: null, muted: store.get("sw-arena-mute") === "1", voices: [], played: 0,
+                clip: null, clipBytes: null, custom: false };
+
+  // A custom clip (--tap-sound) is fetched right away and decoded once audio is unlocked.
+  fetch("/tap-sound", { cache: "force-cache" }).then(function (r) {
+    return r.ok ? r.arrayBuffer() : null;
+  }).then(function (buf) {
+    if (buf && buf.byteLength) { audio.clipBytes = buf; audio.custom = true; decodeClip(); }
+  }).catch(function () { /* no custom sound: synthesize */ });
+
+  function decodeClip() {
+    if (!audio.ctx || !audio.clipBytes || audio.clip) return;
+    var bytes = audio.clipBytes;
+    audio.clipBytes = null;
+    try {
+      audio.ctx.decodeAudioData(bytes, function (b) { audio.clip = b; }, function () { audio.custom = false; });
+    } catch (e) { audio.custom = false; }
   }
-  window.SafeWriteBhopu = bhopu;            // lets a test render it offline
-
-  var audio = { ctx: null, muted: store.get("sw-arena-mute") === "1", voices: 0, played: 0 };
 
   function audioCtx() {
     if (!audio.ctx) {
@@ -108,26 +144,50 @@
     if (audio.ctx.state === "suspended" && audio.ctx.resume) {
       try { var p = audio.ctx.resume(); if (p && p.catch) p.catch(function () {}); } catch (e) { /* no gesture yet */ }
     }
+    decodeClip();
     return audio.ctx;
   }
 
+  // Every tap makes a sound. At most 3 play at once per phone: a new tap fades out the oldest.
+  function release(master) {
+    var i = audio.voices.indexOf(master);
+    if (i < 0) return;
+    audio.voices.splice(i, 1);
+    try {
+      master.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.015);
+      setTimeout(function () { master.disconnect(); }, 120);
+    } catch (e) { /* already gone */ }
+  }
+
   function honk() {
-    if (audio.muted || audio.voices >= 3) return;   // at most 3 horns at once per phone
+    if (audio.muted) return;
     var ctx = audioCtx();
     if (!ctx) return;
     var play = function () {
-      audio.voices++;
+      if (audio.voices.length >= 3) release(audio.voices[0]);
       audio.played++;
-      var master = ctx.createGain();
-      master.gain.value = 0.9;
+      var master = ctx.createGain(), end, t = ctx.currentTime + 0.005, rate = 0.94 + Math.random() * 0.12;
       master.connect(ctx.destination);
-      var end = bhopu(ctx, master, ctx.currentTime + 0.005, 0.92 + Math.random() * 0.16);
-      setTimeout(function () { audio.voices--; master.disconnect(); }, (end - ctx.currentTime) * 1000 + 120);
+      audio.voices.push(master);
+      if (audio.clip) {
+        var b = ctx.createBufferSource();
+        b.buffer = audio.clip;
+        b.playbackRate.value = rate;
+        b.connect(master);
+        b.start(t);
+        end = t + audio.clip.duration / rate;
+      } else {
+        master.gain.value = 0.9;
+        end = faah(ctx, master, t, rate);
+      }
+      setTimeout(function () { release(master); }, (end - ctx.currentTime) * 1000 + 50);
     };
     if (ctx.state === "running") play();
     else if (ctx.resume) { try { ctx.resume().then(play, function () {}); } catch (e) { /* ignore */ } }
   }
-  window.SafeWriteHornStats = function () { return { played: audio.played, state: audio.ctx && audio.ctx.state }; };
+  window.SafeWriteHornStats = function () {
+    return { played: audio.played, state: audio.ctx && audio.ctx.state, custom: !!audio.clip };
+  };
 
   function renderSound() {
     var b = $("sound");
@@ -190,7 +250,7 @@
     pill.className = "pill" + (s === "LIVE" ? " live" : s === "FROZEN" ? " frozen" : "");
     pill.textContent = s === "LIVE" ? "LIVE" : s === "FROZEN" ? "round over" : "waiting for host";
     btn.disabled = s !== "LIVE";
-    label.textContent = s === "LIVE" ? "PULL THE PLUG" : s === "FROZEN" ? "LOOK UP ↑" : "WAITING…";
+    label.textContent = s === "LIVE" ? "Press for MARKS" : s === "FROZEN" ? "LOOK UP ↑" : "WAITING…";
   }
 
   function setCrashes(n) {

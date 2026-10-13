@@ -123,6 +123,7 @@ class Handler(BaseHTTPRequestHandler):
     state: State
     arena: Any = None          # an ArenaEngine, only on servers made by make_arena_server
     host_token: str = ""
+    tap_sound: Optional[str] = None   # an audio file the phones play on every tap (--tap-sound)
     server_version = f"SafeWriteCrashLab/{__version__}"
 
     def log_message(self, fmt: str, *args: Any) -> None:  # quiet
@@ -457,6 +458,19 @@ class Handler(BaseHTTPRequestHandler):
     def page_tap(self) -> None:
         self._page("tap.html")
 
+    def tap_sound_file(self) -> None:
+        if not self.tap_sound:
+            self.error(404, "no custom tap sound: the phones synthesize one")
+            return
+        with open(self.tap_sound, "rb") as f:
+            body = f.read()
+        self.send_response(200)
+        self.send_header("Content-Type", TAP_SOUND_TYPES[os.path.splitext(self.tap_sound)[1].lower()])
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "max-age=3600")
+        self.end_headers()
+        self.wfile.write(body)
+
     def page_arena(self) -> None:
         tok = self.q().get("host", "")
         extra = {}
@@ -535,6 +549,10 @@ class Handler(BaseHTTPRequestHandler):
                 _SSE["clients"] -= 1
 
 
+#: The default tap sound shipped with the arena ("faah"); --tap-sound replaces it, "synth" disables it.
+DEFAULT_TAP_SOUND = os.path.join(STATIC, "sounds", "faah.mp3")
+TAP_SOUND_TYPES = {".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".aac": "audio/aac", ".ogg": "audio/ogg",
+                   ".oga": "audio/ogg", ".opus": "audio/ogg", ".wav": "audio/wav", ".webm": "audio/webm"}
 _SSE_MU = threading.Lock()
 _SSE = {"clients": 0}
 
@@ -556,6 +574,7 @@ ROUTES: Dict[Any, Callable[[Handler], None]] = {
     ("POST", "/api/store/crash"): Handler.api_store_crash,
     ("GET", "/tap"): Handler.page_tap,
     ("GET", "/arena"): Handler.page_arena,
+    ("GET", "/tap-sound"): Handler.tap_sound_file,
     ("POST", "/api/arena/join"): Handler.api_arena_join,
     ("POST", "/api/arena/tap"): Handler.api_arena_tap,
     ("GET", "/api/arena/me"): Handler.api_arena_me,
@@ -593,7 +612,7 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True,
 # Crash Arena server: the Crash Lab on the LAN, locked down to the arena
 # ----------------------------------------------------------------------------
 #: What a phone on the LAN may reach.  control/export check the host token themselves.
-ARENA_PUBLIC = {("GET", "/tap"), ("GET", "/arena"), ("POST", "/api/arena/join"), ("POST", "/api/arena/tap"),
+ARENA_PUBLIC = {("GET", "/tap"), ("GET", "/arena"), ("GET", "/tap-sound"), ("POST", "/api/arena/join"), ("POST", "/api/arena/tap"),
                 ("GET", "/api/arena/me"), ("GET", "/api/arena/stream"), ("POST", "/api/arena/control"),
                 ("GET", "/api/arena/export")}
 ARENA_STATIC = {"/tap.js", "/arena.js", "/arena.css", "/styles.css", "/util.js", "/vendor/qrcode.js"}
@@ -628,11 +647,25 @@ class ArenaHTTPServer(ThreadingHTTPServer):
     request_queue_size = 256       # socketserver's default of 5 drops SYNs when a room taps at once
 
 
+def check_tap_sound(path: str) -> str:
+    """Validate a --tap-sound file; return its absolute path."""
+    full = os.path.abspath(path)
+    ext = os.path.splitext(full)[1].lower()
+    if ext not in TAP_SOUND_TYPES:
+        raise ValueError(f"--tap-sound must be one of {', '.join(sorted(TAP_SOUND_TYPES))}, not {ext or 'no extension'}")
+    if not os.path.isfile(full):
+        raise ValueError(f"--tap-sound: no such file {full}")
+    if os.path.getsize(full) > 5 << 20:
+        raise ValueError("--tap-sound: keep the clip under 5 MB (every phone downloads it once)")
+    return full
+
+
 def make_arena_server(host: str, port: int, arena: Any, token: str,
-                      store_dir: str = "demo-store") -> ArenaHTTPServer:
+                      store_dir: str = "demo-store", tap_sound: Optional[str] = None) -> ArenaHTTPServer:
     """A server whose handler class is bound to this arena (no global state)."""
     handler = type("BoundArenaHandler", (ArenaHandler,),
-                   {"state": State(store_dir), "arena": arena, "host_token": token})
+                   {"state": State(store_dir), "arena": arena, "host_token": token,
+                    "tap_sound": check_tap_sound(tap_sound) if tap_sound else None})
     return ArenaHTTPServer((host, port), handler)
 
 
@@ -640,11 +673,22 @@ def serve_arena(host: str = "0.0.0.0", port: int = 8765, pool: int = 4, naive: s
                 safe: str = "cow", size: int = 65536, queue_max: int = 500, per_phone: int = 3,
                 max_phones: int = 30, rate: float = 8.0,
                 autotap_rate: float = 10.0, lanes: Optional[int] = None, url_host: Optional[str] = None,
-                token: Optional[str] = None, store_dir: str = "demo-store", open_browser: bool = True) -> int:
+                token: Optional[str] = None, store_dir: str = "demo-store", open_browser: bool = True,
+                tap_sound: Optional[str] = None) -> int:
     import secrets
     from ..arena import ArenaEngine, lan_addresses
 
     token = token or secrets.token_urlsafe(9)
+    if tap_sound is None and os.path.isfile(DEFAULT_TAP_SOUND):
+        tap_sound = DEFAULT_TAP_SOUND
+    elif tap_sound == "synth":
+        tap_sound = None
+    if tap_sound:
+        try:
+            tap_sound = check_tap_sound(tap_sound)
+        except ValueError as e:
+            print(e)
+            return 2
     ips = lan_addresses()
     phone_host = url_host or (ips[0] if ips else "127.0.0.1")
     phone_url = f"http://{phone_host}:{port}/tap"
@@ -652,7 +696,7 @@ def serve_arena(host: str = "0.0.0.0", port: int = 8765, pool: int = 4, naive: s
     arena = ArenaEngine(naive=naive, safe=safe, pool=pool, lanes=lanes, size=size, queue_max=queue_max,
                         per_phone=per_phone, max_phones=max_phones, rate=rate, autotap_rate=autotap_rate, public_url=phone_url)
     try:
-        httpd = make_arena_server(host, port, arena, token, store_dir)
+        httpd = make_arena_server(host, port, arena, token, store_dir, tap_sound)
     except OSError as e:
         print(f"cannot listen on port {port}: {e}\n"
               f"  is the Crash Lab or another arena already running?  try  --port {port + 1}")
@@ -673,6 +717,7 @@ def serve_arena(host: str = "0.0.0.0", port: int = 8765, pool: int = 4, naive: s
   PROJECTOR (host):  {host_url}
   host token:        {token}    (projector keys: S start · F freeze · R reset · A auto-tap)
   phones:            up to {arena.max_phones} (a phone idle for a minute gives its seat to a newcomer)
+  tap sound:         {os.path.basename(tap_sound) if tap_sound else 'synthesized "FAAAH" in the browser'}
 
   left  (normal save): {naive:<12}  right (SafeWrite): {safe}
   writers:           {pool} per side, warm  ·  {size // 1024} KB document  ·  kill delay 0-{m['delay_max_ms']} ms

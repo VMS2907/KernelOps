@@ -148,7 +148,7 @@ function renderGallery(items) {
   if (key === S.galleryKey) return;
   S.galleryKey = key;
   if (!items.length) {
-    fill($("gallery"), h("div", { class: "empty-l" }, "No broken files yet. Pull the plug!"));
+    fill($("gallery"), h("div", { class: "empty-l" }, "No broken files yet. Press for marks!"));
     return;
   }
   fill($("gallery"), items.slice(0, 4).map((g) => {

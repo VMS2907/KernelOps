@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#d03b3b">
+<title>Pull the plug · SafeWrite</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d03b3b'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-15h-7z' fill='white'/%3E%3C/svg%3E">
+<style>
+/* Same design tokens as the Crash Lab (styles.css), inlined so the phone needs one request. */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface-1: #fcfcfb; --surface-2: #f3f2ee; --surface-3: #e9e8e2;
+  --ink-1: #0b0b0b; --ink-2: #52514e; --ink-3: #6f6e69; --hair: #e1e0d9; --axis: #c3c2b7;
+  --bad: #d03b3b; --bad-deep: #a32222; --bad-ink: #a32222; --bad-wash: rgba(208, 59, 59, .10);
+  --good: #0ca30c; --good-ink: #006300; --good-wash: rgba(12, 163, 12, .10);
+  --warn-ink: #8a5a00; --warn-wash: rgba(250, 178, 25, .16);
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #222220; --surface-3: #2c2c2a;
+    --ink-1: #f0efec; --ink-2: #c3c2b7; --ink-3: #9a9890; --hair: #2c2c2a; --axis: #383835;
+    --bad-ink: #e66767; --bad-wash: rgba(208, 59, 59, .18);
+    --good-ink: #0ca30c; --good-wash: rgba(12, 163, 12, .16);
+    --warn-ink: #fab219; --warn-wash: rgba(250, 178, 25, .14);
+  }
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--page); color: var(--ink-1); font: 16px/1.45 var(--sans);
+  -webkit-font-smoothing: antialiased; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+.screen {
+  display: none; flex-direction: column; min-height: 100%; gap: 14px;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  max-width: 520px; margin: 0 auto;
+}
+.screen.on { display: flex; }
+.brand { font-weight: 700; color: var(--ink-2); font-size: 14px; letter-spacing: .02em; }
+h1 { font-size: 26px; line-height: 1.15; margin: 8px 0 0; letter-spacing: -0.02em; }
+p { margin: 0; color: var(--ink-2); }
+.fine { font-size: 13px; color: var(--ink-3); }
+form { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+label { font-size: 14px; font-weight: 600; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+input {
+  font: inherit; font-size: 20px; padding: 14px; border-radius: 12px; border: 2px solid var(--axis);
+  background: var(--surface-1); color: var(--ink-1); width: 100%;
+}
+input:focus { outline: none; border-color: var(--ink-1); }
+.go {
+  font: inherit; font-size: 20px; font-weight: 700; padding: 15px; border-radius: 12px; border: 0;
+  background: var(--ink-1); color: var(--page); cursor: pointer;
+}
+.go:disabled { opacity: .5; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.who { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who button { border: 0; background: none; color: var(--ink-3); font: inherit; font-size: 13px; font-weight: 500; padding: 0 0 0 6px; text-decoration: underline; }
+.right { display: flex; align-items: center; gap: 8px; }
+.sound { border: 1px solid var(--axis); background: var(--surface-1); border-radius: 999px; font-size: 16px;
+         width: 36px; height: 30px; padding: 0; line-height: 1; cursor: pointer; }
+.sound[aria-pressed="false"] { opacity: .55; }
+.pill { font-size: 12.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; background: var(--surface-3); color: var(--ink-2); }
+.pill.live { background: var(--bad); color: #fff; }
+.pill.frozen { background: var(--ink-1); color: var(--page); }
+.stage { flex: 1; display: grid; place-items: center; min-height: 0; padding: 4px 0; }
+.plug {
+  width: min(82vw, 52vh, 420px); height: min(82vw, 52vh, 420px); border-radius: 50%; border: 0; padding: 0;
+  background: radial-gradient(circle at 35% 30%, #f06a6a, var(--bad) 55%, var(--bad-deep));
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  box-shadow: 0 10px 0 #7d1919, 0 18px 40px rgba(208, 59, 59, .35);
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation;
+  transition: transform .06s ease-out, box-shadow .06s ease-out; cursor: pointer;
+}
+.plug .bolt { font-size: min(30vw, 19vh, 150px); line-height: 1; }
+.plug .lbl { font-size: min(7vw, 4.4vh, 34px); font-weight: 900; letter-spacing: .04em; }
+.plug.press { transform: translateY(8px) scale(.96); box-shadow: 0 2px 0 #7d1919, 0 6px 16px rgba(208, 59, 59, .3); }
+.plug:disabled { background: radial-gradient(circle at 35% 30%, #b9b8b0, #8f8e87 60%, #6f6e69); box-shadow: 0 10px 0 #4c4b47; }
+.plug:disabled .lbl { font-size: min(5.6vw, 3.6vh, 26px); }
+.mine { text-align: center; }
+.mine .line { font-size: 20px; font-weight: 600; }
+.mine .line b { font-size: 34px; font-variant-numeric: tabular-nums; }
+.verdicts { display: flex; flex-direction: column; gap: 8px; }
+.v { border-radius: 12px; padding: 10px 12px; background: var(--surface-2); font-size: 15px; }
+.v b { display: block; font-size: 17px; }
+.v .d { font-size: 13px; color: var(--ink-3); }
+.v.bad { background: var(--bad-wash); }
+.v.bad b { color: var(--bad-ink); }
+.v.good { background: var(--good-wash); }
+.v.good b { color: var(--good-ink); }
+.note { text-align: center; font-size: 14px; font-weight: 600; border-radius: 10px; padding: 8px 10px; background: var(--warn-wash); color: var(--warn-ink); }
+.note[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .plug { transition: none; } }
+</style>
+</head>
+<body>
+<section class="screen on" id="join">
+  <div class="brand">⚡ SafeWrite · Crash Arena</div>
+  <h1>You are about to crash a real program.</h1>
+  <p>Every tap kills two programs in the middle of saving <b>Final_Assignment.txt</b>: one saves the
+    normal way, one uses SafeWrite. Watch the big screen to see whose file survives.</p>
+  <form id="join-form" autocomplete="off">
+    <label>Your name
+      <input id="name" maxlength="16" autocapitalize="words" enterkeyhint="go" placeholder="e.g. Priya" required>
+    </label>
+    <button class="go" id="join-btn" type="submit">Join</button>
+  </form>
+  <p class="fine">Your name appears on the projector. Keep it friendly.</p>
+  <div class="note" id="join-note" hidden></div>
+</section>
+
+<section class="screen" id="play">
+  <div class="bar">
+    <div class="who"><span id="who"></span><button id="rename" type="button">change</button></div>
+    <div class="right">
+      <button class="sound" id="sound" type="button" aria-pressed="true" title="Horn sound on/off">🔊</button>
+      <span class="pill" id="state">connecting</span>
+    </div>
+  </div>
+  <div class="stage">
+    <button class="plug" id="plug" type="button" disabled aria-label="Pull the plug">
+      <span class="bolt" aria-hidden="true">⚡</span><span class="lbl" id="plug-label">WAITING…</span>
+    </button>
+  </div>
+  <div class="mine">
+    <div class="line">You crashed <b id="crashes">0</b> <span id="saves">saves</span></div>
+    <div class="fine" id="taps">0 taps received by the server</div>
+  </div>
+  <div class="verdicts" aria-live="polite">
+    <div class="v" id="v-naive"><b>Normal save</b><span class="d">your first crash will show up here</span></div>
+    <div class="v" id="v-safe"><b>SafeWrite</b><span class="d">every crash is a real killed process</span></div>
+  </div>
+  <div class="note" id="note" hidden></div>
+</section>
+<script src="tap.js" defer></script>
+</body>
+</html>

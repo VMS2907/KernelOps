@@ -65,11 +65,20 @@ def version_of(data: bytes, size: int) -> Optional[int]:
 # ----------------------------------------------------------------------------
 # the writer (child process)
 # ----------------------------------------------------------------------------
-def child_main(path: str, start: int, size: int) -> None:  # pragma: no cover - runs in a child
+def child_main(path: str, start: int, size: int, gated: bool = False) -> None:  # pragma: no cover - runs in a child
+    """Save version start+1, start+2, ... forever, acknowledging each one on stdout.
+
+    ``gated`` writers (the arena's pre-warmed pool) open the store, report
+    ready, then wait for one line on stdin before the first save.  If the
+    parent goes away first, stdin hits EOF and the writer exits quietly.
+    """
     store = SafeStore.open(path)
     out = sys.stdout.buffer
     out.write(b"R\n")
     out.flush()
+    if gated and not sys.stdin.buffer.readline():
+        store.close()
+        return
     n = start
     while True:
         n += 1
@@ -78,19 +87,27 @@ def child_main(path: str, start: int, size: int) -> None:  # pragma: no cover - 
         out.flush()
 
 
-def _spawn(path: str, start: int, size: int) -> subprocess.Popen:
+def _spawn(path: str, start: int, size: int, gated: bool = False) -> subprocess.Popen:
     env = dict(os.environ)
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
-    return subprocess.Popen([sys.executable, "-m", "safewrite.torture", "child", path, str(start), str(size)],
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    args = [sys.executable, "-m", "safewrite.torture", "child", path, str(start), str(size)]
+    if gated:
+        args.append("gated")
+    return subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            stdin=subprocess.PIPE if gated else None, env=env)
 
 
-def _kill(proc: subprocess.Popen) -> None:
+def _send_kill(proc: subprocess.Popen) -> None:
+    """Deliver the kill without waiting, so two writers can die back to back."""
     if hasattr(signal, "SIGKILL"):
         os.kill(proc.pid, signal.SIGKILL)
     else:  # pragma: no cover - Windows: TerminateProcess, equally abrupt
         proc.kill()
+
+
+def _kill(proc: subprocess.Popen) -> None:
+    _send_kill(proc)
     proc.wait()
 
 
@@ -233,5 +250,5 @@ def _judge(path: str, before: int, acked: int, size: int):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    if len(sys.argv) == 5 and sys.argv[1] == "child":
-        child_main(sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
+    if len(sys.argv) in (5, 6) and sys.argv[1] == "child":
+        child_main(sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), gated=sys.argv[5:] == ["gated"])

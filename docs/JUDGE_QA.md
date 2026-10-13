@@ -156,6 +156,37 @@ testing method could not have caught a missing fsync.
 Replay real kernel block I/O in a VM (dm-log-writes), a COW B+-tree for millions of keys, a hybrid
 COW + WAL (like ZFS's ZIL), and an "audit any program" mode that runs strace traces through our simulator.
 
+### Crash Arena (the audience crashes it live)
+
+**27. Is the naive side rigged?**
+**No. Both sides run the same writer program, get killed by the same tap, after the same random
+delay, back to back.** The only difference is the engine: `naive/trunc` does what
+`open(path, "w")` does, and `cow` is SafeWrite. Who dies first alternates on every tap, and the
+same `_judge` code from the torture test classifies both files. Each crash record (`/api/arena/export`)
+shows the delay, the kill order and the judge's verdict. The test suite checks that every crashed
+tap killed exactly one writer per side. Naive *survives* about 40% of kills (`OLD`/`NEW`), and the
+projector shows that too.
+
+**28. Is a phone tap really a `kill -9`?**
+**Yes. An accepted tap ends with `SIGKILL` (`TerminateProcess` on Windows) on two real writer
+processes that are in the middle of their save loop.** Then this laptop opens each store, which
+runs real recovery, and judges the bytes. Nothing is counted until that verdict exists. When the
+room taps faster than the laptop can kill (~25 pairs a second on 4 cores), the extra taps are shown
+as "dropped", never as crashes. "Taps received" and "real crashes" sit side by side on the projector.
+
+**29. Why doesn't `kill -9` test durability?**
+**Because the kernel page cache survives a killed process.** Every `write()` that returned is still
+there, so a missing `fsync` can never show up. That is why we built the power-loss simulator,
+where unflushed writes may be lost, reordered or torn. The arena proves *atomicity* on a real file
+system; the simulator proves *durability*. The summary slide says exactly that.
+
+**30. What if two taps arrive at once?**
+**Each becomes its own pair of crashes, on its own pair of writers.** Taps go into a bounded fair
+queue (round-robin across phones, at most 3 waiting per phone), and several crash lanes take them
+in parallel. Each lane holds its own writers, and each writer has its own store directory and
+process lock, so two crashes never touch the same file. If both taps arrive while every writer is
+busy, they wait or are dropped, and both are still counted.
+
 ---
 
 ### Numbers to remember
@@ -170,4 +201,5 @@ COW + WAL (like ZFS's ZIL), and an "audit any program" mode that runs strace tra
 | WAL group commit | **6.9** commits per fsync at 16 threads |
 | undo write amplification | **2.19×** |
 | race | **50 / 400** vs **400 / 400** |
-| tests | **53**, CI on Linux / macOS / Windows |
+| Crash Arena (30 phones × 60 s) | **1,547** crash pairs, naive/trunc **61%** corrupted, cow **0**; ~25 pairs/s on 4 cores |
+| tests | **70**, CI on Linux / macOS / Windows |

@@ -23,4 +23,4 @@ safewrite = "safewrite.cli:main"
 include = ["safewrite*"]
 
 [tool.setuptools.package-data]
-"safewrite.server" = ["static/*"]
+"safewrite.server" = ["static/*", "static/vendor/*"]

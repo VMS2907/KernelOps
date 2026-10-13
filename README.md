@@ -31,7 +31,8 @@ Switch the engine to <code>cow</code> and the same crash recovers a byte-identic
 | Lost-update race, 8 threads × 50 increments | unsynchronized ≈ **50/400**; `store.update()` **400/400** |
 | COW recovery time, 100 → 5,000 un-checkpointed commits | **~1 ms flat** (WAL replay: 23 → 77 ms) |
 | WAL group commit at 16 threads | **6.9 commits share one fsync** |
-| Tests | 53 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
+| **Crash Arena**: 30 phones tapping for 60 s ([load test](docs/ARENA.md#7-capacity-ram-and-the---pool-value)) | 9,730 taps → **1,547 real crash pairs** (24.9/s per side, 0 HTTP errors); `naive/trunc` corrupted **61%**, `cow` **0** |
+| Tests | 70 automated tests, CI on Linux · macOS · Windows × Python 3.9 / 3.12 |
 
 Zero dependencies: Python ≥ 3.9 standard library only. Runs offline.
 
@@ -43,6 +44,7 @@ Zero dependencies: Python ≥ 3.9 standard library only. Runs offline.
 git clone https://github.com/VMS2907/KernelOps && cd KernelOps
 
 python -m safewrite serve          # the Crash Lab → http://127.0.0.1:8765
+python -m safewrite arena --pool 8 # Crash Arena: the audience crashes it from their phones
 python -m safewrite demo           # narrated terminal walk-through (real crashes, live)
 python -m unittest discover -s tests -t .
 ```
@@ -69,6 +71,8 @@ python -m safewrite explore --examples 1              # the full crash-state mat
 python -m safewrite torture --trials 200              # real kill -9 loop
 python -m safewrite race                              # lost-update race vs. synchronization
 python -m safewrite bench                             # latency, fsyncs, write amplification, recovery
+python -m safewrite arena --pool 8                    # Crash Arena on the LAN (phones + projector)
+python tools/arena_load.py                            # 30 simulated phones x 60 s against the arena
 ```
 </details>
 
@@ -148,11 +152,14 @@ This is the methodology of the OSDI research tools **ALICE** (2014) and **CrashM
 | **Trade-offs** | Measured saves/s, fsyncs/commit, write amplification, recovery scaling, concurrency. |
 | **Documents** | A *real* store on disk: edit, save, browse/restore versions, and **Save & kill -9 mid-save** (a child process is killed for real, then recovery runs). |
 | **OS concepts** | Concept → code → evidence mapping, architecture, assumptions and limitations. |
+| **Arena** (`/arena`, `/tap`) | `python -m safewrite arena`: the room scans a QR code and every phone gets one giant ⚡ button with a "bhoo-bhoo" horn. Each tap **really** kills a `naive/trunc` writer and a `cow` writer mid-save with the same delay; the projector counts corrupted files live (normal save ≈ 60%, SafeWrite 0). Up to 30 phones; host keys S/F/R/A. Runbook: [docs/ARENA.md](docs/ARENA.md). |
 
 | | |
 |---|---|
 | ![COW recovery in the Lab](docs/img/lab-cow.png) | ![Measured trade-offs](docs/img/tradeoffs.png) |
 | ![kill -9 torture](docs/img/torture.png) | ![OS concepts](docs/img/concepts.png) |
+
+![Crash Arena: the audience's taps really kill writers; normal save corrupts, SafeWrite never does](docs/img/arena-live.png)
 
 ---
 
@@ -167,9 +174,11 @@ safewrite/
   concurrency.py  RWLock · ProcessLock (flock / msvcrt) · GroupCommit
   store.py        SafeStore public API (lock → recover on open, transactions, update)
   torture.py      real kill -9 harness        race.py   lost-update demo
+  arena.py        Crash Arena: warm writer pools, paired kill lanes, honest counters
   bench.py        measurements                demo.py   narrated terminal demo
   cli.py          python -m safewrite …       server/   Crash Lab (stdlib http.server + vanilla JS)
-tests/            54 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API
+tests/            70 tests: formats, VFS equivalence, engines, exhaustive crashes, real crashes, faults, concurrency, API, arena
+tools/            arena_load.py: N simulated phones against the arena, invariants checked
 results/          explore.json · bench.json (pre-generated, loaded by the UI)
 docs/             DESIGN.md · JUDGE_QA.md · DEMO_SCRIPT.md · PLAN.md · VIDEO_PLAN.md · img/ · media/
 video/            the launch film, built from code (footage capture, motion graphics, synthesized score)
@@ -178,6 +187,7 @@ video/            the launch film, built from code (footage capture, motion grap
 ## Documents
 
 * **[docs/DESIGN.md](docs/DESIGN.md)**: the design document, covering all seven required deliverables in depth.
+* **[docs/ARENA.md](docs/ARENA.md)**: the Crash Arena stage runbook: hotspot or router setup, firewall, the 90-second script, fallbacks, measured capacity.
 * **[docs/LIVE_DEMO.md](docs/LIVE_DEMO.md)**: kill a real program mid-save on your own laptop and open the result in Notepad (copy-paste commands for Windows and macOS).
 * **[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)**: the 7-minute stage demo, click by click, with a fallback plan.
 * **[docs/JUDGE_QA.md](docs/JUDGE_QA.md)**: the questions we expect from judges, answered.

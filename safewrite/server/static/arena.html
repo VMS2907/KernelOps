@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crash Arena · SafeWrite</title>
+<meta name="description" content="The audience kills real writer processes mid-save; the projector counts what survived.">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="arena.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d03b3b'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-15h-7z' fill='white'/%3E%3C/svg%3E">
+</head>
+<body class="arena state-LOBBY">
+<header class="ab-top">
+  <div class="ab-brand">
+    <div class="brand-mark" aria-hidden="true">⚡</div>
+    <div>
+      <div class="ab-title">Crash Arena</div>
+      <div class="ab-doc">saving <b>Final_Assignment.txt</b></div>
+    </div>
+  </div>
+  <div class="ab-stats">
+    <div class="ab-stat"><div class="v" id="s-taps">0</div><div class="l">taps received</div></div>
+    <div class="ab-stat"><div class="v" id="s-crashes">0</div><div class="l">real crashes, each side</div></div>
+    <div class="ab-stat"><div class="v" id="s-rate">0</div><div class="l">crashes / sec, each side</div></div>
+    <div class="ab-stat"><div class="v" id="s-phones">0</div><div class="l">phones</div></div>
+  </div>
+  <ol class="ab-leaders" id="leaders" aria-label="Top crashers"></ol>
+  <div class="ab-mini-qr" id="mini-qr" title="Join"></div>
+</header>
+
+<main class="ab-main">
+  <section class="ab-view" id="v-lobby">
+    <div class="lobby">
+      <div class="qr-box"><div id="qr" class="qr"></div></div>
+      <div class="lobby-text">
+        <div class="kicker">SafeWrite · Crash Arena</div>
+        <h1>Scan and pull the plug</h1>
+        <p class="lead">Every tap really kills two programs in the middle of saving
+          <b>Final_Assignment.txt</b>: one saves the way most apps do, one uses SafeWrite.</p>
+        <ol class="steps">
+          <li>Join the same Wi-Fi as this laptop and scan the code</li>
+          <li>Enter your name</li>
+          <li>Tap <b>⚡</b> as fast as you like</li>
+        </ol>
+        <div class="url" id="url"></div>
+        <div class="url-warn" id="url-warn" hidden></div>
+        <div class="joined"><b id="joined">0</b> <span id="joined-l">phones joined</span></div>
+        <div class="names" id="names"></div>
+        <div class="warm" id="warm"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-view" id="v-live">
+    <div class="split">
+      <div class="side naive">
+        <div class="side-head">
+          <div class="kicker">what most apps do</div>
+          <h2>Normal save</h2>
+          <div class="side-sub" id="naive-sub">open(path, "w") · overwrite in place</div>
+        </div>
+        <div class="nums">
+          <div class="num"><div class="n" id="naive-crashes">0</div><div class="l">real crashes</div></div>
+          <div class="num hot"><div class="n" id="naive-bad">0</div><div class="l">corrupted files</div>
+            <div class="pct" id="naive-pct"></div></div>
+        </div>
+        <div class="mix" id="naive-mix" aria-label="Verdicts"></div>
+        <div class="legend-l"><span><i style="background:var(--bad)"></i>file destroyed</span><span><i style="background:var(--old)"></i>previous version kept</span><span><i style="background:var(--new)"></i>new version kept</span></div>
+        <div class="list-title">corruption gallery · latest broken files</div>
+        <div class="list" id="gallery"></div>
+      </div>
+      <div class="side safe">
+        <div class="side-head">
+          <div class="kicker">copy-on-write · checksums · atomic commit</div>
+          <h2>SafeWrite</h2>
+          <div class="side-sub" id="safe-sub">engine cow</div>
+        </div>
+        <div class="nums">
+          <div class="num"><div class="n" id="safe-crashes">0</div><div class="l">real crashes</div></div>
+          <div class="num hot"><div class="n" id="safe-bad">0</div><div class="l">corrupted files</div>
+            <div class="pct" id="safe-pct"></div></div>
+        </div>
+        <div class="mix" id="safe-mix" aria-label="Verdicts"></div>
+        <div class="legend-l"><span><i style="background:var(--bad)"></i>file destroyed</span><span><i style="background:var(--old)"></i>previous version kept</span><span><i style="background:var(--new)"></i>new version kept</span></div>
+        <div class="list-title">live feed · every crash, recovered</div>
+        <div class="list" id="feed"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-view" id="v-frozen">
+    <div class="final">
+      <div class="kicker">Final result · every number is a real crash</div>
+      <div class="f1" id="f1"></div>
+      <div class="f2 bad" id="f2"></div>
+      <div class="f2 good" id="f3"></div>
+      <div class="f4">kill -9 is the easy case. Power loss is harder — that's what our simulator proves.</div>
+      <a class="btn primary f-btn" href="/#explorer" target="_blank" rel="noopener">Open the Explorer →</a>
+      <div class="f5" id="f5"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="ab-foot">
+  <div class="honest" id="honest">Waiting for the arena server…</div>
+  <div class="host" id="host" hidden>
+    <span class="pill neutral">host</span>
+    <button class="btn" data-act="start" title="S">S · Start</button>
+    <button class="btn" data-act="freeze" title="F">F · Freeze</button>
+    <button class="btn" data-act="reset" title="R twice">R · Reset</button>
+    <button class="btn" data-act="autotap" id="auto-btn" title="A">A · Auto-tap off</button>
+  </div>
+  <div class="viewer" id="viewer" hidden>view only · open the host URL printed in the terminal to control</div>
+</footer>
+<div class="banner" id="banner" hidden></div>
+<script src="vendor/qrcode.js"></script>
+<script type="module" src="arena.js"></script>
+</body>
+</html>

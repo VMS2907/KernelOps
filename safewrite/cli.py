@@ -15,6 +15,7 @@ Proof commands::
     race      lost-update race vs. synchronized read-modify-write
     bench     latency / fsyncs / write amplification / recovery time
     serve     the Crash Lab web UI
+    arena     Crash Arena: the audience crashes SafeWrite live from their phones
     demo      a narrated walk-through in the terminal
 """
 
@@ -449,6 +450,14 @@ def cmd_serve(a: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_arena(a: argparse.Namespace) -> int:
+    from .server.app import serve_arena
+    return serve_arena(a.host, a.port, pool=a.pool, naive=a.naive_variant, safe=a.safe_engine, size=a.size,
+                       queue_max=a.queue, per_phone=a.per_phone_queue, max_phones=a.max_phones, rate=a.rate,
+                       autotap_rate=a.autotap_rate, lanes=a.lanes, url_host=a.url_host, token=a.token,
+                       store_dir=a.store, open_browser=not a.no_browser)
+
+
 def cmd_demo(a: argparse.Namespace) -> int:
     from .demo import run_demo
     return run_demo(pause=not a.no_pause)
@@ -555,6 +564,28 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--store", default="demo-store", help="real store for the Documents tab")
     s.add_argument("--no-browser", action="store_true")
     s.set_defaults(fn=cmd_serve)
+
+    s = sub.add_parser("arena", help="Crash Arena: the audience kills real writers from their phones")
+    s.add_argument("--host", default="0.0.0.0", help="address to listen on (default: every interface)")
+    s.add_argument("--port", type=int, default=8765)
+    s.add_argument("--pool", type=int, default=4, help="warm writer processes per side")
+    s.add_argument("--lanes", type=int, help="crash pairs processed in parallel (default: min(pool, 4))")
+    s.add_argument("--naive-variant", default="naive/trunc", choices=all_specs(), metavar="SPEC",
+                   help="left side, the normal save (default naive/trunc = open(path, 'w'); or naive)")
+    s.add_argument("--safe-engine", default="cow", choices=["shadow", "undo", "wal", "cow"],
+                   help="right side, SafeWrite")
+    s.add_argument("--size", type=int, default=64 * 1024, help="document size in bytes (average)")
+    s.add_argument("--queue", type=int, default=500, help="max taps waiting; more are counted and dropped")
+    s.add_argument("--per-phone-queue", type=int, default=3,
+                   help="max taps one phone may have waiting (keeps tap-to-verdict short; 0 = no cap)")
+    s.add_argument("--rate", type=float, default=8.0, help="max taps per second per phone")
+    s.add_argument("--max-phones", type=int, default=30, help="how many phones may join (default 30)")
+    s.add_argument("--autotap-rate", type=float, default=10.0, help="taps per second when auto-tap is on")
+    s.add_argument("--url-host", help="address printed in the QR code, if auto-detection picks the wrong one")
+    s.add_argument("--token", help="host token (default: random, printed at startup)")
+    s.add_argument("--store", default="demo-store", help="real store for the Crash Lab's Documents tab")
+    s.add_argument("--no-browser", action="store_true")
+    s.set_defaults(fn=cmd_arena)
 
     s = sub.add_parser("demo", help="narrated terminal demo")
     s.add_argument("--no-pause", action="store_true")

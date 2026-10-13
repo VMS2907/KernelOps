@@ -489,7 +489,8 @@ Python ≥ 3.9, standard library only, Linux / macOS / Windows.
 python -m safewrite serve                 # Crash Lab web UI, http://127.0.0.1:8765
 python -m safewrite demo                  # narrated terminal demo
 python -m safewrite explore --examples 1  # the full proof matrix
-python -m unittest discover -s tests -t . # 54 tests
+python -m unittest discover -s tests -t . # 70 tests
+python -m safewrite arena --pool 8        # Crash Arena: the audience kills real writers (docs/ARENA.md)
 ```
 
 ### 7.2 Verification matrix

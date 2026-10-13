@@ -19,14 +19,26 @@ JSON API (all GET unless noted):
   POST /api/store/restore {key,version}
   POST /api/store/crash {key,text,at}   save in a child process that is killed for
                                          real at syscall ``at``, then recover
+
+Crash Arena (``python -m safewrite arena``; see safewrite/arena.py):
+
+  /tap                              phone page          /arena   projector page
+  POST /api/arena/join {client_id,nickname}
+  POST /api/arena/tap  {client_id,nickname}   -> {accepted, your_crashes}
+  /api/arena/me?client_id           the phone's state and its latest verdicts
+  /api/arena/stream                 SSE: stats every 200 ms + crash pairs
+  POST /api/arena/control {action}  start|freeze|reset|autotap_on|autotap_off (host token)
+  /api/arena/export                 every crash record as JSON (host token)
 """
 
 from __future__ import annotations
 
+import hmac
 import json
 import mimetypes
 import os
 import random
+import signal
 import subprocess
 import sys
 import tempfile
@@ -34,6 +46,7 @@ import threading
 import time
 import traceback
 import webbrowser
+from http.cookies import CookieError, SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Callable, Dict, Optional
 from urllib.parse import parse_qs, urlparse
@@ -108,6 +121,8 @@ def _jsonable(obj: Any) -> Any:
 
 class Handler(BaseHTTPRequestHandler):
     state: State
+    arena: Any = None          # an ArenaEngine, only on servers made by make_arena_server
+    host_token: str = ""
     server_version = f"SafeWriteCrashLab/{__version__}"
 
     def log_message(self, fmt: str, *args: Any) -> None:  # quiet
@@ -400,6 +415,129 @@ class Handler(BaseHTTPRequestHandler):
         eng.commit({key: text.encode()})
         return {"syscalls": rec.syscalls, "trace": [op.to_json() for op in rec.trace]}
 
+    # ------------------------------------------------------- crash arena
+    # Every handler here only reads counters or enqueues a tap: the kills and
+    # recoveries run on the arena's own threads, never on a request thread.
+    def _arena(self) -> Any:
+        if self.arena is None:
+            self.error(503, "the arena is not running: start it with  python -m safewrite arena")
+        return self.arena
+
+    def _small_body(self, limit: int = 4096) -> Dict[str, Any]:
+        n = int(self.headers.get("Content-Length") or 0)
+        if n > limit:
+            raise ValueError("request body too large")
+        b = json.loads(self.rfile.read(n) or b"{}")
+        if not isinstance(b, dict):
+            raise ValueError("expected a JSON object")
+        return b
+
+    def _token_ok(self) -> bool:
+        tok = self.headers.get("X-Arena-Token", "")
+        if not tok:
+            try:
+                morsel = SimpleCookie(self.headers.get("Cookie", "")).get("sw_host")
+                tok = morsel.value if morsel else ""
+            except CookieError:
+                tok = ""
+        return bool(self.host_token and tok) and hmac.compare_digest(tok.encode(), self.host_token.encode())
+
+    def _page(self, name: str, extra: Optional[Dict[str, str]] = None) -> None:
+        with open(os.path.join(STATIC, name), "rb") as f:
+            body = f.read()
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        for k, v in (extra or {}).items():
+            self.send_header(k, v)
+        self.end_headers()
+        self.wfile.write(body)
+
+    def page_tap(self) -> None:
+        self._page("tap.html")
+
+    def page_arena(self) -> None:
+        tok = self.q().get("host", "")
+        extra = {}
+        if tok and self.host_token and hmac.compare_digest(tok.encode(), self.host_token.encode()):
+            # The page then removes ?host= from the address bar; the cookie keeps it the host.
+            extra["Set-Cookie"] = f"sw_host={tok}; Path=/; SameSite=Strict; HttpOnly"
+        self._page("arena.html", extra)
+
+    def _seated(self, fn: Callable[[], Any]) -> None:
+        from ..arena import ArenaFull
+        try:
+            self.json(fn())
+        except ArenaFull as e:
+            self.json({"error": str(e), "full": True}, 409)
+
+    def api_arena_join(self) -> None:
+        a = self._arena()
+        if a is not None:
+            b = self._small_body()
+            self._seated(lambda: a.join(str(b.get("client_id", "")), b.get("nickname")))
+
+    def api_arena_tap(self) -> None:
+        a = self._arena()
+        if a is not None:
+            b = self._small_body()
+            self._seated(lambda: a.tap(str(b.get("client_id", "")), b.get("nickname")))
+
+    def api_arena_me(self) -> None:
+        a = self._arena()
+        if a is not None:
+            self.json(a.me(self.q().get("client_id", "")))
+
+    def api_arena_control(self) -> None:
+        a = self._arena()
+        if a is None:
+            return
+        if not self._token_ok():
+            self.error(403, "host token required")
+            return
+        self.json(a.control(str(self._small_body().get("action", ""))))
+
+    def api_arena_export(self) -> None:
+        a = self._arena()
+        if a is None:
+            return
+        if not self._token_ok():
+            self.error(403, "host token required")
+            return
+        self.json(a.export())
+
+    def api_arena_stream(self) -> None:
+        a = self._arena()
+        if a is None:
+            return
+        with _SSE_MU:
+            if _SSE["clients"] >= 64:
+                self.error(503, "too many live viewers")
+                return
+            _SSE["clients"] += 1
+        try:
+            self.sse_start()
+            self.sse("hello", {**a.meta(), "is_host": self._token_ok()})
+            seq, epoch = max(0, a.processed - 12), None
+            while not a.closed:
+                snap = a.snapshot()
+                if snap["epoch"] != epoch:
+                    seq = seq if epoch is None else 0
+                    epoch = snap["epoch"]
+                pairs, seq = a.feed_since(seq)
+                if pairs:
+                    self.sse("crashes", pairs)
+                self.sse("stats", snap)
+                time.sleep(0.2)
+        finally:
+            with _SSE_MU:
+                _SSE["clients"] -= 1
+
+
+_SSE_MU = threading.Lock()
+_SSE = {"clients": 0}
+
 
 ROUTES: Dict[Any, Callable[[Handler], None]] = {
     ("GET", "/api/meta"): Handler.api_meta,
@@ -416,6 +554,14 @@ ROUTES: Dict[Any, Callable[[Handler], None]] = {
     ("POST", "/api/store/delete"): Handler.api_store_delete,
     ("POST", "/api/store/restore"): Handler.api_store_restore,
     ("POST", "/api/store/crash"): Handler.api_store_crash,
+    ("GET", "/tap"): Handler.page_tap,
+    ("GET", "/arena"): Handler.page_arena,
+    ("POST", "/api/arena/join"): Handler.api_arena_join,
+    ("POST", "/api/arena/tap"): Handler.api_arena_tap,
+    ("GET", "/api/arena/me"): Handler.api_arena_me,
+    ("GET", "/api/arena/stream"): Handler.api_arena_stream,
+    ("POST", "/api/arena/control"): Handler.api_arena_control,
+    ("GET", "/api/arena/export"): Handler.api_arena_export,
 }
 
 
@@ -441,3 +587,117 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True,
     finally:
         Handler.state.close_store()
         httpd.server_close()
+
+
+# ----------------------------------------------------------------------------
+# Crash Arena server: the Crash Lab on the LAN, locked down to the arena
+# ----------------------------------------------------------------------------
+#: What a phone on the LAN may reach.  control/export check the host token themselves.
+ARENA_PUBLIC = {("GET", "/tap"), ("GET", "/arena"), ("POST", "/api/arena/join"), ("POST", "/api/arena/tap"),
+                ("GET", "/api/arena/me"), ("GET", "/api/arena/stream"), ("POST", "/api/arena/control"),
+                ("GET", "/api/arena/export")}
+ARENA_STATIC = {"/tap.js", "/arena.js", "/arena.css", "/styles.css", "/util.js", "/vendor/qrcode.js"}
+LOOPBACK = {"127.0.0.1", "::1", "::ffff:127.0.0.1"}
+
+
+class ArenaHandler(Handler):
+    """Phones get the arena only.  The full Crash Lab answers on this laptop
+    (loopback) or to the host's browser (token cookie), so nobody in the
+    audience can start an exploration or a torture run mid-demo."""
+
+    loopback = LOOPBACK
+
+    def is_host(self) -> bool:
+        return self.client_address[0] in self.loopback or self._token_ok()
+
+    def _dispatch(self, method: str) -> None:
+        path = urlparse(self.path).path
+        if (method, path) in ARENA_PUBLIC or (method == "GET" and path in ARENA_STATIC) or self.is_host():
+            super()._dispatch(method)
+        elif method == "GET" and path in ("", "/", "/index.html"):
+            self.send_response(302)
+            self.send_header("Location", "/tap")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+        else:
+            self.error(403, "during the arena the Crash Lab is only available on the presenter's laptop")
+
+
+class ArenaHTTPServer(ThreadingHTTPServer):
+    daemon_threads = True
+    request_queue_size = 256       # socketserver's default of 5 drops SYNs when a room taps at once
+
+
+def make_arena_server(host: str, port: int, arena: Any, token: str,
+                      store_dir: str = "demo-store") -> ArenaHTTPServer:
+    """A server whose handler class is bound to this arena (no global state)."""
+    handler = type("BoundArenaHandler", (ArenaHandler,),
+                   {"state": State(store_dir), "arena": arena, "host_token": token})
+    return ArenaHTTPServer((host, port), handler)
+
+
+def serve_arena(host: str = "0.0.0.0", port: int = 8765, pool: int = 4, naive: str = "naive/trunc",
+                safe: str = "cow", size: int = 65536, queue_max: int = 500, per_phone: int = 3,
+                max_phones: int = 30, rate: float = 8.0,
+                autotap_rate: float = 10.0, lanes: Optional[int] = None, url_host: Optional[str] = None,
+                token: Optional[str] = None, store_dir: str = "demo-store", open_browser: bool = True) -> int:
+    import secrets
+    from ..arena import ArenaEngine, lan_addresses
+
+    token = token or secrets.token_urlsafe(9)
+    ips = lan_addresses()
+    phone_host = url_host or (ips[0] if ips else "127.0.0.1")
+    phone_url = f"http://{phone_host}:{port}/tap"
+    host_url = f"http://127.0.0.1:{port}/arena?host={token}"
+    arena = ArenaEngine(naive=naive, safe=safe, pool=pool, lanes=lanes, size=size, queue_max=queue_max,
+                        per_phone=per_phone, max_phones=max_phones, rate=rate, autotap_rate=autotap_rate, public_url=phone_url)
+    try:
+        httpd = make_arena_server(host, port, arena, token, store_dir)
+    except OSError as e:
+        print(f"cannot listen on port {port}: {e}\n"
+              f"  is the Crash Lab or another arena already running?  try  --port {port + 1}")
+        return 2
+
+    def _term(*_: Any) -> None:
+        raise KeyboardInterrupt
+
+    if hasattr(signal, "SIGTERM"):
+        signal.signal(signal.SIGTERM, _term)
+    try:
+        print("SafeWrite Crash Arena: warming up writers ...", flush=True)
+        arena.start()
+        arena.wait_warm(60)
+        m = arena.meta()
+        print(f"""
+  PHONES open:       {phone_url}
+  PROJECTOR (host):  {host_url}
+  host token:        {token}    (projector keys: S start · F freeze · R reset · A auto-tap)
+  phones:            up to {arena.max_phones} (a phone idle for a minute gives its seat to a newcomer)
+
+  left  (normal save): {naive:<12}  right (SafeWrite): {safe}
+  writers:           {pool} per side, warm  ·  {size // 1024} KB document  ·  kill delay 0-{m['delay_max_ms']} ms
+  queue:             {queue_max} taps max, {per_phone or 'no limit'} waiting per phone  ·  {rate:g} taps/s per phone  ·  auto-tap {autotap_rate:g}/s
+""")
+        if not ips:
+            print("  ! no network address found: join the hotspot/router first and restart, or pass --url-host")
+        elif len(ips) > 1 and not url_host:
+            print(f"  other addresses:  {', '.join(ips[1:])}")
+            print("  (if phones cannot reach the PHONES address, restart with --url-host <one of these>)")
+        if sys.platform == "win32":
+            print("""
+  Windows: when the firewall asks, tick *Private networks* and click Allow.  If phones still
+  cannot connect, set the Wi-Fi network to Private and run once in an admin PowerShell:
+    New-NetFirewallRule -DisplayName "SafeWrite Arena" -Direction Inbound -Protocol TCP -LocalPort %d -Action Allow -Profile Private""" % port)
+        elif sys.platform == "darwin":
+            print("  macOS: if asked whether Python may accept incoming connections, click Allow.")
+        print("\n  Ctrl+C stops the arena, kills every writer and deletes its temp stores.\n", flush=True)
+        if open_browser:
+            threading.Timer(0.5, lambda: webbrowser.open(host_url)).start()
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\nstopping: killing writers, deleting temp stores")
+    finally:
+        arena.shutdown()
+        httpd.server_close()
+        httpd.RequestHandlerClass.state.close_store()  # type: ignore[attr-defined]
+    return 0

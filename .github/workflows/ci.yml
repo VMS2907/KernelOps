@@ -26,3 +26,5 @@ jobs:
         run: python -m safewrite explore --models power
       - name: Real kill -9 torture (short)
         run: python -m safewrite torture --engines shadow,undo,wal,cow --trials 20 --size 16384
+      - name: Live technical challenges KO-16-C1..C5
+        run: python -m safewrite challenge

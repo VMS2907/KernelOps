@@ -97,6 +97,8 @@ class Engine(ABC):
     OPTIONS: ClassVar[Dict[str, Any]] = {}
     #: Named ablations: variant name -> (option overrides, what breaks).
     VARIANTS: ClassVar[Dict[str, Dict[str, Any]]] = {}
+    #: Documented crash points: name -> where to crash (see ``ShadowEngine``).
+    CRASH_POINTS: ClassVar[Dict[str, Dict[str, Any]]] = {}
 
     def __init__(self, vfs: VFS, **options: Any) -> None:
         unknown = set(options) - set(self.OPTIONS)
@@ -200,4 +202,5 @@ class Engine(ABC):
             "atomic_tx": cls.atomic_tx, "safe": cls.safe,
             "options": dict(cls.OPTIONS),
             "variants": {k: {kk: vv for kk, vv in v.items()} for k, v in cls.VARIANTS.items()},
+            "crash_points": {k: v["means"] for k, v in cls.CRASH_POINTS.items()},
         }

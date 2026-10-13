@@ -66,7 +66,7 @@ export class ConceptsView {
         h("ul", { style: { margin: "8px 0 0", paddingLeft: "18px", lineHeight: "1.7" } },
           h("li", {}, "Durability assumes the drive honours FLUSH (fsync). A drive that lies about its write cache defeats every software scheme, ZFS and Postgres included."),
           h("li", {}, "The power model assumes metadata is journaled in order (ext4, XFS, NTFS, APFS). The paranoid model additionally drops 512-byte sector atomicity."),
-          h("li", {}, "Single machine, one writer process at a time (enforced by flock); many threads inside it."),
+          h("li", {}, "Single machine, one writer process at a time for undo/wal/cow (enforced by flock); many threads inside it. The shadow engine also has a multi-writer mode (shared session lock + COMMIT lock, local file systems)."),
           h("li", {}, "Crash states are exhaustive for these scenarios up to a per-point budget; larger traces are sampled with every prefix, every single-drop and every single-keep subset included."),
           h("li", {}, "Future work: dm-log-writes block-level replay in a VM, a COW B+-tree for millions of keys, incremental GC, Windows FlushFileBuffers on directories."))),
     );

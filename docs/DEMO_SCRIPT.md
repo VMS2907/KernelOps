@@ -5,7 +5,8 @@
 ## Before you go on stage (pre-flight checklist)
 
 ```bash
-git pull && python -m unittest discover -s tests -t .      # 54 tests, all OK
+git pull && python -m unittest discover -s tests -t .      # 78 tests, all OK
+python -m safewrite challenge                             # live challenges C1-C5: all ✓ (see CHALLENGES.md)
 python -m safewrite serve --no-browser                    # leave running
 python -m safewrite explore --json results/explore.json --keep-details   # optional: refresh results
 ```

@@ -198,18 +198,30 @@ Notation: `W` = `pwrite`, `F` = `fsync`, `FD` = `fsync(dir)`. Lines marked ★ a
 
 ```
 put(key, B):
+  prepare:                                      # nothing visible changes; any failure → CommitAborted
+    refuse if len(B) > max_payload (1 MiB)      # before anything is written (EFBIG)
     tmp ← docs/<key>~<n>.tmp                    # unique: concurrent writers never share a temp
     W(tmp, header(len, crc(B)) ‖ B)
     F(tmp)                                      # B durable BEFORE it can become visible
     verify read-back(tmp) == record             # catches I/O errors before commit
+  publish (under the COMMIT lock):
     rename(tmp → docs/<key>)                    # ★ atomic name switch
     FD(docs)                                    # the rename itself is durable → acknowledge
+                                                # failure here → VisibleNotDurable (B already visible)
 
 recover():
-    for every *~*.tmp: unlink                   # never renamed ⇒ never committed
-    FD(docs) if anything was removed
-    validate every document (length + CRC)
+    validate every document (length + CRC)      # integrity first
+    for every *~*.tmp:                          # never renamed ⇒ never committed
+        destination damaged → move to quarantine/ (never promoted, never deleted)
+        otherwise           → unlink
+    FD(docs) if anything was moved or removed
+    (multi-writer, other writers live: touch no temp at all)
 ```
+
+The three documented crash points of the round-1 test plan are `during_write` (inside W),
+`after_validation` (before the rename) and `after_replace` (after the rename, before FD). See
+[CHALLENGES.md](CHALLENGES.md) for the live challenges built on this protocol: crash points, damaged
+destinations, a full disk, a failing directory fsync and concurrent writers.
 
 ### 4.2 Undo journal (`engines/undo.py`)
 
@@ -409,7 +421,11 @@ These are the two outcomes the problem statement allows, produced by the two jou
 | **WAL record with a lost middle sector** | its CRC fails → treated as uncommitted; without CRCs it is replayed as garbage | `wal/no-checksum` |
 | **Crash during recovery** | recovery's own writes are crash-tested; re-recovery converges | 19,318 nested crash states |
 | **Recovery run twice** | identical result (idempotent) | checked on every crash state |
-| **Disk full / EIO / fsync failure** | the commit raises; nothing is published; the store refuses further writes until reopened, because retrying a failed fsync is unsafe (PostgreSQL "fsyncgate"); reopening recovers A or B | `tests/test_faults.py`: an error injected at every syscall |
+| **Disk full / EIO / fsync failure** | the commit raises; reopening recovers A or B. Shadow says which side of the commit point failed: before the rename → `CommitAborted` (A untouched, temp removed, store stays writable); after it → `VisibleNotDurable` (B already visible, store read-only until reopened, because retrying a failed fsync is unsafe: PostgreSQL "fsyncgate") | `tests/test_faults.py`: an error injected at every syscall; `tests/test_challenges.py` |
+| **Disk full halfway through a 1 MiB temp** | partial temp removed (space returned), A kept byte-identical, error states the space needed; documents over the declared 1 MiB cap are refused before any write | challenge C3 |
+| **`fsync(dir)` fails after the rename** | `VisibleNotDurable`: readers already see B; after a power loss A or B may return, each intact | challenge C4 |
+| **Damaged destination + valid uncommitted temp** | the temp is never promoted (a checksum proves integrity, not commitment); both files are kept byte-identical (temp → `quarantine/`); reads are refused | challenge C2 |
+| **Two writer processes, same document** (shadow, multi-writer mode) | unique temps; commits serialized by a `COMMIT` lock; a sweeping recovery waits for the exclusive session lock; optional conditional saves turn lost updates into `WriteConflict` | challenge C5 |
 | **Two processes open the same store** | the second gets `StoreError: store is in use by another process (pid N)` | `test_second_process_is_refused` |
 | **Writer killed while holding the lock** | the kernel drops the `flock` with the process: no stale lock | `test_lock_is_released_when_holder_is_killed` |
 | **Concurrent read-modify-write** | `update(fn)` / transactions hold the store lock from read to commit: no lost updates | `race` command; `test_transactions_are_isolated` |
@@ -459,8 +475,10 @@ the store makes it a one-word change: `--engine wal`.
    matrix cells are within it today); beyond it we sample, always including every prefix,
    single-drop and single-keep subset. The scenarios are small by design: crash-consistency bugs are
    about protocol *ordering*, not data volume.
-4. **One writer process.** Enforced with `flock`. Many threads inside it are fine. Multi-process
-   writers would need shared-memory coordination.
+4. **One writer process (undo, wal, cow).** Enforced with `flock`. Many threads inside it are fine.
+   Their per-process state (log position, catalog) would need shared-memory coordination. The shadow
+   engine, whose only shared state is the file system, has a multi-writer mode (shared session lock,
+   `COMMIT` lock, unique temps; local file systems only, since `flock` is unreliable over NFS).
 5. **Scale.** The COW catalog is a single serialized object, rewritten per commit (O(#docs)), and
    GC is a full mark-and-sweep. That is right for thousands of documents, not millions.
 6. **Platform.** Windows has no directory fsync (NTFS journals metadata itself); macOS needs
@@ -473,7 +491,8 @@ the store makes it a one-word change: `--engine wal`.
 * A COW B+-tree with path copying (as LMDB and btrfs use) for O(log n) commits at millions of keys,
   plus incremental GC.
 * Hybrid **COW + WAL** (ZFS ZIL style): log small commits cheaply, fold them into COW snapshots.
-* Multi-process writers via a shared-memory lock table; replication for machine-loss durability.
+* Multi-process writers for undo/wal/cow via a shared-memory lock table; replication for
+  machine-loss durability.
 * An *audit mode* that traces any program with `strace` and runs its syscalls through our
   simulator, i.e. ALICE for arbitrary applications.
 
@@ -489,7 +508,8 @@ Python ≥ 3.9, standard library only, Linux / macOS / Windows.
 python -m safewrite serve                 # Crash Lab web UI, http://127.0.0.1:8765
 python -m safewrite demo                  # narrated terminal demo
 python -m safewrite explore --examples 1  # the full proof matrix
-python -m unittest discover -s tests -t . # 54 tests
+python -m safewrite challenge             # the live challenges KO-16-C1..C5, narrated
+python -m unittest discover -s tests -t . # 78 tests
 ```
 
 ### 7.2 Verification matrix
@@ -503,6 +523,7 @@ python -m unittest discover -s tests -t . # 54 tests
 | Real `os._exit` at every syscall, every safe engine | atomicity with real processes and files | `test_os_exit_at_every_syscall_recovers_old_or_new` |
 | Real `kill -9` torture | atomicity under random real kills | 0 corruptions (safe); naive/trunc ≈ 50% corrupted |
 | Fault injection (ENOSPC/EIO at every syscall) | I/O errors never corrupt committed data | `tests/test_faults.py` |
+| Live challenges C1–C5 | crash points, damaged destination, full disk, failed dir fsync, two writer processes | `python -m safewrite challenge`: 49 checks; `tests/test_challenges.py` |
 | Format tests | I: every flipped byte, truncation and extension detected | `tests/test_format.py` |
 | Concurrency tests | C: no lost updates, isolation, exclusive process lock, lock released on kill | `tests/test_concurrency.py` |
 | CI | portability | GitHub Actions: Ubuntu, macOS, Windows × Python 3.9, 3.12 |

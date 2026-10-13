@@ -579,7 +579,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--per-phone-queue", type=int, default=3,
                    help="max taps one phone may have waiting (keeps tap-to-verdict short; 0 = no cap)")
     s.add_argument("--rate", type=float, default=8.0, help="max taps per second per phone")
-    s.add_argument("--max-phones", type=int, default=30, help="how many phones may join (default 30)")
+    s.add_argument("--max-phones", type=int, default=60, help="how many phones may join (default 60)")
     s.add_argument("--autotap-rate", type=float, default=10.0, help="taps per second when auto-tap is on")
     s.add_argument("--url-host", help="address printed in the QR code, if auto-detection picks the wrong one")
     s.add_argument("--token", help="host token (default: random, printed at startup)")

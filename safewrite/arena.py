@@ -400,7 +400,7 @@ class ArenaEngine:
     def __init__(self, naive: str = "naive/trunc", safe: str = "cow", pool: int = 4,
                  lanes: Optional[int] = None, scenario: Optional[Scenario] = None, size: int = 65536,
                  queue_max: int = 500, per_phone: int = 3, rate: float = 8.0, autotap_rate: float = 10.0,
-                 max_phones: int = 30,
+                 max_phones: int = 60,
                  max_spawns: Optional[int] = None, delay_max: Optional[float] = None,
                  seed: Optional[int] = None, directory: Optional[str] = None,
                  public_url: str = "") -> None:

@@ -3,7 +3,7 @@
 > The audience crashes SafeWrite live from their phones. Every tap **really kills** two writer
 > processes in the middle of saving `Final_Assignment.txt`, one saving the way most apps do and
 > one using SafeWrite. Each phone has one giant **😈 Press for MARKS** button that plays a "FAAAH"
-> on every tap, and the projector counts what survived. Up to **30 phones** can play at once.
+> on every tap, and the projector counts what survived. Up to **60 phones** can play at once (`--max-phones` to change).
 
 ![Crash Arena projector, live](img/arena-live.png)
 

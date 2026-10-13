@@ -148,23 +148,23 @@ class Limits(unittest.TestCase):
         finally:
             a.shutdown()
 
-    def test_at_most_30_phones_and_closed_tabs_give_their_seat_back(self):
-        a = ArenaEngine()                         # default cap: 30 phones
+    def test_at_most_60_phones_and_closed_tabs_give_their_seat_back(self):
+        a = ArenaEngine()                         # default cap: 60 phones
         try:
-            self.assertEqual(a.max_phones, 30)
-            for i in range(30):
+            self.assertEqual(a.max_phones, 60)
+            for i in range(60):
                 a.join(cid(i), f"p{i}")
             with self.assertRaises(ArenaFull):
-                a.join(cid(30), "31st")
+                a.join(cid(60), "61st")
             with self.assertRaises(ArenaFull):
-                a.tap(cid(30))                    # tapping without a seat is refused too
+                a.tap(cid(60))                    # tapping without a seat is refused too
             a.join(cid(7), "renamed")             # a seated phone can always come back
-            self.assertEqual(a.snapshot()["phones"]["joined"], 30)
+            self.assertEqual(a.snapshot()["phones"]["joined"], 60)
             a.clients[cid(3)].seen -= 120         # this phone closed its tab two minutes ago
-            self.assertEqual(a.join(cid(30), "31st")["nickname"], "31st")
+            self.assertEqual(a.join(cid(60), "61st")["nickname"], "61st")
             self.assertNotIn(cid(3), a.clients)
             ph = a.snapshot()["phones"]
-            self.assertEqual((ph["joined"], ph["max"], ph["full"]), (30, 30, True))
+            self.assertEqual((ph["joined"], ph["max"], ph["full"]), (60, 60, True))
             self.assertEqual(a.snapshot()["taps"]["phone"]["received"], 0, "refused phones never count as taps")
         finally:
             a.shutdown()
@@ -359,7 +359,7 @@ class HTTP(unittest.TestCase):
             self.assertEqual(self.req("/api/arena/tap", {"client_id": cid(2)})[0], 409)
             self.assertEqual(self.req("/api/arena/tap", {"client_id": cid(1)})[0], 200)
         finally:
-            self.arena.max_phones = 30
+            self.arena.max_phones = 60
         with urllib.request.urlopen(self.base + "/api/arena/stream", timeout=30) as r:
             events = []
             while len(events) < 3:

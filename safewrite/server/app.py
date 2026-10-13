@@ -671,7 +671,7 @@ def make_arena_server(host: str, port: int, arena: Any, token: str,
 
 def serve_arena(host: str = "0.0.0.0", port: int = 8765, pool: int = 4, naive: str = "naive/trunc",
                 safe: str = "cow", size: int = 65536, queue_max: int = 500, per_phone: int = 3,
-                max_phones: int = 30, rate: float = 8.0,
+                max_phones: int = 60, rate: float = 8.0,
                 autotap_rate: float = 10.0, lanes: Optional[int] = None, url_host: Optional[str] = None,
                 token: Optional[str] = None, store_dir: str = "demo-store", open_browser: bool = True,
                 tap_sound: Optional[str] = None) -> int:

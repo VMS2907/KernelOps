@@ -291,8 +291,11 @@ re-establishes durability.
 
 A second round repeats the race with **conditional saves** (`expect` = sha256 of A): the first
 committer wins, the second gets `WriteConflict` (its temp removed, nothing committed), so neither
-update is lost silently. Mutual exclusion is also proven by a witness: inside the COMMIT lock each
-writer creates a marker file with `O_EXCL`, which would fail if two were ever inside.
+update is lost silently. The checks do not trust timestamps: mutual exclusion is proven by a witness
+(inside the COMMIT lock each writer creates a marker file with `O_EXCL`, which would fail if two
+were ever inside), the commit order is appended to a file while the lock is held, and each writer
+keeps a "live" marker that it deletes before releasing its session lock, which the recovery
+process checks is gone once it holds the exclusive lock.
 
 **What to say.** Two locks, two jobs. The session lock is a readers-writer lock between *live
 writers* (shared) and *recovery* (exclusive): it guarantees recovery only ever sees temps whose

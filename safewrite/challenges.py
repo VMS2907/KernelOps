@@ -35,6 +35,24 @@ from .vfs import FaultyVFS, OsVFS, RecordingVFS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A64, B64, C64 = b"\x41" * 64, b"\x42" * 64, b"\x43" * 64
 
+# One clock for every process on the machine, for the C5 timeline.
+# ``time.perf_counter`` is per-process on some platforms and versions (macOS,
+# Windows with Python 3.9), so read the system-wide counters directly.
+if os.name == "nt":  # pragma: no cover - Windows
+    import ctypes
+    _QPF = ctypes.c_int64()
+    ctypes.windll.kernel32.QueryPerformanceFrequency(ctypes.byref(_QPF))
+
+    def _now() -> float:
+        t = ctypes.c_int64()
+        ctypes.windll.kernel32.QueryPerformanceCounter(ctypes.byref(t))
+        return t.value / _QPF.value
+elif hasattr(time, "clock_gettime") and hasattr(time, "CLOCK_MONOTONIC"):
+    def _now() -> float:
+        return time.clock_gettime(time.CLOCK_MONOTONIC)
+else:  # pragma: no cover
+    _now = time.time
+
 
 # ----------------------------------------------------------------------------
 # helpers
@@ -444,21 +462,26 @@ class _TracedVFS(FaultyVFS):
 
 
 class _TracedLock:
-    """The COMMIT lock, plus a mutual-exclusion witness (an O_EXCL marker file)."""
+    """The COMMIT lock, plus clock-independent evidence: a mutual-exclusion
+    witness (an ``O_EXCL`` marker file) and the commit order, appended to a
+    file while the lock is held."""
 
-    def __init__(self, inner: Any, emit: Callable[..., None], witness: str) -> None:
-        self.inner, self.emit, self.witness = inner, emit, witness
+    def __init__(self, inner: Any, emit: Callable[..., None], prefix: str, who: str) -> None:
+        self.inner, self.emit, self.who = inner, emit, who
+        self.witness, self.order = prefix + ".inside", prefix + ".order"
         self.fd: Optional[int] = None
 
     def __enter__(self) -> "_TracedLock":
         self.emit("waits for the COMMIT lock")
-        t = time.perf_counter()
+        t = _now()
         self.inner.__enter__()
-        self.emit(f"holds the COMMIT lock (waited {(time.perf_counter() - t) * 1000:.1f} ms)", lock="acquired")
+        self.emit(f"holds the COMMIT lock (waited {(_now() - t) * 1000:.1f} ms)", lock="acquired")
         try:
             self.fd = os.open(self.witness, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
             self.emit("!! another writer is inside the commit section", overlap=True)
+        with open(self.order, "a") as f:
+            f.write(self.who + "\n")
         return self
 
     def __exit__(self, *exc: object) -> None:
@@ -471,16 +494,18 @@ class _TracedLock:
 
 
 def _writer_proc(path: str, who: str, payload: bytes, expect: Any, barrier: Any, q: Any,
-                 witness: str) -> None:
+                 prefix: str) -> None:
     """One writer process: open shared, prepare, barrier, commit, close."""
     def emit(msg: str, **kw: Any) -> None:
-        q.put({"t": time.perf_counter(), "who": who, "msg": msg, **kw})
+        q.put({"t": _now(), "who": who, "msg": msg, **kw})
+    live = f"{prefix}.live-{who}"      # exists exactly while this writer's session is open
     try:
+        open(live, "w").close()
         s = SafeStore.open(path, multi_writer=True)
         emit(f"opened the store (session lock SHARED, writer id {s.engine.writer_id})")
         eng = s.engine
         eng.vfs = _TracedVFS(eng.vfs, emit)
-        eng.commit_lock = _TracedLock(eng.commit_lock, emit, witness)
+        eng.commit_lock = _TracedLock(eng.commit_lock, emit, prefix, who)
         cand = eng.prepare("doc", payload)
         emit(f"prepared {cand.tmp.rsplit('/', 1)[-1]}: written, fsynced, validated (invisible)")
         barrier.wait(timeout=120)      # every candidate is prepared
@@ -491,6 +516,7 @@ def _writer_proc(path: str, who: str, payload: bytes, expect: Any, barrier: Any,
         except WriteConflict as e:
             emit(f"WriteConflict: {e.message.split('.')[0]}; temp removed, nothing committed", result="conflict")
         emit("closes the store (releases its session lock)", closed=True)
+        os.unlink(live)                # gone BEFORE the session lock is released
         s.close()
     except BaseException as e:  # report, never hang the barrier
         emit(f"ERROR {type(e).__name__}: {e}", result="error")
@@ -500,13 +526,16 @@ def _writer_proc(path: str, who: str, payload: bytes, expect: Any, barrier: Any,
             pass
 
 
-def _recovery_proc(path: str, q: Any) -> None:
+def _recovery_proc(path: str, q: Any, prefix: str) -> None:
     def emit(msg: str, **kw: Any) -> None:
-        q.put({"t": time.perf_counter(), "who": "R", "msg": msg, **kw})
+        q.put({"t": _now(), "who": "R", "msg": msg, **kw})
     try:
         emit("wants the session lock EXCLUSIVELY (a sweeping recovery)", wants=True)
         with SafeStore.open(path, wait=120) as s:
-            emit("got it: no writer is live any more; recovery runs", lock="exclusive")
+            folder, base = os.path.split(prefix)
+            live = [n for n in os.listdir(folder) if n.startswith(base + ".live-")]
+            emit(f"got it: {len(live)} writer session(s) still live; recovery runs", lock="exclusive",
+                 live_writers=len(live))
             for ev in s.recovery.events:
                 emit("recovery: " + ev.msg, swept=ev.kind == "discard")
             data = s.get("doc")
@@ -523,10 +552,10 @@ def _c5_round(work: str, name: str, cas: bool, with_recovery: bool, chk: Checks)
     ctx = multiprocessing.get_context("spawn")
     q = ctx.Queue()
     barrier = ctx.Barrier(3)
-    witness = os.path.join(work, name + ".inside")
+    prefix = os.path.join(work, name)
     expect = sha256(A64) if cas else "*"
-    t0 = time.perf_counter()
-    writers = [ctx.Process(target=_writer_proc, args=(store, who, data, expect, barrier, q, witness))
+    t0 = _now()
+    writers = [ctx.Process(target=_writer_proc, args=(store, who, data, expect, barrier, q, prefix))
                for who, data in (("B", B64), ("C", C64))]
     log: List[Dict[str, Any]] = []
     for p in writers:
@@ -536,7 +565,7 @@ def _c5_round(work: str, name: str, cas: bool, with_recovery: bool, chk: Checks)
         barrier.wait(timeout=120)
         show_dir(store, {"A": A64, "B": B64, "C": C64}, "disk at the barrier (both candidates prepared):")
         if with_recovery:
-            rproc = ctx.Process(target=_recovery_proc, args=(store, q))
+            rproc = ctx.Process(target=_recovery_proc, args=(store, q, prefix))
             rproc.start()
             deadline = time.monotonic() + 120
             while time.monotonic() < deadline:
@@ -569,13 +598,15 @@ def _c5_round(work: str, name: str, cas: bool, with_recovery: bool, chk: Checks)
         return next((e for e in by[w] if all(e.get(k) == v for k, v in kw.items())), None)
     errors = [e for e in log if e.get("result") == "error"]
     chk.check(not errors, "no process failed" + (f": {errors[0]['msg']}" if errors else ""))
-    acq = {w: first(w, lock="acquired") for w in "BC"}
-    rel = {w: first(w, lock="released") for w in "BC"}
-    if all(acq.values()) and all(rel.values()):
-        order = sorted("BC", key=lambda w: acq[w]["t"])        # type: ignore[index]
+    try:
+        with open(prefix + ".order") as f:
+            order = f.read().split()              # written inside the lock: the true commit order
+    except OSError:
+        order = []
+    if sorted(order) == ["B", "C"]:
         w1, w2 = order
-        chk.check(rel[w1]["t"] <= acq[w2]["t"] and not any(e.get("overlap") for e in log),  # type: ignore[index]
-                  f"commit sections never overlap: {w1} released the COMMIT lock before {w2} acquired it")
+        chk.check(not any(e.get("overlap") for e in log),
+                  f"commit sections never overlap: {w1} committed, then {w2} (O_EXCL witness never tripped)")
     else:
         order = ["B", "C"]
         chk.check(False, "both writers reached the commit section")
@@ -600,9 +631,8 @@ def _c5_round(work: str, name: str, cas: bool, with_recovery: bool, chk: Checks)
         chk.check(doc == payload[order[0]], f"doc = {shape(doc)}: the winner's version, intact")
     chk.check(not leftovers, "no temp files left behind")
     if with_recovery:
-        closes = [first(w, closed=True) for w in "BC"]
         racq = first("R", lock="exclusive")
-        chk.check(racq and all(closes) and all(racq["t"] >= cl["t"] for cl in closes),  # type: ignore[index]
+        chk.check(racq is not None and racq.get("live_writers") == 0,
                   "the exclusive recovery waited until both writers had closed (recovery ⟂ live writes)")
         chk.check(not any(e.get("swept") for e in by["R"]),
                   "it found nothing to sweep: no live save was ever deleted")
